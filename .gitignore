@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Miscellaneous
+*.root
+*.png
+
+# Directories
+build/
+.vscode/
