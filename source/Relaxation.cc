@@ -8,22 +8,15 @@ Relaxation::Relaxation()
 
     singlet_abundance_ = singlet_to_triplet / (1 + singlet_to_triplet);
     triplet_abundance_ = 1 - singlet_abundance_;
+
+    random_generator_ = std::mt19937(std::random_device()());
 }
 
 Relaxation::~Relaxation() {}
 
-OpticalPhoton Relaxation::create_photon(double time) {
-    OpticalPhoton a_photon;
-    a_photon.set_emission_time(time + sample_emission());
-
-    return a_photon;
-}
-
 double Relaxation::sample_emission() {
-    std::random_device rd;
-    generator_ = std::mt19937(rd());
     emission_distribution_ = std::uniform_real_distribution<double>(0, 1);
-    double random_number = emission_distribution_(generator_);
+    double random_number = emission_distribution_(random_generator_);
 
     double t_initial = 0.;
     double t_final = 1000.;
@@ -37,6 +30,13 @@ double Relaxation::sample_emission() {
     }
 
     return t;
+}
+
+OpticalPhoton Relaxation::create_photon(double time) {
+    OpticalPhoton a_photon;
+    a_photon.set_emission_time(time + sample_emission());
+
+    return a_photon;
 }
 
 double Relaxation::emission_probability(double t) {

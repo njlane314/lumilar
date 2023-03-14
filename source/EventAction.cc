@@ -8,6 +8,7 @@ EventAction::EventAction()
 EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event* event) {
+    std::cout << "-- Processing event index " << event->GetEventID() << "..." << std::endl;
     signal_ = new Signal();
 }
 
@@ -30,6 +31,9 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     output_manager_->RecordEntry(event);
     signal_->scintillation_->print_scintillation();
+
+    delete signal_;
+    signal_ = nullptr;
 }
 
 void EventAction::PrintEvent(const G4Event* event) {}

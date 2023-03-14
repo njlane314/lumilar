@@ -19,7 +19,7 @@ class Relaxation {
     double singlet_abundance_;
     double triplet_abundance_;
     
-    std::mt19937 generator_;
+    std::mt19937 random_generator_;
     std::uniform_real_distribution<double> emission_distribution_;
     Properties* material_properties_;
 
