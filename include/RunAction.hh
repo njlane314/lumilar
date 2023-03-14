@@ -6,6 +6,7 @@
 #include "G4UserRunAction.hh"
 
 #include "OutputManager.hh"
+#include "MaterialProperties.hh"
 
 class RunAction : public G4UserRunAction {
 public:
@@ -19,6 +20,7 @@ public:
     
 private:
     OutputManager* output_manager_;
+
     int verbose_level_;
 
     std::chrono::system_clock::time_point start_time_;

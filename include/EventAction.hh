@@ -1,14 +1,15 @@
 #ifndef EVENT_ACTION_HH
 #define EVENT_ACTION_HH
 
+#include "Signal.hh"
+#include "OutputManager.hh"
+
 #include "G4UserEventAction.hh"
 
 #include "G4Event.hh"
 #include "G4ios.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
-
-#include "OutputManager.hh"
 
 class EventAction : public G4UserEventAction {
  public:
@@ -22,6 +23,7 @@ class EventAction : public G4UserEventAction {
 	void PrintEvent(const G4Event* event);
 
 	OutputManager* output_manager_;
+	Signal* signal_;
 
 	int verbose_level_;
 	std::string source_;
