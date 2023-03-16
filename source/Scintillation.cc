@@ -7,12 +7,12 @@ Scintillation::Scintillation()
 
 Scintillation::~Scintillation() {}
 
-void Scintillation::add_radiant(int radiant_size, const std::vector<double>& position, double time) {
+void Scintillation::add_radiant(int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet) {
     PhotonRadiant current_radiant = {};
 
     current_radiant.position = position;
     for (int i = 0; i < radiant_size; i++) {
-        current_radiant.photons.push_back(relaxation_generator_.create_photon(time));
+        current_radiant.photons.push_back(relaxation_generator_.create_photon(time, singlet_to_triplet));
     }
 
     scintillation_.push_back(current_radiant);

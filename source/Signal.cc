@@ -45,13 +45,12 @@ void Signal::process_response(const G4Step* step) {
 
     int thermal_electrons_size, optical_photons_size;
 	if (particle_charge != 0 && entering_material == 18 && deposit > intrinsic_threshold) {
-        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+") {
-            MaterialProperties::get_instance()->get_material_properties()->singlet_to_triplet = 0.3;
-
+        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+") /* i.e. light particle */ {
             MediumResponse medium_response;
+            double singlet_to_triplet = material_properties_->singlet_to_triplet_light;
+
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
+            scintillation_->add_radiant(optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
         }
     }
-
-    scintillation_->add_radiant(optical_photons_size, energy_deposit->position, energy_deposit->time);
 }

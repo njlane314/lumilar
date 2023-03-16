@@ -38,6 +38,9 @@ Properties MaterialProperties::initialise_properties(std::string material = "lAr
         material_properties.singlet_lifetime = 5 * ns;
         material_properties.triplet_lifetime = 2100 * ns;
 
+        material_properties.singlet_to_triplet_light = 0.33;
+        material_properties.singlet_to_triplet_heavy = 3.;
+
         material_properties.electric_field = 0.5; // kilovolt / cm
     } 
     return material_properties;

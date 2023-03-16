@@ -3,28 +3,25 @@
 
 #include "MaterialProperties.hh"
 #include "OpticalPhoton.hh"
-
-#include <random>
+#include "TF1.h"
+#include <iostream>
 
 class Relaxation {
- public:
+public:
     Relaxation();
     ~Relaxation();
 
-    OpticalPhoton create_photon(double time);
+    double sample_emission(double singlet_to_triplet);
+    OpticalPhoton create_photon(double global_time, double singlet_to_triplet);
 
- private:
-    double singlet_lifetime_;
-    double triplet_lifetime_;
-    double singlet_abundance_;
-    double triplet_abundance_;
-    
-    std::mt19937 random_generator_;
-    std::uniform_real_distribution<double> emission_distribution_;
+private:
+    static double emission_probability(const double* x, const double* p);
+
     Properties* material_properties_;
 
-    double sample_emission();
-    double emission_probability(double t);
+    double singlet_lifetime_;
+    double triplet_lifetime_;
+    TF1* emission_probability_ = nullptr;
 };
 
-#endif // RELAXATION_HH
+#endif

@@ -19,7 +19,8 @@ struct Properties {
     double singlet_lifetime;
     double triplet_lifetime;
 
-    double singlet_to_triplet;
+    double singlet_to_triplet_light;
+    double singlet_to_triplet_heavy;
 
     double electric_field;
 };
