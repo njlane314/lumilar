@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     if (generator_confignameStream.good()) {
         G4UImanager* ui_manager = G4UImanager::GetUIpointer();
         ui_manager->ApplyCommand("/control/execute " + generator_config);
-        std::cout << "-- Macro execution done" << std::endl;
+        std::cout << "-- Macro complete!" << std::endl;
     }
     else {
         std::cout << "-- Failed to open generator config file" << std::endl;

@@ -22,4 +22,4 @@ file(GLOB_RECURSE HEADERS ${PROJECT_SOURCE_DIR}/*.hh)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} marley)
+target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CLHEP_LIBRARIES} marley)

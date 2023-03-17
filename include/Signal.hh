@@ -14,14 +14,14 @@ class Signal {
   
   static Signal* get_instance();
   void process_response(const G4Step* step);
-
-  Scintillation* scintillation_;
+  Scintillation* get_scintillation();
 
  private:
   EnergyDeposit* create_energy_deposit(const G4Step* step);
 
   static Signal* instance_;
   Properties* material_properties_;
+  Scintillation* scintillation_;
 };
 
 #endif // SIGNAL_HH

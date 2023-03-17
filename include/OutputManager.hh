@@ -18,6 +18,8 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
 
+#include "Scintillation.hh"
+
 class OutputManager :  public G4UImessenger{
 public:
     OutputManager();
@@ -31,6 +33,7 @@ public:
     void RecordEntry(const G4Event* event);
     void RecordEntry(const G4Track* track);
     void RecordEntry(const G4Step* step);
+    void RecordEntry(const Scintillation* scintillation);
 
     void CloseFile();
 
@@ -48,6 +51,7 @@ private:
     TTree* event_tree_ = nullptr;
     TTree* track_tree_ = nullptr;
     TTree* step_tree_ = nullptr;
+    TTree* photon_tree_ = nullptr;
 
     G4Box* detector_solid_ = nullptr;
     
@@ -84,6 +88,8 @@ private:
 
     int step_count;
     int track_count;
+
+    Double_t photon_time;
 };
 
 #endif // OUTPUT_MANAGER_HH

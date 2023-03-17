@@ -3,8 +3,15 @@
 
 #include "MaterialProperties.hh"
 #include "OpticalPhoton.hh"
-#include "TF1.h"
+
+#include <CLHEP/Random/RandomEngine.h>
+#include <CLHEP/Random/RandExponential.h>
+#include <CLHEP/Random/RandFlat.h>
+#include <CLHEP/Random/JamesRandom.h>
+#include <CLHEP/Random/RandBinomial.h>
+
 #include <iostream>
+#include <chrono>
 
 class Relaxation {
 public:
@@ -15,13 +22,15 @@ public:
     OpticalPhoton create_photon(double global_time, double singlet_to_triplet);
 
 private:
-    static double emission_probability(const double* x, const double* p);
-
     Properties* material_properties_;
 
     double singlet_lifetime_;
     double triplet_lifetime_;
-    TF1* emission_probability_ = nullptr;
+
+    CLHEP::RandExponential* singlet_lifetime_dist_;
+    CLHEP::RandExponential* triplet_lifetime_dist_;
+    CLHEP::RandFlat* rand_flat_dist_;
 };
 
 #endif
+

@@ -20,6 +20,10 @@ Signal* Signal::get_instance() {
     return instance_;
 }
 
+Scintillation* Signal::get_scintillation() {
+    return scintillation_;
+}
+
 EnergyDeposit* Signal::create_energy_deposit(const G4Step* step) {
     EnergyDeposit* energy_deposit = new EnergyDeposit(); 
     G4ThreeVector pos = step->GetPreStepPoint()->GetPosition();

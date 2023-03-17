@@ -73,6 +73,9 @@ void OutputManager::CreateFile() {
     step_tree_->Branch("step_time", &step_time, "step_time/D");
     step_tree_->Branch("step_total_energy", &step_total_energy, "step_total_energy/D");
     step_tree_->Branch("step_kinetic_energy", &step_kinetic_energy, "step_kinetic_energy/D");
+
+    photon_tree_ = new TTree("photon_tree", "Photon tree");
+    photon_tree_->Branch("photon_time", &photon_time, "photon_time/D");
 }
 
 void OutputManager::CloseFile() {
@@ -84,6 +87,7 @@ void OutputManager::CloseFile() {
         event_tree_->Write();
         track_tree_->Write();
         step_tree_->Write();
+        photon_tree_->Write();
 
         file_->Close();
         std::cout << "-- Output done" << std::endl;
@@ -154,4 +158,14 @@ void OutputManager::RecordEntry(const G4Step* step) {
     step_tree_->Fill();
 
     step_count++;
+}
+
+void OutputManager::RecordEntry(const Scintillation* scintillation) {
+    std::vector<double> emission_times = scintillation->get_emission_times();
+    int num_photons = emission_times.size();
+
+    for (int i = 0; i < num_photons; i++) {
+        photon_time = emission_times[i];
+        photon_tree_->Fill();
+    }
 }
