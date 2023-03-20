@@ -52,7 +52,7 @@ if [ -z "$GEANT4_DIR" ] || [ -z "$ROOT_DIR" ] || [ -z "$MARLEY_DIR" ]; then
 
         if [ -d "$GEANT4_DIR" ] && [ -d "$ROOT_DIR" ] && [ -d "$MARLEY_DIR" ]; then
             echo "export GEANT4_DIR=$GEANT4_DIR" > "$CACHE_FILE"
-            echo "export ROOT_DIR=$ROOT_DIR" >> "$CACHE_FILE"
+            echo "export ROOT_DIR=$ROOT_DIR/root_install/cmake" >> "$CACHE_FILE"
             echo "export MARLEY_DIR=$MARLEY_DIR" >> "$CACHE_FILE"
 
             source "$CACHE_FILE"

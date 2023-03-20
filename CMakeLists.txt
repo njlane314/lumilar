@@ -13,9 +13,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include(${ROOT_USE_FILE})
 link_libraries(${ROOT_LIBRARIES})
 
-include_directories(/home/lane/software/marley/include)
+include_directories(/home/lane/Software/src/marley/include)
 add_library(marley SHARED IMPORTED)
-set_target_properties(marley PROPERTIES IMPORTED_LOCATION  /home/lane/software/marley/build/libMARLEY.so)
+set_target_properties(marley PROPERTIES IMPORTED_LOCATION  /home/lane/Software/src/marley/build/libMARLEY.so)
 
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/*.cc)
 file(GLOB_RECURSE HEADERS ${PROJECT_SOURCE_DIR}/*.hh)

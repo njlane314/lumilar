@@ -13,9 +13,9 @@ double Relaxation::sample_emission(double singlet_to_triplet) {
     double triplet_abundance = 1 - singlet_abundance;
 
     if (CLHEP::RandBinomial::shoot(1, singlet_abundance) == 1) {
-        return CLHEP::RandExponential::shoot(singlet_lifetime_);
+        return CLHEP::RandExponential::shoot(singlet_lifetime_ * log(2.0));
     } else {
-        return CLHEP::RandExponential::shoot(triplet_lifetime_);
+        return CLHEP::RandExponential::shoot(triplet_lifetime_ * log(2.0));
     }
 }
 

@@ -76,6 +76,7 @@ void OutputManager::CreateFile() {
 
     photon_tree_ = new TTree("photon_tree", "Photon tree");
     photon_tree_->Branch("photon_time", &photon_time, "photon_time/D");
+    photon_tree_->Branch("photon number", &photon_num, "photon_num/I");
 }
 
 void OutputManager::CloseFile() {
@@ -162,10 +163,16 @@ void OutputManager::RecordEntry(const G4Step* step) {
 
 void OutputManager::RecordEntry(const Scintillation* scintillation) {
     std::vector<double> emission_times = scintillation->get_emission_times();
-    int num_photons = emission_times.size();
+    std::vector<PhotonRadiant> scintillation_ = scintillation->get_scintillation();
 
+    int num_photons = emission_times.size();
     for (int i = 0; i < num_photons; i++) {
         photon_time = emission_times[i];
+        photon_tree_->Fill();
+    }
+
+    for (const auto& a_radiant : scintillation_) {
+        photon_num = a_radiant.photons.size();
         photon_tree_->Fill();
     }
 }

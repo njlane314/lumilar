@@ -90,6 +90,7 @@ private:
     int track_count;
 
     Double_t photon_time;
+    Double_t photon_num;
 };
 
 #endif // OUTPUT_MANAGER_HH
