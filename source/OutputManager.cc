@@ -162,26 +162,24 @@ void OutputManager::RecordEntry(const G4Step* step) {
     step_count++;
 }
 
-void OutputManager::RecordEntry(const Scintillation* scintillation) {
+void OutputManager::RecordEntry(const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> emission_times = scintillation->get_emission_times();
+    
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
     for (int i = 0; i < emission_times.size(); i++) {
         photon_time = emission_times[i];
         signal_tree_->Fill();
     }
 
-    for (int i = 0; i < radiant_sizes.size(); i++) {
-        photon_num = radiant_sizes[i];
-        signal_tree_->Fill();
-    }
-}
-
-void OutputManager::RecordEntry(const Ionisation* ionisation) {
-    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
-
-    for (int i = 0; i < cloud_sizes.size(); i++) {
-        electron_num = cloud_sizes[i];
-        signal_tree_->Fill();
+    if (radiant_sizes.size() == cloud_sizes.size()) {
+        for (int i = 0; i < radiant_sizes.size(); i++) {
+            photon_num = radiant_sizes[i];
+            electron_num = cloud_sizes[i];
+            signal_tree_->Fill();
+        }
+    } else {
+        abort();
     }
 }

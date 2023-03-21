@@ -34,8 +34,7 @@ public:
     void RecordEntry(const G4Event* event);
     void RecordEntry(const G4Track* track);
     void RecordEntry(const G4Step* step);
-    void RecordEntry(const Scintillation* scintillation);
-    void RecordEntry(const Ionisation* ionisation);
+    void RecordEntry(const Scintillation* scintillation, const Ionisation* ionisation);
 
     void CloseFile();
 
