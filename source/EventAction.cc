@@ -30,6 +30,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     output_manager_->RecordEntry(event);
     output_manager_->RecordEntry(signal_->get_scintillation());
+    output_manager_->RecordEntry(signal_->get_ionisation());
 
     delete signal_;
     signal_ = nullptr;

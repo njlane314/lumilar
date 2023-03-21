@@ -14,12 +14,8 @@ void Scintillation::add_radiant(int radiant_size, const std::vector<double>& pos
     for (int i = 0; i < radiant_size; i++) {
         current_radiant.photons.push_back(relaxation_generator_.create_photon(time, singlet_to_triplet));
     }
-
+    
     scintillation_.push_back(current_radiant);
-}
-
-std::vector<PhotonRadiant> Scintillation::get_scintillation() const { 
-    return scintillation_; 
 }
 
 std::vector<double> Scintillation::get_emission_times() const {
@@ -38,6 +34,14 @@ std::vector<std::vector<double>> Scintillation::get_radiant_positions() const {
         radiant_positions.push_back(a_radiant.position);
     }
     return radiant_positions;
+}
+
+std::vector<double> Scintillation::get_radiant_sizes() const {
+    std::vector<double> radiant_sizes;
+    for (const auto& a_radiant : scintillation_) {
+        radiant_sizes.push_back(a_radiant.photons.size());
+    }
+    return radiant_sizes;
 }
 
 void Scintillation::print_scintillation() const {

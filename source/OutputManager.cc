@@ -74,9 +74,10 @@ void OutputManager::CreateFile() {
     step_tree_->Branch("step_total_energy", &step_total_energy, "step_total_energy/D");
     step_tree_->Branch("step_kinetic_energy", &step_kinetic_energy, "step_kinetic_energy/D");
 
-    photon_tree_ = new TTree("photon_tree", "Photon tree");
-    photon_tree_->Branch("photon_time", &photon_time, "photon_time/D");
-    photon_tree_->Branch("photon number", &photon_num, "photon_num/I");
+    signal_tree_ = new TTree("signal_tree", "Photon tree");
+    signal_tree_->Branch("photon_time", &photon_time, "photon_time/D");
+    signal_tree_->Branch("photon_number", &photon_num, "photon_num/I");
+    signal_tree_->Branch("electron_number", &electron_num, "electron_num/I");
 }
 
 void OutputManager::CloseFile() {
@@ -88,7 +89,7 @@ void OutputManager::CloseFile() {
         event_tree_->Write();
         track_tree_->Write();
         step_tree_->Write();
-        photon_tree_->Write();
+        signal_tree_->Write();
 
         file_->Close();
         std::cout << "-- Output done" << std::endl;
@@ -163,16 +164,24 @@ void OutputManager::RecordEntry(const G4Step* step) {
 
 void OutputManager::RecordEntry(const Scintillation* scintillation) {
     std::vector<double> emission_times = scintillation->get_emission_times();
-    std::vector<PhotonRadiant> scintillation_ = scintillation->get_scintillation();
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
 
-    int num_photons = emission_times.size();
-    for (int i = 0; i < num_photons; i++) {
+    for (int i = 0; i < emission_times.size(); i++) {
         photon_time = emission_times[i];
-        photon_tree_->Fill();
+        signal_tree_->Fill();
     }
 
-    for (const auto& a_radiant : scintillation_) {
-        photon_num = a_radiant.photons.size();
-        photon_tree_->Fill();
+    for (int i = 0; i < radiant_sizes.size(); i++) {
+        photon_num = radiant_sizes[i];
+        signal_tree_->Fill();
+    }
+}
+
+void OutputManager::RecordEntry(const Ionisation* ionisation) {
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+
+    for (int i = 0; i < cloud_sizes.size(); i++) {
+        electron_num = cloud_sizes[i];
+        signal_tree_->Fill();
     }
 }

@@ -9,6 +9,7 @@ Signal::Signal()
     }
 
     scintillation_ = new Scintillation();
+    ionisation_ = new Ionisation();
 }
 
 Signal::~Signal() {}
@@ -22,6 +23,10 @@ Signal* Signal::get_instance() {
 
 Scintillation* Signal::get_scintillation() {
     return scintillation_;
+}
+
+Ionisation* Signal::get_ionisation() {
+    return ionisation_;
 }
 
 EnergyDeposit* Signal::create_energy_deposit(const G4Step* step) {
@@ -55,6 +60,7 @@ void Signal::process_response(const G4Step* step) {
 
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
             scintillation_->add_radiant(optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
+            ionisation_->add_cloud(thermal_electrons_size, energy_deposit->position);
         }
     }
 }
