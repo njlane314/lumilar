@@ -19,6 +19,8 @@
 #include "marley/MassTable.hh"
 #include "marley/Level.hh"
 
+#include <CLHEP/Random/RandExponential.h>
+
 #include "DetectorConstruction.hh"
 
 class MarleyGenerator {
@@ -26,18 +28,16 @@ public:
     MarleyGenerator(std::string marley_source);
     ~MarleyGenerator();
 
-    std::map<double, double> cascade_times_;
+    std::map<double, double> half_lives_;
 
     void GeneratePrimaryVertex(G4Event* event);
-    double SampleDecayTime(double half_life);
+    double sample_decay_time(double half_life);
     
-    void PrintEvent(const marley::Event& event);
+    void print_event(const marley::Event& event);
 
 private:
     std::string source_;
     int delay_states_;
-
-    std::vector<std::pair<double, double>> halflife_vec_;
 };
 
 #endif // MARLEY_GENERATOR_HH

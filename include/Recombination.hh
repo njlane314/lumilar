@@ -3,6 +3,7 @@
 
 #include "MaterialProperties.hh"
 #include "Excitation.hh"
+#include <CLHEP/Random/RandBinomial.h>
 #include <random> 
 
 class Recombination {

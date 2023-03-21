@@ -2,7 +2,8 @@
 #define EXCITATION_HH
 
 #include "MaterialProperties.hh"
-#include <random>
+#include <CLHEP/Random/RandGauss.h>
+#include <CLHEP/Random/RandPoisson.h>
 
 struct EnergyDeposit {
     double visible;

@@ -26,10 +26,6 @@ private:
 
     double singlet_lifetime_;
     double triplet_lifetime_;
-
-    CLHEP::RandExponential* singlet_lifetime_dist_;
-    CLHEP::RandExponential* triplet_lifetime_dist_;
-    CLHEP::RandFlat* rand_flat_dist_;
 };
 
 #endif

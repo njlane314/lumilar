@@ -1,21 +1,24 @@
 #include "Recombination.hh"
 
 std::pair<double, double> Recombination::create_recombination(EnergyDeposit* energy_deposit, Properties* material_properties, std::pair<double, double> intrinsic_response) {
-    std::random_device rd;
-    std::mt19937 eng(rd());
     double recombination_factor = compute_recombination_factor(energy_deposit->linear_transfer, material_properties->electric_field); 
 
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;
 
-    std::normal_distribution<double> dist(num_ionisations * recombination_factor, num_ionisations * recombination_factor * (1 - recombination_factor));
-    
-    double thermal_electrons = dist(eng);
-    double optical_photons = num_excitations + (num_ionisations - thermal_electrons);
+    int thermal_electrons = static_cast<int>(std::round(CLHEP::RandBinomial::shoot(num_ionisations, recombination_factor)));
+    int optical_photons = num_excitations;
+
+    if (thermal_electrons < 0) {
+        thermal_electrons = 0;
+    } else {
+        optical_photons += num_ionisations - thermal_electrons;
+    }
 
     return std::make_pair(thermal_electrons, optical_photons);
 }
 
+// charge_recombination
 double Recombination::compute_recombination_factor(double linear_transfer, double electric_field) {
     auto BirksRecomb = [&]() -> double {
         double ARecomb = 0.800;

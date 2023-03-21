@@ -2,8 +2,8 @@
 
 MarleyGenerator::MarleyGenerator(std::string marley_source)
 : source_(marley_source), delay_states_(0) {
-    // https://www.sciencedirect.com/science/article/pii/S0090375217300169
-    cascade_times_ = {
+    // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
+    half_lives_ = {
         { 0.0298299*MeV, 4.25*ns },
         { 0.800143*MeV, 0.26*ps },
         { 1.64364*MeV, 0.336*us },
@@ -13,14 +13,6 @@ MarleyGenerator::MarleyGenerator(std::string marley_source)
 }
 
 MarleyGenerator::~MarleyGenerator() {}
-
-double MarleyGenerator::SampleDecayTime(double half_life) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::exponential_distribution<double> dist(std::log(2.0) / half_life);
-
-    return dist(gen);
-}
 
 void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::JSONConfig marley_config(source_);
@@ -41,9 +33,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
 
-            auto iter = cascade_times_.find(excited_state);
-            if (iter != cascade_times_.end()) {
-                double decay_time = SampleDecayTime(iter->second);
+            auto iter = half_lives_.find(excited_state);
+            if (iter != half_lives_.end()) {
+                double decay_time = sample_decay_time(iter->second);
                 primary_vertex->SetT0(global_time + decay_time);
                 std::cout << "Decay time: " << decay_time << std::endl;
             }
@@ -63,10 +55,14 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     }
 
     event->AddPrimaryVertex(primary_vertex);
-    PrintEvent(marley_event);
+    //print_event(marley_event);
 }
 
-void MarleyGenerator::PrintEvent(const marley::Event& event) {
+double MarleyGenerator::sample_decay_time(double half_life) {
+    return CLHEP::RandExponential::shoot(log(2.0) / half_life);
+}
+
+void MarleyGenerator::print_event(const marley::Event& event) {
     std::cout << "\nGenerated event data:" << std::endl;
     std::cout << "Projectile energy: " << event.projectile().total_energy() << std::endl;
     std::cout << "Initial excitation energy: " << event.Ex() << " MeV" << std::endl;
