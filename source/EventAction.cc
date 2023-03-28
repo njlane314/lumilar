@@ -36,6 +36,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     analysis_manager_->AnalyseFixedEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
     analysis_manager_->AnalyseSignalResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
     analysis_manager_->AnalyseVariableEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->AnalyseFixedEnergyYield(signal_->get_scintillation(), signal_->get_ionisation());
 
     signal_->delete_signal();
 }

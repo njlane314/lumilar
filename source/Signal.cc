@@ -68,8 +68,8 @@ void Signal::process_response(const G4Step* step) {
             double singlet_to_triplet = material_properties_->singlet_to_triplet_light;
 
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
-            scintillation_->add_radiant(energy_deposit, optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
-            ionisation_->add_cloud(energy_deposit, thermal_electrons_size, energy_deposit->position);
+            scintillation_->add_radiant(energy_deposit->visible, optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
+            ionisation_->add_cloud(energy_deposit->visible, thermal_electrons_size, energy_deposit->position);
         }
     }
 

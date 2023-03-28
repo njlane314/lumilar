@@ -3,11 +3,11 @@
 Ionisation* Ionisation::instance_ = nullptr;
 
 Ionisation::Ionisation() 
-: ionisation_(), ejection_generator_(Ejection()) {}
+: visible_deposits_(), ionisation_(), ejection_generator_(Ejection()) {}
 
 Ionisation::~Ionisation() {}
 
-void Ionisation::add_cloud(const EnergyDeposit* energy_deposit, int cloud_size, const std::vector<double>& position) {
+void Ionisation::add_cloud(double visible_deposit, int cloud_size, const std::vector<double>& position) {
     ElectronCloud current_cloud = {};
 
     current_cloud.position = position;
@@ -16,7 +16,7 @@ void Ionisation::add_cloud(const EnergyDeposit* energy_deposit, int cloud_size, 
     }
 
     ionisation_.push_back(current_cloud);
-    energy_deposits_.push_back(energy_deposit);
+    visible_deposits_.push_back(visible_deposit);
 }
 
 std::vector<double> Ionisation::get_cloud_sizes() const {
@@ -35,8 +35,8 @@ std::vector<std::vector<double>> Ionisation::get_cloud_positions() const {
     return cloud_positions;
 }
 
-std::vector<const EnergyDeposit*> Ionisation::get_energy_deposits() const {
-    return energy_deposits_;
+std::vector<double> Ionisation::get_visible_deposits() const {
+    return visible_deposits_;
 }
 
 void Ionisation::print_ionisation() const {
