@@ -1,8 +1,11 @@
 #include "EventAction.hh"
 
 EventAction::EventAction()
-: output_manager_(nullptr), verbose_level_(0) {
+: output_manager_(nullptr), verbose_level_(0), output_level_(0) {
 	output_manager_ = OutputManager::Instance();
+    analysis_manager_ = AnalysisManager::Instance();
+
+    output_level_ = 2;
 }
 
 EventAction::~EventAction() {}
@@ -18,7 +21,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     int event_id = event->GetEventID() + 1;
 	events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-	progress_interval_ = events_to_generate_ / 10.;
+	progress_interval_ = events_to_generate_ / 100.;
     if (event_id % progress_interval_ == 0) {
         int percent_complete = event_id * 100 / events_to_generate_;
         
@@ -28,11 +31,13 @@ void EventAction::EndOfEventAction(const G4Event* event) {
         std::cout.flush();
     }
 
-    output_manager_->RecordEntry(event);
-    output_manager_->RecordEntry(signal_->get_scintillation(), signal_->get_ionisation());
+    //output_manager_->RecordEntry(event); 
+    
+    analysis_manager_->AnalyseFixedEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->AnalyseSignalResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->AnalyseVariableEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
 
-    delete signal_;
-    signal_ = nullptr;
+    signal_->delete_signal();
 }
 
 void EventAction::PrintEvent(const G4Event* event) {}

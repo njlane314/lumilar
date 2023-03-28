@@ -6,6 +6,7 @@
 #include "G4UserRunAction.hh"
 
 #include "OutputManager.hh"
+#include "AnalysisManager.hh"
 #include "MaterialProperties.hh"
 
 class RunAction : public G4UserRunAction {

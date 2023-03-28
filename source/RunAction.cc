@@ -8,12 +8,16 @@ RunAction::RunAction()
 RunAction::~RunAction() {}
 
 void RunAction::BeginOfRunAction(const G4Run* run) {
-	MaterialProperties* material_properties = new MaterialProperties("lAr");
-
+	auto analysis_manager = new AnalysisManager();
 	start_time_ = std::chrono::high_resolution_clock::now();
+	
+	MaterialProperties* material_properties = new MaterialProperties("lAr");
 }
 
 void RunAction::EndOfRunAction(const G4Run* run) {
+	auto analysis_manager = AnalysisManager::Instance();
+	analysis_manager->SaveHistograms();
+	
 	if (verbose_level_ > 0) {
 		PrintRun();
 	}

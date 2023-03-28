@@ -8,8 +8,12 @@ Signal::Signal()
         instance_ = this;
     }
 
-    scintillation_ = new Scintillation();
-    ionisation_ = new Ionisation();
+    if (!material_properties_) {
+        throw std::runtime_error("MaterialProperties instance is null");
+    }
+
+    scintillation_ = std::make_unique<Scintillation>();
+    ionisation_ = std::make_unique<Ionisation>();
 }
 
 Signal::~Signal() {}
@@ -22,11 +26,16 @@ Signal* Signal::get_instance() {
 }
 
 Scintillation* Signal::get_scintillation() {
-    return scintillation_;
+    return scintillation_.get();
 }
 
 Ionisation* Signal::get_ionisation() {
-    return ionisation_;
+    return ionisation_.get();
+}
+
+void Signal::delete_signal() {
+    delete instance_;
+    instance_ = nullptr;
 }
 
 EnergyDeposit* Signal::create_energy_deposit(const G4Step* step) {
@@ -49,7 +58,7 @@ void Signal::process_response(const G4Step* step) {
 
 	std::string particle_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
 
-    double intrinsic_threshold = material_properties_->loss_per_ionisation;
+    double intrinsic_threshold = material_properties_->loss_per_ionisation; /* error here when using marley */
     double deposit = step->GetTotalEnergyDeposit() - step->GetNonIonizingEnergyDeposit();
 
     int thermal_electrons_size, optical_photons_size;
@@ -59,8 +68,10 @@ void Signal::process_response(const G4Step* step) {
             double singlet_to_triplet = material_properties_->singlet_to_triplet_light;
 
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
-            scintillation_->add_radiant(optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
-            ionisation_->add_cloud(thermal_electrons_size, energy_deposit->position);
+            scintillation_->add_radiant(energy_deposit, optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
+            ionisation_->add_cloud(energy_deposit, thermal_electrons_size, energy_deposit->position);
         }
     }
+
+    delete energy_deposit;
 }
