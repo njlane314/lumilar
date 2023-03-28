@@ -7,14 +7,18 @@ SOURCE_DIR="$PWD"
 
 BUILD=0
 RUN_TEST=0
+RUN_GEN=0
 
-while getopts ":bt" opt; do
+while getopts ":btg" opt; do
   case ${opt} in
     b )
       BUILD=1
       ;;
     t )
       RUN_TEST=1
+      ;;
+    g )
+      RUN_GEN=1
       ;;
     \? )
       echo "-- Failed to parse arguments" 1>&2
@@ -83,6 +87,11 @@ if [ $RUN_TEST -eq 1 ]; then
     ./energyloss -g generator/gun_electron_lin.mac -d detector/simpleLArTPC.txt  
 fi
 
+if [ $RUN_GEN -eq 1 ]; then 
+    cd "$SOURCE_DIR/system"
+    ./energyloss -g generator/marley_mono.mac -d detector/simpleLArTPC.txt
+fi
+
 cd "$SOURCE_DIR"
 
-# ./run_build.sh -b -t
+# ./run_build.sh -b -t -g

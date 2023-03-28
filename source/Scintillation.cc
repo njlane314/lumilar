@@ -3,11 +3,11 @@
 Scintillation* Scintillation::instance_ = nullptr;
 
 Scintillation::Scintillation()
-: scintillation_(), relaxation_generator_(Relaxation()) {}
+: energy_deposits_(), scintillation_(), relaxation_generator_(Relaxation()) {}
 
 Scintillation::~Scintillation() {}
 
-void Scintillation::add_radiant(int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet) {
+void Scintillation::add_radiant(const EnergyDeposit* energy_deposit, int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet) {
     PhotonRadiant current_radiant = {};
 
     current_radiant.position = position;
@@ -16,6 +16,7 @@ void Scintillation::add_radiant(int radiant_size, const std::vector<double>& pos
     }
     
     scintillation_.push_back(current_radiant);
+    energy_deposits_.push_back(energy_deposit);
 }
 
 std::vector<double> Scintillation::get_emission_times() const {
@@ -34,6 +35,18 @@ std::vector<std::vector<double>> Scintillation::get_radiant_positions() const {
         radiant_positions.push_back(a_radiant.position);
     }
     return radiant_positions;
+}
+
+std::vector<const EnergyDeposit*> Scintillation::get_energy_deposits() const {
+    return energy_deposits_;
+}
+
+std::vector<double> Scintillation::get_visible_deposits() const {
+    std::vector<double> visible_deposits;
+    for (const auto&energy_deposit : energy_deposits_) {
+        visible_deposits.push_back(energy_deposit->visible);
+    }
+    return visible_deposits;
 }
 
 std::vector<double> Scintillation::get_radiant_sizes() const {

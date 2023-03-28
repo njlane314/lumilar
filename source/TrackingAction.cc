@@ -24,7 +24,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track) {
 		PrintTrack(track);
 	}
 
-	output_manager_->RecordEntry(track);
+	//output_manager_->RecordEntry(track);
 }
 
 void TrackingAction::PrintTrack(const G4Track* track) {}

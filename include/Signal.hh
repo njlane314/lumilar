@@ -8,6 +8,7 @@
 #include "Ionisation.hh"
 
 #include "G4Step.hh"
+#include <memory>
 
 class Signal {
  public:
@@ -18,14 +19,15 @@ class Signal {
   void process_response(const G4Step* step);
   Scintillation* get_scintillation();
   Ionisation* get_ionisation();
+  void delete_signal();
 
  private:
   EnergyDeposit* create_energy_deposit(const G4Step* step);
 
   static Signal* instance_;
   Properties* material_properties_;
-  Scintillation* scintillation_;
-  Ionisation* ionisation_;
+  std::unique_ptr<Scintillation> scintillation_;
+  std::unique_ptr<Ionisation> ionisation_;
 };
 
 #endif // SIGNAL_HH

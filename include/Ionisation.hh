@@ -6,6 +6,7 @@
 
 #include "ThermalElectron.hh"
 #include "Ejection.hh"
+#include "Excitation.hh"
 
 struct ElectronCloud {
     std::vector<double> position;
@@ -17,14 +18,16 @@ class Ionisation {
     Ionisation();
     ~Ionisation();
 
-    void add_cloud(int cloud_size, const std::vector<double>& position);
+    void add_cloud(const EnergyDeposit* energy_deposit, int cloud_size, const std::vector<double>& position);
     std::vector<std::vector<double>> get_cloud_positions() const;
     std::vector<double> get_cloud_sizes() const;
+    std::vector<const EnergyDeposit*> get_energy_deposits() const;
     void print_ionisation() const;
 
  private:
     static Ionisation* instance_;
     std::vector<ElectronCloud> ionisation_;
+    std::vector<const EnergyDeposit*> energy_deposits_;
     Ejection ejection_generator_;
 };
 

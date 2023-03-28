@@ -12,7 +12,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 		PrintStep(step);
 	}
 
-	output_manager_->RecordEntry(step);
+	//output_manager_->RecordEntry(step);
 
 	Signal::get_instance()->process_response(step);
 }

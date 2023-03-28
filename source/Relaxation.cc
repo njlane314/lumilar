@@ -13,9 +13,11 @@ double Relaxation::sample_emission(double singlet_to_triplet) {
     double triplet_abundance = 1 - singlet_abundance;
 
     if (CLHEP::RandBinomial::shoot(1, singlet_abundance) == 1) {
-        return CLHEP::RandExponential::shoot(log(2.0) / singlet_lifetime_);
+        return CLHEP::RandExponential::shoot(singlet_lifetime_);
     } else {
-        return CLHEP::RandExponential::shoot(log(2.0) / triplet_lifetime_);
+        // determine if triplet state is quenched
+        //double quenching_factor = 
+        return CLHEP::RandExponential::shoot(triplet_lifetime_);
     }
 }
 

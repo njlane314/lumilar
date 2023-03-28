@@ -11,7 +11,7 @@ class Recombination {
     static std::pair<double, double> create_recombination(EnergyDeposit* energy_deposit, Properties* material_properties, std::pair<double, double> intrinsic_response);
 
  private:
-    static double compute_recombination_factor(double linear_transfer, double electric_field);
+    static double charge_recombination(double linear_transfer, double electric_field);
 };
 
 #endif // RECOMBINATION_HH

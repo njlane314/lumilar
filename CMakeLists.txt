@@ -4,6 +4,8 @@ project(energyloss)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../system)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow -Wno-sign-compare -Wunused-parameter -g")
+
 find_package(Geant4 REQUIRED)
 find_package(ROOT REQUIRED)
 

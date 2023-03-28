@@ -1,0 +1,60 @@
+#ifndef ANALYSIS_MANAGER_HH
+#define ANALYSIS_MANAGER_HH
+
+#include <string>
+#include <TFile.h>
+#include <TTree.h>
+
+#include "Scintillation.hh"
+#include "Ionisation.hh"
+
+#include "G4Event.hh"
+
+#include "TCanvas.h"
+#include "TF1.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TLegend.h"
+#include "TROOT.h"
+#include "TStyle.h"
+#include "TTree.h"
+#include "TProfile.h"
+#include "TFitResult.h"
+#include "TGraphErrors.h"
+#include "TMultiGraph.h"
+
+#include "TGraph.h"
+#include "TLegend.h"
+#include "TMath.h"
+
+class AnalysisManager {
+public:
+    AnalysisManager();
+    virtual ~AnalysisManager();
+
+    static AnalysisManager* Instance();
+    void RecordEntry(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation);
+    void Write();
+
+private:
+    static AnalysisManager* instance_;
+
+    int entry_counter_;
+
+    TH2F* hist_charge_energy;
+    TH2F* hist_light_energy;
+    TH2F* hist_quanta_energy;
+
+    TH1F* hist_charge;
+    TH1F* hist_light;
+    TH1F* hist_quanta;
+
+    TH1F* hist_charge_step;
+    TH1F* hist_light_step;
+    TH1F* hist_quanta_step;
+
+    TH1F* hist_light_time;
+};
+
+#endif // ANALYSIS_MANAGER_HH
