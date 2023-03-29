@@ -112,7 +112,7 @@ void AnalysisManager::AnalyseVariableEnergySignal(const G4Event* event, const Sc
 }
 
 void AnalysisManager::AnalyseFixedEnergySignal(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
-    double energy = event->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy();
+    double energy = event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy();
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
@@ -136,20 +136,21 @@ void AnalysisManager::AnalyseFixedEnergySignal(const G4Event* event, const Scint
 
 void AnalysisManager::AnalyseFixedEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> visible_deposits = scintillation->get_visible_deposits();
+    std::vector<double> linear_transfers = scintillation->get_linear_transfers();
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
     int photon_count = 0;
     int electron_count = 0;
     double visible_deposit = 0;
-    if (radiant_sizes.size() == cloud_sizes.size() == visible_deposits.size()) {
+    if (radiant_sizes.size() == cloud_sizes.size()) {
         for (int i = 0; i < radiant_sizes.size(); i++) {
             photon_count += radiant_sizes[i];
             electron_count += cloud_sizes[i];
             visible_deposit += visible_deposits[i];
         }
     }
-
+    
     hist_charge_yield = GetHistogram(TH1F_map_, "hist_charge_yield", "Charge", "Counts");
     hist_light_yield = GetHistogram(TH1F_map_, "hist_light_yield", "Light", "Counts");
     hist_quanta_yield = GetHistogram(TH1F_map_, "hist_quanta_yield", "Quanta", "Counts");
@@ -157,4 +158,42 @@ void AnalysisManager::AnalyseFixedEnergyYield(const Scintillation* scintillation
     hist_light_yield->Fill(photon_count / visible_deposit);
     hist_charge_yield->Fill(electron_count / visible_deposit);
     hist_quanta_yield->Fill((photon_count + electron_count) / visible_deposit);
+}
+
+void AnalysisManager::AnalyseVariableEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation) {
+    std::vector<double> visible_deposits = scintillation->get_visible_deposits();
+    std::vector<double> linear_transfers = scintillation->get_linear_transfers();
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+
+    hist_var_charge_yield = GetHistogram(TH2F_map_, "hist_var_charge_yield", "Charge", "Counts");
+    hist_var_light_yield = GetHistogram(TH2F_map_, "hist_var_light_yield", "Light", "Counts");
+    hist_var_quanta_yield = GetHistogram(TH2F_map_, "hist_var_quanta_yield", "Quanta", "Counts");
+
+    hist_dQdx = GetHistogram(TH2F_map_, "hist_dQdx", "dQdx", "Counts");
+    hist_dLdx = GetHistogram(TH2F_map_, "hist_dLdx", "dLdx", "Counts");
+    hist_dJdx = GetHistogram(TH2F_map_, "hist_dJdx", "dJdx", "Counts");
+
+    if (radiant_sizes.size() == cloud_sizes.size()) {
+        for (int i = 0; i < radiant_sizes.size(); i++) {
+            hist_var_charge_yield->Fill(linear_transfers[i], cloud_sizes[i] / visible_deposits[i]);
+            hist_var_light_yield->Fill(linear_transfers[i], radiant_sizes[i] / visible_deposits[i]);
+            hist_var_quanta_yield->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / visible_deposits[i]);
+
+            hist_dQdx->Fill(linear_transfers[i], cloud_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
+            hist_dLdx->Fill(linear_transfers[i], radiant_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
+            hist_dJdx->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / (linear_transfers[i] / visible_deposits[i]));
+        }
+    }
+}
+
+void AnalysisManager::AnalysePulse(const Scintillation* scintillation) {
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> emission_times = scintillation->get_emission_times();
+
+    hist_pulse = GetHistogram(TH1F_map_, "hist_pulse", "Time", "Counts");
+
+    for (int i = 0; i < emission_times.size(); i++) {
+        hist_pulse->Fill(emission_times[i]);
+    }
 }

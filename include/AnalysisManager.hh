@@ -27,6 +27,8 @@ class AnalysisManager {
     void AnalyseVariableEnergySignal(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation);
     void AnalyseSignalResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation);
     void AnalyseFixedEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation);
+    void AnalyseVariableEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation);
+    void AnalysePulse(const Scintillation* scintillation);
  private:
     static AnalysisManager* instance_;
     std::map<std::string, TH1F*> TH1F_map_;
@@ -43,6 +45,13 @@ class AnalysisManager {
     TH1F* hist_charge_yield;
     TH1F* hist_light_yield;
     TH1F* hist_quanta_yield;
+    TH2F* hist_var_charge_yield;
+    TH2F* hist_var_light_yield;
+    TH2F* hist_var_quanta_yield;
+    TH2F* hist_dQdx;
+      TH2F* hist_dLdx;
+      TH2F* hist_dJdx;
+      TH1F* hist_pulse;
 };
 
 #endif // ANALYSIS_MANAGER_HH
