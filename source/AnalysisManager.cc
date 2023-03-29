@@ -191,7 +191,7 @@ void AnalysisManager::AnalysePulse(const Scintillation* scintillation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> emission_times = scintillation->get_emission_times();
 
-    hist_pulse = GetHistogram(TH1F_map_, "hist_pulse", "Time", "Counts");
+    hist_pulse = GetHistogram(TH1F_map_, "hist_pulse", "Time", "Counts", 1000, 0, 1000);
 
     for (int i = 0; i < emission_times.size(); i++) {
         hist_pulse->Fill(emission_times[i]);

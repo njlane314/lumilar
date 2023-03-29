@@ -4,11 +4,11 @@ MarleyGenerator::MarleyGenerator(std::string marley_source)
 : source_(marley_source), delay_states_(0) {
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
     half_lives_ = {
-        { 0.0298299*MeV, 4.25*ns },
-        { 0.800143*MeV, 0.26*ps },
+        //{ 0.0298299*MeV, 4.25*ns },
+        //{ 0.800143*MeV, 0.26*ps },
         { 1.64364*MeV, 0.336*us },
-        { 1.95907*MeV, 0.54*ps },
-        { 2.010368*MeV, 0.32*ps },
+        //{ 1.95907*MeV, 0.54*ps },
+        //{ 2.010368*MeV, 0.32*ps },
     };
 }
 
