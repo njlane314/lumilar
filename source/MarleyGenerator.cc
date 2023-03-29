@@ -59,7 +59,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 }
 
 double MarleyGenerator::sample_decay_time(double half_life) {
-    return CLHEP::RandExponential::shoot(log(2.0) / half_life);
+    return CLHEP::RandExponential::shoot(half_life / log(2.));
 }
 
 void MarleyGenerator::print_event(const marley::Event& event) {

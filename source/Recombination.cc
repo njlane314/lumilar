@@ -3,6 +3,8 @@
 std::pair<double, double> Recombination::create_recombination(EnergyDeposit* energy_deposit, Properties* material_properties, std::pair<double, double> intrinsic_response) {
     double recombination_factor = charge_recombination(energy_deposit->linear_transfer, material_properties->electric_field); 
 
+    //std::cout << "Linear transfer: " << energy_deposit->linear_transfer << ", electric field: " << material_properties->electric_field << std::endl;
+
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;
 

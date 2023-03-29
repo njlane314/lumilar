@@ -63,12 +63,12 @@ void Signal::process_response(const G4Step* step) {
 
     int thermal_electrons_size, optical_photons_size;
 	if (particle_charge != 0 && entering_material == 18 && deposit > intrinsic_threshold) {
-        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+") /* i.e. light particle */ {
+        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+" || particle_name == "proton") /* i.e. light particle */ {
             MediumResponse medium_response;
             double singlet_to_triplet = material_properties_->singlet_to_triplet_light;
 
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
-            scintillation_->add_radiant(energy_deposit->visible, optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
+            scintillation_->add_radiant(energy_deposit->visible, energy_deposit->linear_transfer, optical_photons_size, energy_deposit->position, energy_deposit->time, singlet_to_triplet);
             ionisation_->add_cloud(energy_deposit->visible, thermal_electrons_size, energy_deposit->position);
         }
     }

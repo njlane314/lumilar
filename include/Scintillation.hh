@@ -18,16 +18,18 @@ class Scintillation {
     Scintillation();
     ~Scintillation();
 
-    void add_radiant(double visible_deposit, int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet);
+    void add_radiant(double visible_deposit, double linear_transfer, int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet);
     std::vector<double> get_emission_times() const;
     std::vector<std::vector<double>> get_radiant_positions() const;
     std::vector<double> get_radiant_sizes() const;
     std::vector<double> get_visible_deposits() const;
+    std::vector<double> get_linear_transfers() const;
     void print_scintillation() const;
 
  private:
     std::vector<PhotonRadiant> scintillation_;
     std::vector<double> visible_deposits_;
+    std::vector<double> linear_transfers_;
     static Scintillation* instance_;
     Relaxation relaxation_generator_;
 };
