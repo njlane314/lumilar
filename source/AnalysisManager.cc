@@ -71,54 +71,36 @@ TH1F* AnalysisManager::GetHistogram(std::map<std::string, TH1F*>& hist_map, cons
     return histogram;
 }
 
-void AnalysisManager::AnalyseSignalResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::DiscreteResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
-    hist_charge = GetHistogram(TH1F_map_, "hist_charge", "Charge", "Counts");
-    hist_light = GetHistogram(TH1F_map_, "hist_light", "Light", "Counts");
-    hist_quanta = GetHistogram(TH1F_map_, "hist_quanta", "Quanta", "Counts");
+    charge_step_response = GetHistogram(TH1F_map_, "charge_step_response", "Charge Step Response", "Entries/bin");
+    light_step_response = GetHistogram(TH1F_map_, "light_step_response", "Light Step Response", "Entries/bin");
+    joint_step_response = GetHistogram(TH1F_map_, "joint_step_response", "Joint Step Response", "Entries/bin");
 
     if (radiant_sizes.size() == cloud_sizes.size()) {
         for (int i = 0; i < radiant_sizes.size(); i++) {
-            hist_light->Fill(radiant_sizes[i]);
-            hist_charge->Fill(cloud_sizes[i]);
-            hist_quanta->Fill(radiant_sizes[i] + cloud_sizes[i]);
+            charge_step_response->Fill(cloud_sizes[i]);
+            light_step_response->Fill(radiant_sizes[i]);
+            joint_step_response->Fill(radiant_sizes[i] + cloud_sizes[i]);
         }
     }
 }
 
-void AnalysisManager::AnalyseVariableEnergySignal(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+
     double energy = event->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy();
-    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
-    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
-    hist_charge_energy = GetHistogram(TH2F_map_, "hist_charge_energy", "Energy", "Charge");
-    hist_light_energy = GetHistogram(TH2F_map_, "hist_light_energy", "Energy", "Light");
-    hist_quanta_energy = GetHistogram(TH2F_map_, "hist_quanta_energy", "Energy", "Quanta");
+    charge_event_response = GetHistogram(TH1F_map_, "charge_event_response", "Charge Event Response", "Entries/bin");
+    light_event_response = GetHistogram(TH1F_map_, "light_event_response", "Light Event Repsonse", "Entries/bin");
+    joint_event_response = GetHistogram(TH1F_map_, "joint_event_response", "Joint Event Response", "Entries/bin");
 
-    int photon_count = 0;
-    int electron_count = 0;
-    if (radiant_sizes.size() == cloud_sizes.size()) {
-        for (int i = 0; i < radiant_sizes.size(); i++) {
-            photon_count += radiant_sizes[i];
-            electron_count += cloud_sizes[i];
-        }
-    }
-
-    hist_light_energy->Fill(energy, photon_count);
-    hist_charge_energy->Fill(energy, electron_count);
-    hist_quanta_energy->Fill(energy, photon_count + electron_count);
-}
-
-void AnalysisManager::AnalyseFixedEnergySignal(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
-    double energy = event->GetPrimaryVertex()->GetPrimary()->GetKineticEnergy();
-    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
-    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
-
-    hist_charge_fixed = GetHistogram(TH1F_map_, "hist_charge_fixed", "Charge", "Counts");
-    hist_light_fixed = GetHistogram(TH1F_map_, "hist_light_fixed", "Light", "Counts");
-    hist_quanta_fixed = GetHistogram(TH1F_map_, "hist_quanta_fixed", "Quanta", "Counts");
+    charge_event_response_energy = GetHistogram(TH2F_map_, "charge_event_response_energy", "Initial Primary Energy [MeV]", "Charge Event Response/bin");
+    light_event_response_energy = GetHistogram(TH2F_map_, "light_event_response_energy", "Initial Primary Energy [MeV]", "Light Event Response/bin");
+    joint_event_response_energy = GetHistogram(TH2F_map_, "joint_event_response_energy", "Initial Primary Energy [MeV]", "Joint Event Response/bin");
 
     int photon_count = 0;
     int electron_count = 0;
@@ -129,16 +111,33 @@ void AnalysisManager::AnalyseFixedEnergySignal(const G4Event* event, const Scint
         }
     }
 
-    hist_light_fixed->Fill(photon_count);
-    hist_charge_fixed->Fill(electron_count);
-    hist_quanta_fixed->Fill(photon_count + electron_count);
+    charge_event_response->Fill(electron_count);
+    light_event_response->Fill(photon_count);
+    joint_event_response->Fill(photon_count + electron_count);
+
+    charge_event_response_energy->Fill(energy, electron_count);
+    light_event_response_energy->Fill(energy, photon_count);
+    joint_event_response_energy->Fill(energy, photon_count + electron_count);
 }
 
-void AnalysisManager::AnalyseFixedEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::SignalYield(const Scintillation* scintillation, const Ionisation* ionisation) {
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+
     std::vector<double> visible_deposits = scintillation->get_visible_deposits();
     std::vector<double> linear_transfers = scintillation->get_linear_transfers();
-    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
-    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+
+    charge_event_yield = GetHistogram(TH1F_map_, "charge_event_yield", "Charge Event Yield [/MeV]", "Entries/bin");
+    light_event_yield = GetHistogram(TH1F_map_, "light_event_yield", "Light Event Yield [/MeV]", "Entries/bin");
+    joint_event_yield = GetHistogram(TH1F_map_, "joint_event_yield", "Joint Event Yield [/MeV]", "Entries/bin");
+
+    charge_step_yield = GetHistogram(TH2F_map_, "charge_step_yield", "Charge Step Yield [/MeV]", "Entries/bin");
+    light_step_yield = GetHistogram(TH2F_map_, "light_step_yield", "Light Step Yield [/MeV]", "Entries/bin");
+    joint_step_yield = GetHistogram(TH2F_map_, "joint_step_yield", "Joint Step Yield [/MeV]", "Entries/bin");
+
+    charge_step_density = GetHistogram(TH2F_map_, "charge_length_yield", "Charge Step Density [/cm]", "Entries/bin");
+    light_step_density = GetHistogram(TH2F_map_, "light_length_yield", "Light Step Density [/cm]", "Entries/bin");
+    joint_step_density = GetHistogram(TH2F_map_, "joint_length_yield", "Joint Step Density [/cm]", "Entries/bin");
 
     int photon_count = 0;
     int electron_count = 0;
@@ -148,52 +147,35 @@ void AnalysisManager::AnalyseFixedEnergyYield(const Scintillation* scintillation
             photon_count += radiant_sizes[i];
             electron_count += cloud_sizes[i];
             visible_deposit += visible_deposits[i];
+
+            charge_step_yield->Fill(linear_transfers[i], cloud_sizes[i] / visible_deposits[i]);
+            light_step_yield->Fill(linear_transfers[i], radiant_sizes[i] / visible_deposits[i]);
+            joint_step_yield->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / visible_deposits[i]);
+
+            charge_step_density->Fill(linear_transfers[i], cloud_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
+            light_step_density->Fill(linear_transfers[i], radiant_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
+            joint_step_density->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / (linear_transfers[i] / visible_deposits[i]));
         }
     }
-    
-    hist_charge_yield = GetHistogram(TH1F_map_, "hist_charge_yield", "Charge", "Counts");
-    hist_light_yield = GetHistogram(TH1F_map_, "hist_light_yield", "Light", "Counts");
-    hist_quanta_yield = GetHistogram(TH1F_map_, "hist_quanta_yield", "Quanta", "Counts");
 
-    hist_light_yield->Fill(photon_count / visible_deposit);
-    hist_charge_yield->Fill(electron_count / visible_deposit);
-    hist_quanta_yield->Fill((photon_count + electron_count) / visible_deposit);
+    charge_event_yield->Fill(electron_count / visible_deposit);
+    light_event_yield->Fill(photon_count / visible_deposit);
+    joint_event_yield->Fill((photon_count + electron_count) / visible_deposit);
 }
 
-void AnalysisManager::AnalyseVariableEnergyYield(const Scintillation* scintillation, const Ionisation* ionisation) {
-    std::vector<double> visible_deposits = scintillation->get_visible_deposits();
-    std::vector<double> linear_transfers = scintillation->get_linear_transfers();
-    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
-    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
-
-    hist_var_charge_yield = GetHistogram(TH2F_map_, "hist_var_charge_yield", "Charge", "Counts");
-    hist_var_light_yield = GetHistogram(TH2F_map_, "hist_var_light_yield", "Light", "Counts");
-    hist_var_quanta_yield = GetHistogram(TH2F_map_, "hist_var_quanta_yield", "Quanta", "Counts");
-
-    hist_dQdx = GetHistogram(TH2F_map_, "hist_dQdx", "dQdx", "Counts");
-    hist_dLdx = GetHistogram(TH2F_map_, "hist_dLdx", "dLdx", "Counts");
-    hist_dJdx = GetHistogram(TH2F_map_, "hist_dJdx", "dJdx", "Counts");
-
-    if (radiant_sizes.size() == cloud_sizes.size()) {
-        for (int i = 0; i < radiant_sizes.size(); i++) {
-            hist_var_charge_yield->Fill(linear_transfers[i], cloud_sizes[i] / visible_deposits[i]);
-            hist_var_light_yield->Fill(linear_transfers[i], radiant_sizes[i] / visible_deposits[i]);
-            hist_var_quanta_yield->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / visible_deposits[i]);
-
-            hist_dQdx->Fill(linear_transfers[i], cloud_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
-            hist_dLdx->Fill(linear_transfers[i], radiant_sizes[i] / (linear_transfers[i] / visible_deposits[i]));
-            hist_dJdx->Fill(linear_transfers[i], (cloud_sizes[i] + radiant_sizes[i]) / (linear_transfers[i] / visible_deposits[i]));
-        }
-    }
-}
-
-void AnalysisManager::AnalysePulse(const Scintillation* scintillation) {
+void AnalysisManager::StackPulseShape(const Scintillation* scintillation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> emission_times = scintillation->get_emission_times();
 
-    hist_pulse = GetHistogram(TH1F_map_, "hist_pulse", "Time", "Counts", 1000, 0, 1000);
+    int xmin = 0;
+    int xmax = 2000;
+    double time_resolution = 1;
+
+    double bins = (xmax - xmin) / time_resolution;
+
+    pulse_shape = GetHistogram(TH1F_map_, "pulse_shape", "Emission time [ns]", "Entries/bin", bins, xmin, xmax);
 
     for (int i = 0; i < emission_times.size(); i++) {
-        hist_pulse->Fill(emission_times[i]);
+        pulse_shape->Fill(emission_times[i]);
     }
 }

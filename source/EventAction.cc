@@ -33,12 +33,11 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     //output_manager_->RecordEntry(event); 
     
-    analysis_manager_->AnalyseFixedEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->AnalyseSignalResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->AnalyseVariableEnergySignal(event, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->AnalyseFixedEnergyYield(signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->AnalyseVariableEnergyYield(signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->AnalysePulse(signal_->get_scintillation());
+    analysis_manager_->DiscreteResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->EventResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->SignalYield(signal_->get_scintillation(), signal_->get_ionisation());
+
+    analysis_manager_->StackPulseShape(signal_->get_scintillation());
 
     signal_->delete_signal();
 }

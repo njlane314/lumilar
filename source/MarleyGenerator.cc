@@ -40,9 +40,6 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
                 std::cout << "Decay time: " << decay_time << std::endl;
             }
 
-            if (excited_state == 1.64364) {
-                delay_states_++;
-            }
             cascade_idx++;
         }
 
@@ -55,7 +52,6 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     }
 
     event->AddPrimaryVertex(primary_vertex);
-    //print_event(marley_event);
 }
 
 double MarleyGenerator::sample_decay_time(double half_life) {
