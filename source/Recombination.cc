@@ -57,5 +57,5 @@ double Recombination::charge_recombination(double linear_transfer, double electr
         return EscapingFraction() * FieldCorrection();
     };
 
-    return BirksRecomb() + EscapeRecomb();
+    return BirksRecomb(); //+ EscapeRecomb();
 }

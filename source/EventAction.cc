@@ -38,6 +38,8 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     analysis_manager_->SignalYield(signal_->get_scintillation(), signal_->get_ionisation());
 
     analysis_manager_->StackPulseShape(signal_->get_scintillation());
+    analysis_manager_->RandomPulseShape(signal_->get_scintillation());
+    analysis_manager_->PulseShapeDiscrimination(signal_->get_scintillation(), signal_->get_ionisation());
 
     signal_->delete_signal();
 }

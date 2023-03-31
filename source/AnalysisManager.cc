@@ -92,6 +92,7 @@ void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* s
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
+    std::vector<double> visible_deposits = scintillation->get_visible_deposits();
     double energy = event->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy();
 
     charge_event_response = GetHistogram(TH1F_map_, "charge_event_response", "Charge Event Response", "Entries/bin");
@@ -102,12 +103,18 @@ void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* s
     light_event_response_energy = GetHistogram(TH2F_map_, "light_event_response_energy", "Initial Primary Energy [MeV]", "Light Event Response/bin");
     joint_event_response_energy = GetHistogram(TH2F_map_, "joint_event_response_energy", "Initial Primary Energy [MeV]", "Joint Event Response/bin");
 
+    charge_event_visible_energy = GetHistogram(TH2F_map_, "charge_event_visible_energy", "Visible Energy [MeV]", "Charge Event Response/bin");
+    light_event_visible_energy = GetHistogram(TH2F_map_, "light_event_visible_energy", "Visible Primary Energy [MeV]", "Light Event Response/bin");
+    joint_event_visible_energy = GetHistogram(TH2F_map_, "joint_event_visible_energy", "Visible Primary Energy [MeV]", "Joint Event Response/bin");
+
     int photon_count = 0;
     int electron_count = 0;
+    double visible_deposit = 0;
     if (radiant_sizes.size() == cloud_sizes.size()) {
         for (int i = 0; i < radiant_sizes.size(); i++) {
             photon_count += radiant_sizes[i];
             electron_count += cloud_sizes[i];
+            visible_deposit += visible_deposits[i];
         }
     }
 
@@ -118,6 +125,10 @@ void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* s
     charge_event_response_energy->Fill(energy, electron_count);
     light_event_response_energy->Fill(energy, photon_count);
     joint_event_response_energy->Fill(energy, photon_count + electron_count);
+
+    charge_event_visible_energy->Fill(visible_deposit, electron_count);
+    light_event_visible_energy->Fill(visible_deposit, photon_count);
+    joint_event_visible_energy->Fill(visible_deposit, photon_count + electron_count);
 }
 
 void AnalysisManager::SignalYield(const Scintillation* scintillation, const Ionisation* ionisation) {
@@ -164,7 +175,6 @@ void AnalysisManager::SignalYield(const Scintillation* scintillation, const Ioni
 }
 
 void AnalysisManager::StackPulseShape(const Scintillation* scintillation) {
-    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> emission_times = scintillation->get_emission_times();
 
     int xmin = 0;
@@ -178,4 +188,52 @@ void AnalysisManager::StackPulseShape(const Scintillation* scintillation) {
     for (int i = 0; i < emission_times.size(); i++) {
         pulse_shape->Fill(emission_times[i]);
     }
+}
+
+void AnalysisManager::RandomPulseShape(const Scintillation* scintillation) {
+    std::vector<double> emission_times = scintillation->get_emission_times();
+
+    int xmin = 0;
+    int xmax = 2000;
+    double time_resolution = 1;
+
+    int bins = round((double)(xmax - xmin) / (double)time_resolution);
+    random_pulse_shape = GetHistogram(TH1F_map_, "random_pulse_shape", "Emission time [ns]", "Entries/bin", bins, xmin, xmax);
+    random_pulse_shape->Reset();
+    for (int i = 0; i < emission_times.size(); i++) {
+        random_pulse_shape->Fill(emission_times[i]);
+    }
+}
+
+void AnalysisManager::PulseShapeDiscrimination(const Scintillation* scintillation, const Ionisation* ionisation) {
+    std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
+    std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
+    std::vector<double> emission_times = scintillation->get_emission_times();
+
+    int prompt_window = 200;
+
+    prompt_fraction_scint = GetHistogram(TH2F_map_, "prompt_fraction", "Scintillation count", "Prompt fraction");
+    prompt_fraction_ratio = GetHistogram(TH2F_map_, "prompt_fraction_ratio", "S1/S2", "Prompt fraction");
+
+    int photon_count = 0;
+    int electron_count = 0;
+    if (radiant_sizes.size() == cloud_sizes.size()) {
+        for (int i = 0; i < radiant_sizes.size(); i++) {
+            photon_count += radiant_sizes[i];
+            electron_count += cloud_sizes[i];
+        }
+    }
+
+    int prompt_count = 0;
+    for (int i = 0; i < emission_times.size(); i++) {
+        //std::cout << emission_times[i] << std::endl;
+        if (emission_times[i] < prompt_window) {
+            prompt_count++;
+        }
+    }
+    double f_prompt = (double) prompt_count / (double) emission_times.size();
+    std::cout << f_prompt << std::endl;
+
+    prompt_fraction_scint->Fill(photon_count, f_prompt);
+    prompt_fraction_ratio->Fill((double)photon_count / (double)electron_count, f_prompt);
 }

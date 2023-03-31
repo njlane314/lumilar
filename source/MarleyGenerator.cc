@@ -29,7 +29,15 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     int particle_idx = 0;
     int cascade_idx = 0;
 
-    for (const auto& marley_particle : marley_event.get_final_particles()) {    
+    std::vector<G4PrimaryVertex*> primary_vertices;
+
+    for (const auto& marley_particle : marley_event.get_final_particles()) {
+        G4PrimaryVertex* primary_vertex = new G4PrimaryVertex(0, 0, 0, global_time);
+        G4PrimaryParticle* a_particle = new G4PrimaryParticle(marley_particle->pdg_code(), marley_particle->px(), marley_particle->py(), marley_particle->pz(), marley_particle->total_energy());
+        a_particle->SetCharge(marley_particle->charge());
+
+        primary_vertex->SetPrimary(a_particle);
+
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
 
@@ -43,15 +51,14 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
             cascade_idx++;
         }
 
-        G4PrimaryParticle* a_particle = new G4PrimaryParticle(marley_particle->pdg_code(), marley_particle->px(), marley_particle->py(), marley_particle->pz(), marley_particle->total_energy());
-        a_particle->SetCharge(marley_particle->charge());
-        
-        primary_vertex->SetPrimary(a_particle);
-        
+        primary_vertices.push_back(primary_vertex);
+
         particle_idx++;
     }
 
-    event->AddPrimaryVertex(primary_vertex);
+    for (const auto& primary_vertex : primary_vertices) {
+        event->AddPrimaryVertex(primary_vertex);
+    }
 }
 
 double MarleyGenerator::sample_decay_time(double half_life) {

@@ -14,4 +14,4 @@
 /generator/marley/source generator/config/marley_mono.js
 
 # run
-/run/beamOn 100
+/run/beamOn 1000
