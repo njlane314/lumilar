@@ -23,6 +23,12 @@ struct Properties {
     double singlet_to_triplet_heavy;
 
     double electric_field;
+
+    double excited_rate_light;
+    double quenched_rate_light;
+
+    double excited_rate_heavy;
+    double quenched_rate_heavy;
 };
 
 class MaterialProperties {

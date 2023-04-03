@@ -26,7 +26,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
         int percent_complete = event_id * 100 / events_to_generate_;
         
         std::stringstream message;
-        message << "[" << percent_complete << "%] " << "Generating event " << event_id << " of " << events_to_generate_;
+        message << "[" << std::setw(3) << percent_complete << "%] " << "Generating event " << event_id << " of " << events_to_generate_;
         std::cout << message.str() << std::endl;
         std::cout.flush();
     }

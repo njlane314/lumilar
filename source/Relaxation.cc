@@ -1,29 +1,29 @@
 #include "Relaxation.hh"
 
-Relaxation::Relaxation()
-: material_properties_(MaterialProperties::get_instance()->get_material_properties()) {
-    singlet_lifetime_ = material_properties_->singlet_lifetime;
-    triplet_lifetime_ = material_properties_->triplet_lifetime;
-}
+Relaxation::Relaxation() : 
+material_properties_(MaterialProperties::get_instance()->get_material_properties()), 
+singlet_lifetime_(material_properties_->singlet_lifetime),
+triplet_lifetime_(material_properties_->triplet_lifetime) {}
 
 Relaxation::~Relaxation() {}
 
 double Relaxation::sample_emission(double singlet_to_triplet) {
     double singlet_abundance = singlet_to_triplet / (1 + singlet_to_triplet);
-    double triplet_abundance = 1 - singlet_abundance;
 
-    if (CLHEP::RandBinomial::shoot(1, singlet_abundance) == 1) {
+    if (CLHEP::RandBinomial::shoot(1, singlet_abundance)) {
         return CLHEP::RandExponential::shoot(singlet_lifetime_);
     } else {
-        // determine if triplet state is quenched
-        //double quenching_factor = 
-        return CLHEP::RandExponential::shoot(triplet_lifetime_);
+        double quenched_lifetime = 1. / ((1. / triplet_lifetime_) + material_properties_->excited_rate_light);
+        double quenched_prob = log(1 + material_properties_->quenched_rate_light * quenched_lifetime) / (material_properties_->quenched_rate_light * triplet_lifetime_);
+        if (CLHEP::RandBinomial::shoot(1, quenched_prob)) {
+            return -1;
+        } else {
+            return CLHEP::RandExponential::shoot(triplet_lifetime_);
+        }
     }
 }
 
 OpticalPhoton Relaxation::create_photon(double global_time, double singlet_to_triplet) {
-    OpticalPhoton a_photon;
-    a_photon.set_emission_time(global_time + sample_emission(singlet_to_triplet));
-
-    return a_photon;
+    double emission_time = sample_emission(singlet_to_triplet);
+    return (emission_time < 0) ? OpticalPhoton() : OpticalPhoton(global_time + emission_time);
 }

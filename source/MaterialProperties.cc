@@ -42,6 +42,12 @@ Properties MaterialProperties::initialise_properties(std::string material = "lAr
         material_properties.singlet_to_triplet_heavy = 3.;
 
         material_properties.electric_field = 0.5; // kilovolt / cm
+
+        material_properties.excited_rate_light = 1.3 * 1e-4 * ns;
+        material_properties.quenched_rate_light = 2.3 * 1e-4 * ns;
+
+        material_properties.excited_rate_heavy = 0.0;
+        material_properties.quenched_rate_heavy = 2.3 * 1e-3 * ns;
     } 
     return material_properties;
 }

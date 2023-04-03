@@ -12,7 +12,10 @@ void Scintillation::add_radiant(const EnergyDeposit* energy_deposit, int radiant
 
     current_radiant.position = energy_deposit->get_position();
     for (int i = 0; i < radiant_size; i++) {
-        current_radiant.photons.push_back(relaxation_generator_.create_photon(energy_deposit->get_time(), singlet_to_triplet));
+        OpticalPhoton photon = relaxation_generator_.create_photon(energy_deposit->get_time(), singlet_to_triplet);
+        if (photon.get_emission_time() != 0) {
+            current_radiant.photons.push_back(photon);
+        }
     }
     
     scintillation_.push_back(current_radiant);
