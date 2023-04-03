@@ -14,21 +14,14 @@
 #include "marley/Generator.hh"
 #include "marley/JSONConfig.hh"
 
-#include "marley/marley_utils.hh"
-#include "marley/DecayScheme.hh"
-#include "marley/MassTable.hh"
-#include "marley/Level.hh"
-
 #include <CLHEP/Random/RandExponential.h>
-
-#include "DetectorConstruction.hh"
 
 class MarleyGenerator {
 public:
     MarleyGenerator(std::string marley_source);
     ~MarleyGenerator();
 
-    std::map<double, double> half_lives_;
+    std::map<double, double> half_lifes_;
 
     void GeneratePrimaryVertex(G4Event* event);
     double sample_decay_time(double half_life);

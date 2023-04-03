@@ -19,37 +19,32 @@ std::pair<double, double> Recombination::create_recombination(const EnergyDeposi
 }
 
 double Recombination::charge_recombination(double linear_transfer, double electric_field) {
-    auto BirksRecomb = [&]() -> double {
-        double ARecomb = 0.800;
-        double kRecomb = 0.0486;
+    return birks_recombination(linear_transfer, electric_field) + escape_recombination(linear_transfer, electric_field);
+}
 
-        return ARecomb / (1. + linear_transfer * kRecomb / electric_field);
-    };
+double Recombination::birks_recombination(double linear_transfer, double electric_field) {
+    double ARecomb = 0.800;
+    double kRecomb = 0.0486;
 
-    auto EscapeRecomb = [&]() -> double {
-        auto EscapingFraction = [linear_transfer]() -> double {
-            double larqlChi0A = 0.00338427;
-            double larqlChi0B = -6.57037;
-            double larqlChi0C = 1.88418;
-            double larqlChi0D = 0.000129379;
+    return ARecomb / (1. + linear_transfer * kRecomb / electric_field);
+}
 
-            return larqlChi0A / (larqlChi0B + exp(larqlChi0C + larqlChi0D * linear_transfer));
-        };
+double Recombination::escape_recombination(double linear_transfer, double electric_field) {
+    double larqlChi0A = 0.00338427;
+    double larqlChi0B = -6.57037;
+    double larqlChi0C = 1.88418;
+    double larqlChi0D = 0.000129379;
 
-        auto FieldCorrection = [&]() -> double {
-            if (linear_transfer < 1) {
-                return 0;
-            }
-            else {
-                double larqlAlpha = 0.0372;
-                double larqlBeta = 0.0124;
+    double escaping_fraction = larqlChi0A / (larqlChi0B + exp(larqlChi0C + larqlChi0D * linear_transfer));
+    
+    if (linear_transfer < 1) {
+        linear_transfer = 1;
+    }
 
-                return std::exp(-electric_field  / (larqlAlpha * std::log(linear_transfer) + larqlBeta));
-            }
-        };
+    double larqlAlpha = 0.0372;
+    double larqlBeta = 0.0124;
 
-        return EscapingFraction() * FieldCorrection();
-    };
+    double field_correction = std::exp(-electric_field  / (larqlAlpha * std::log(linear_transfer) + larqlBeta));
 
-    return BirksRecomb(); //+ EscapeRecomb();
+    return escaping_fraction * field_correction;
 }

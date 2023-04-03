@@ -3,7 +3,7 @@
 MarleyGenerator::MarleyGenerator(std::string marley_source)
 : source_(marley_source), delay_states_(0) {
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
-    half_lives_ = {
+    half_lifes_ = {
         //{ 0.0298299*MeV, 4.25*ns },
         //{ 0.800143*MeV, 0.26*ps },
         { 1.64364*MeV, 0.336*us },
@@ -18,8 +18,6 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::JSONConfig marley_config(source_);
     marley::Generator marley_generator = marley_config.create_generator();
     marley::Event marley_event = marley_generator.create_event();
-
-    G4PrimaryVertex* primary_vertex = new G4PrimaryVertex(0,0,0,0.);
 
     double global_time = 0.;
 
@@ -41,8 +39,8 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
 
-            auto iter = half_lives_.find(excited_state);
-            if (iter != half_lives_.end()) {
+            auto iter = half_lifes_.find(excited_state);
+            if (iter != half_lifes_.end()) {
                 double decay_time = sample_decay_time(iter->second);
                 primary_vertex->SetT0(global_time + decay_time);
                 std::cout << "Decay time: " << decay_time << std::endl;

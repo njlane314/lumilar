@@ -8,6 +8,7 @@
 #include <iostream>
 
 struct Properties {
+    std::string material;
     double loss_per_ionisation;
     double ionisation_threshold;
     double excitation_threshold;

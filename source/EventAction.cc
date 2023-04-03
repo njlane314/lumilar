@@ -20,15 +20,30 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     }
 
     int event_id = event->GetEventID() + 1;
-	events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-	progress_interval_ = events_to_generate_ / 100.;
+    events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+    progress_interval_ = events_to_generate_ / 100.;
+
     if (event_id % progress_interval_ == 0) {
         int percent_complete = event_id * 100 / events_to_generate_;
-        
+        int bar_width = 50;
+        int num_completed_chars = percent_complete * bar_width / 100;
+        int num_remaining_chars = bar_width - num_completed_chars;
+
         std::stringstream message;
-        message << "[" << std::setw(3) << percent_complete << "%] " << "Generating event " << event_id << " of " << events_to_generate_;
-        std::cout << message.str() << std::endl;
-        std::cout.flush();
+        message << "\rGenerating events: [";
+        for (int i = 0; i < num_completed_chars; i++) {
+            message << "=";
+        }
+        message << ">";
+        for (int i = 0; i < num_remaining_chars - 1; i++) {
+            message << " ";
+        }
+        message << "] " << std::setw(3) << percent_complete << "% complete.";
+        std::cout << message.str() << std::flush;
+        
+        if (percent_complete == 100) {
+            std::cout << std::endl << "Event generation complete!" << std::endl;
+        }
     }
 
     //output_manager_->RecordEntry(event); 

@@ -1,0 +1,2 @@
+- [] Add Inverse Transform Sampling of lAr and lArXe slow component emission probability
+- [] Analysis of cross-correlation function using the FFT algorithm

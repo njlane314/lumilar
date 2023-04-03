@@ -8,6 +8,7 @@ RunAction::RunAction()
 RunAction::~RunAction() {}
 
 void RunAction::BeginOfRunAction(const G4Run* run) {
+	std::cout << "-- Beginning run... " << std::endl;
 	auto analysis_manager = new AnalysisManager();
 	start_time_ = std::chrono::high_resolution_clock::now();
 	
