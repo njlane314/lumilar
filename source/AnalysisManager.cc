@@ -71,7 +71,7 @@ TH1F* AnalysisManager::GetHistogram(std::map<std::string, TH1F*>& hist_map, cons
     return histogram;
 }
 
-void AnalysisManager::DiscreteResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::DiscreteResponse(const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
@@ -88,11 +88,11 @@ void AnalysisManager::DiscreteResponse(const G4Event* event, const Scintillation
     }
 }
 
-void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::EventResponse(const G4Event* event, const Signal* signal, const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
-    std::vector<double> visible_deposits = scintillation->get_visible_deposits();
+    std::vector<double> visible_deposits = signal->get_visible_deposits();
     double energy = event->GetPrimaryVertex()->GetPrimary()->GetTotalEnergy();
 
     charge_event_response = GetHistogram(TH1F_map_, "charge_event_response", "Charge Event Response", "Entries/bin");
@@ -131,12 +131,12 @@ void AnalysisManager::EventResponse(const G4Event* event, const Scintillation* s
     joint_event_visible_energy->Fill(visible_deposit, photon_count + electron_count);
 }
 
-void AnalysisManager::SignalYield(const Scintillation* scintillation, const Ionisation* ionisation) {
+void AnalysisManager::SignalYield(const Signal* signal, const Scintillation* scintillation, const Ionisation* ionisation) {
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
 
-    std::vector<double> visible_deposits = scintillation->get_visible_deposits();
-    std::vector<double> linear_transfers = scintillation->get_linear_transfers();
+    std::vector<double> visible_deposits = signal->get_visible_deposits();
+    std::vector<double> linear_transfers = signal->get_linear_transfers();
 
     charge_event_yield = GetHistogram(TH1F_map_, "charge_event_yield", "Charge Event Yield [/MeV]", "Entries/bin");
     light_event_yield = GetHistogram(TH1F_map_, "light_event_yield", "Light Event Yield [/MeV]", "Entries/bin");
@@ -226,13 +226,11 @@ void AnalysisManager::PulseShapeDiscrimination(const Scintillation* scintillatio
 
     int prompt_count = 0;
     for (int i = 0; i < emission_times.size(); i++) {
-        //std::cout << emission_times[i] << std::endl;
         if (emission_times[i] < prompt_window) {
             prompt_count++;
         }
     }
     double f_prompt = (double) prompt_count / (double) emission_times.size();
-    std::cout << f_prompt << std::endl;
 
     prompt_fraction_scint->Fill(photon_count, f_prompt);
     prompt_fraction_ratio->Fill((double)photon_count / (double)electron_count, f_prompt);

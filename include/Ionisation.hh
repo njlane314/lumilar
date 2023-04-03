@@ -18,16 +18,14 @@ class Ionisation {
     Ionisation();
     ~Ionisation();
 
-    void add_cloud(double visible_deposit, int cloud_size, const std::vector<double>& position);
+    void add_cloud(const EnergyDeposit* energy_deposit, int cloud_size);
     std::vector<std::vector<double>> get_cloud_positions() const;
     std::vector<double> get_cloud_sizes() const;
-    std::vector<double> get_visible_deposits() const;
     void print_ionisation() const;
 
  private:
     static Ionisation* instance_;
     std::vector<ElectronCloud> ionisation_;
-    std::vector<double> visible_deposits_;
     Ejection ejection_generator_;
 };
 

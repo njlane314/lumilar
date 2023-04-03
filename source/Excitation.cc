@@ -1,7 +1,7 @@
 #include "Excitation.hh"
 
 std::pair<double, double> Excitation::create_exctiation(const EnergyDeposit* energy_deposit, const Properties* material_properties) {    
-    double expected_ionisations = energy_deposit->visible / material_properties->loss_per_ionisation;
+    double expected_ionisations = energy_deposit->get_visible_energy() / material_properties->loss_per_ionisation;
 
     int num_ionisations = 0;
     int num_excitations = 0;
@@ -12,7 +12,7 @@ std::pair<double, double> Excitation::create_exctiation(const EnergyDeposit* ene
         num_ionisations = static_cast<int>(std::round(CLHEP::RandPoisson::shoot(expected_ionisations)));
     }
 
-    double excitation_energy = energy_deposit->visible - num_ionisations * (material_properties->ionisation_threshold + material_properties->thermal_loss);
+    double excitation_energy = energy_deposit->get_visible_energy() - num_ionisations * (material_properties->ionisation_threshold + material_properties->thermal_loss);
     if (excitation_energy > 0) {
         num_excitations = excitation_energy / material_properties->excitation_threshold;
     }

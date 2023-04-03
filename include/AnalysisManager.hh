@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "G4Event.hh"
+#include "Signal.hh"
 #include "Scintillation.hh"
 #include "Ionisation.hh"
 
@@ -27,9 +28,9 @@ class AnalysisManager {
   TH2F* GetHistogram(std::map<std::string, TH2F*>& hist_map, const std::string& name, const std::string& x_axis_name = "X Axis", const std::string& y_axis_name = "Y Axis", const int nbinsx = 100, const double xmin = 1, const double xmax = 0, const int nbinsy = 100, const double ymin = 1, const double ymax = 0);
   TH1F* GetHistogram(std::map<std::string, TH1F*>& hist_map, const std::string& name, const std::string& x_axis_name = "X Axis", const std::string& y_axis_name = "Y Axis", const int nbinsx = 100, const double xmin = 1, const double xmax = 0);
 
-  void DiscreteResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation);
-  void EventResponse(const G4Event* event, const Scintillation* scintillation, const Ionisation* ionisation);
-  void SignalYield(const Scintillation* scintillation, const Ionisation* ionisation);
+  void DiscreteResponse(const Scintillation* scintillation, const Ionisation* ionisation);
+  void EventResponse(const G4Event* event, const Signal* signal, const Scintillation* scintillation, const Ionisation* ionisation);
+  void SignalYield(const Signal* signal, const Scintillation* scintillation, const Ionisation* ionisation);
   
   void StackPulseShape(const Scintillation* scintillation);
   void RandomPulseShape(const Scintillation* scintillation);

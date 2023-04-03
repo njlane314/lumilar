@@ -33,9 +33,9 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     //output_manager_->RecordEntry(event); 
     
-    analysis_manager_->DiscreteResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->EventResponse(event, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->SignalYield(signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->DiscreteResponse(signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->EventResponse(event, signal_, signal_->get_scintillation(), signal_->get_ionisation());
+    analysis_manager_->SignalYield(signal_, signal_->get_scintillation(), signal_->get_ionisation());
 
     analysis_manager_->StackPulseShape(signal_->get_scintillation());
     analysis_manager_->RandomPulseShape(signal_->get_scintillation());

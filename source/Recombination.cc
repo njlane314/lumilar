@@ -1,14 +1,10 @@
 #include "Recombination.hh"
 
-std::pair<double, double> Recombination::create_recombination(EnergyDeposit* energy_deposit, Properties* material_properties, std::pair<double, double> intrinsic_response) {
-    double recombination_factor = charge_recombination(energy_deposit->linear_transfer, material_properties->electric_field); 
-
-    //std::cout << "Linear transfer: " << energy_deposit->linear_transfer << ", electric field: " << material_properties->electric_field << std::endl;
+std::pair<double, double> Recombination::create_recombination(const EnergyDeposit* energy_deposit, const Properties* material_properties, const std::pair<double, double> intrinsic_response) {
+    double recombination_factor = charge_recombination(energy_deposit->get_visible_energy(), material_properties->electric_field); 
 
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;
-
-    //std::cout << "Recombination factor: " << recombination_factor << std::endl;
 
     int thermal_electrons = static_cast<int>(std::round(CLHEP::RandBinomial::shoot(num_ionisations, recombination_factor)));
     int optical_photons = num_excitations;
@@ -18,8 +14,6 @@ std::pair<double, double> Recombination::create_recombination(EnergyDeposit* ene
     } else {
         optical_photons += num_ionisations - thermal_electrons;
     }
-
-    //std::cout << "Recombination response: " << thermal_electrons << ", " << optical_photons << std::endl;
 
     return std::make_pair(thermal_electrons, optical_photons);
 }

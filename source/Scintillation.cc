@@ -3,31 +3,19 @@
 Scintillation* Scintillation::instance_ = nullptr;
 
 Scintillation::Scintillation()
-: visible_deposits_(), linear_transfers_(), scintillation_(), relaxation_generator_(Relaxation()) {}
+: scintillation_(), relaxation_generator_(Relaxation()) {}
 
 Scintillation::~Scintillation() {}
 
-void Scintillation::add_radiant(double visible_deposit, double linear_transfer, int radiant_size, const std::vector<double>& position, double time, double singlet_to_triplet) {
+void Scintillation::add_radiant(const EnergyDeposit* energy_deposit, int radiant_size, double singlet_to_triplet) {
     PhotonRadiant current_radiant = {};
 
-    current_radiant.position = position;
+    current_radiant.position = energy_deposit->get_position();
     for (int i = 0; i < radiant_size; i++) {
-        current_radiant.photons.push_back(relaxation_generator_.create_photon(time, singlet_to_triplet));
+        current_radiant.photons.push_back(relaxation_generator_.create_photon(energy_deposit->get_time(), singlet_to_triplet));
     }
     
     scintillation_.push_back(current_radiant);
-    visible_deposits_.push_back(visible_deposit);
-    linear_transfers_.push_back(linear_transfer);
-}
-
-std::vector<double> Scintillation::get_emission_times() const {
-    std::vector<double> emission_times;
-    for (const auto& a_radiant : scintillation_) {
-        for (const auto& photon : a_radiant.photons) {
-            emission_times.push_back(photon.get_emission_time());
-        }
-    }
-    return emission_times;
 }
 
 std::vector<std::vector<double>> Scintillation::get_radiant_positions() const {
@@ -38,20 +26,22 @@ std::vector<std::vector<double>> Scintillation::get_radiant_positions() const {
     return radiant_positions;
 }
 
-std::vector<double> Scintillation::get_visible_deposits() const {
-    return visible_deposits_;
-}
-
-std::vector<double> Scintillation::get_linear_transfers() const {
-    return linear_transfers_;
-}
-
 std::vector<double> Scintillation::get_radiant_sizes() const {
     std::vector<double> radiant_sizes;
     for (const auto& a_radiant : scintillation_) {
         radiant_sizes.push_back(a_radiant.photons.size());
     }
     return radiant_sizes;
+}
+
+std::vector<double> Scintillation::get_emission_times() const {
+    std::vector<double> emission_times;
+    for (const auto& a_radiant : scintillation_) {
+        for (const auto& photon : a_radiant.photons) {
+            emission_times.push_back(photon.get_emission_time());
+        }
+    }
+    return emission_times;
 }
 
 void Scintillation::print_scintillation() const {

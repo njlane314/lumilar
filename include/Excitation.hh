@@ -2,18 +2,11 @@
 #define EXCITATION_HH
 
 #include "MaterialProperties.hh"
+#include "EnergyDeposit.hh"
 #include <CLHEP/Random/RandGauss.h>
 #include <CLHEP/Random/RandPoisson.h>
 
 #include <random>
-
-struct EnergyDeposit {
-    double visible;
-    double linear_transfer;
-    std::string particle_type;
-    std::vector<double> position;
-    double time;
-};
 
 class Excitation {
  public: 
