@@ -12,6 +12,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	new AnalysisManager();
 	new OutputManager();
 	new MaterialProperties("lAr");
+	new PulseShapeOutput();
 
 	OutputManager::Instance()->CreateFile();
 }
@@ -21,6 +22,8 @@ void RunAction::EndOfRunAction(const G4Run* run) {
 
 	OutputManager::Instance()->RecordEntry(run);
 	OutputManager::Instance()->SaveFile();
+
+	PulseShapeOutput::Instance()->SaveFile();
 
 	auto end_time = std::chrono::high_resolution_clock::now();
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time_);

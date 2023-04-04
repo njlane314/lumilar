@@ -3,7 +3,7 @@
 
 
 - [] Add Genie generator for proton decay
-- [] Add action initialisation
+- [x] Add action initialisation
 - [] BxDecay0 generator
 - [] StackingAction
 - [] Visualisation

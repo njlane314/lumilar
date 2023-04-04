@@ -89,7 +89,6 @@ private:
     Double_t photon_time;
     Double_t photon_num;
     Double_t electron_num;
-    TVectorD emission_times_vec;
 };
 
 #endif // OUTPUT_MANAGER_HH

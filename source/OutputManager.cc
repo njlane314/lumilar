@@ -61,7 +61,6 @@ void OutputManager::CreateFile() {
     signal_tree_->Branch("photon_time", &photon_time, "photon_time/D");
     signal_tree_->Branch("photon_number", &photon_num, "photon_num/I");
     signal_tree_->Branch("electron_number", &electron_num, "electron_num/I");
-    signal_tree_->Branch("emission_times", &emission_times_vec);
 }
 
 void OutputManager::SaveFile() {
@@ -153,8 +152,6 @@ void OutputManager::RecordEntry(const Scintillation* scintillation, const Ionisa
     
     std::vector<double> radiant_sizes = scintillation->get_radiant_sizes();
     std::vector<double> cloud_sizes = ionisation->get_cloud_sizes();
-
-    TVectorD emission_times_vec(emission_times.size(), emission_times.data());
 
     for (int i = 0; i < emission_times.size(); i++) {
         photon_time = emission_times[i];
