@@ -1,30 +1,26 @@
 #include "RunAction.hh"
 
-RunAction::RunAction() 
-: output_manager_(nullptr), verbose_level_(0) {
-	output_manager_ = OutputManager::Instance();
-}
+RunAction::RunAction() {}
 
 RunAction::~RunAction() {}
 
 void RunAction::BeginOfRunAction(const G4Run* run) {
+	start_time_ = std::chrono::high_resolution_clock::now();
+
 	std::cout << "-- Beginning run... " << std::endl;
 	auto analysis_manager = new AnalysisManager();
-	start_time_ = std::chrono::high_resolution_clock::now();
+	auto output_manager = new OutputManager();
 	
-	MaterialProperties* material_properties = new MaterialProperties("lAr");
+	auto material_properties = new MaterialProperties("lAr");
 }
 
 void RunAction::EndOfRunAction(const G4Run* run) {
 	auto analysis_manager = AnalysisManager::Instance();
-	analysis_manager->SaveHistograms();
-	
-	if (verbose_level_ > 0) {
-		PrintRun();
-	}
+	analysis_manager->SaveFile();
 
-	output_manager_->RecordEntry(run);
-	output_manager_->CloseFile();
+	auto output_manager = OutputManager::Instance();
+	output_manager->RecordEntry(run);
+	output_manager->SaveFile();
 
 	auto end_time = std::chrono::high_resolution_clock::now();
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time_);

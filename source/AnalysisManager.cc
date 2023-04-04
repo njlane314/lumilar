@@ -14,17 +14,16 @@ AnalysisManager* AnalysisManager::Instance() {
     return instance_;
 }
 
-void AnalysisManager::SaveHistograms() {
-    std::cout << "Saving histograms..." << std::endl;
+void AnalysisManager::SaveFile() {
     TFile file("analysis.root", "RECREATE");
     std::map<std::string, TH1F*>::iterator it;
     for (it = TH1F_map_.begin(); it != TH1F_map_.end(); it++) {
-        std::cout << "Writing histogram: " << it->first << std::endl;
+        std::cout << "-- Saved histogram: " << it->first << std::endl;
         it->second->Write();
     }
     std::map<std::string, TH2F*>::iterator it2D;
     for (it2D = TH2F_map_.begin(); it2D != TH2F_map_.end(); it2D++) {
-        std::cout << "Writing histogram: " << it2D->first << std::endl;
+        std::cout << "-- Saved histogram: " << it2D->first << std::endl;
         it2D->second->Write();
     }
 

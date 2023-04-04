@@ -12,6 +12,7 @@
 #include "G4RunManager.hh"
 
 #include "AnalysisManager.hh"
+#include "PulseShapeOutput.hh"
 
 class EventAction : public G4UserEventAction {
  public:
@@ -23,9 +24,10 @@ class EventAction : public G4UserEventAction {
 
  private:
 	void PrintEvent(const G4Event* event);
-
+	void UpdateProgressBar(int event_id, int events_to_generate, double progress_interval);
 	OutputManager* output_manager_;
 	AnalysisManager* analysis_manager_;
+	PulseShapeOutput* pulse_shape_manager_;
 	Signal* signal_;
 
 	int verbose_level_;

@@ -6,6 +6,7 @@
 #include <string>
 #include <TFile.h>
 #include <TTree.h>
+#include "TVectorD.h"
 
 #include "G4Run.hh"
 #include "G4Event.hh"
@@ -36,7 +37,7 @@ public:
     void RecordEntry(const G4Step* step);
     void RecordEntry(const Scintillation* scintillation, const Ionisation* ionisation);
 
-    void CloseFile();
+    void SaveFile();
 
 private:
     void CreateFile();
@@ -93,6 +94,7 @@ private:
     Double_t photon_time;
     Double_t photon_num;
     Double_t electron_num;
+    TVectorD emission_times_vec;
 };
 
 #endif // OUTPUT_MANAGER_HH

@@ -21,8 +21,8 @@ class AnalysisManager {
   ~AnalysisManager();
   static AnalysisManager* Instance();
   
-  void SaveHistograms();
-  
+  void SaveFile();
+
   TH1F* CreateHistogram(const std::string& name, const std::string& x_axis_name, const std::string& y_axis_name, const int nbinsx, const double xmin, const double xmax);
   TH2F* CreateHistogram(const std::string& name, const std::string& x_axis_name, const std::string& y_axis_name, const int nbinsx, const double xmin, const double xmax, const int nbinsy, const double ymin, const double ymax);
   TH2F* GetHistogram(std::map<std::string, TH2F*>& hist_map, const std::string& name, const std::string& x_axis_name = "X Axis", const std::string& y_axis_name = "Y Axis", const int nbinsx = 100, const double xmin = 1, const double xmax = 0, const int nbinsy = 100, const double ymin = 1, const double ymax = 0);

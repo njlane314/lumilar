@@ -7,6 +7,8 @@
 
 #include "OutputManager.hh"
 #include "AnalysisManager.hh"
+#include "PulseShapeOutput.hh"
+
 #include "MaterialProperties.hh"
 
 class RunAction : public G4UserRunAction {
@@ -19,8 +21,6 @@ public:
     void PrintRun();
     
 private:
-    OutputManager* output_manager_;
-    int verbose_level_;
     std::chrono::system_clock::time_point start_time_;
 };
 
