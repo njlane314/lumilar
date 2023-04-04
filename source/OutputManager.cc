@@ -69,6 +69,8 @@ void OutputManager::SaveFile() {
         return;
     }
     else {
+        file_->cd();
+        
         meta_tree_->Write();
         event_tree_->Write();
         track_tree_->Write();

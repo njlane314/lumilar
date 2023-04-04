@@ -5,7 +5,7 @@ EventAction::EventAction() {}
 EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event* event) {
-    auto signal = new Signal();
+    new Signal();
 }
 
 void EventAction::EndOfEventAction(const G4Event* event) {
@@ -32,7 +32,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     progress_interval_ = events_to_generate_ / 100.;
 
     if (event_idx % progress_interval_ == 0) {
-        UpdateProgressBar(event_idx++, events_to_generate_, progress_interval_);
+        UpdateProgressBar(event_idx + 1, events_to_generate_, progress_interval_);
     }
 }
 
@@ -43,7 +43,7 @@ void EventAction::UpdateProgressBar(int event_id, int events_to_generate, double
     int num_remaining_chars = bar_width - num_completed_chars;
 
     std::stringstream message;
-    message << "\rGenerating events: [";
+    message << "\r-- Generating events: [";
     for (int i = 0; i < num_completed_chars; i++) {
         message << "=";
     }
@@ -55,6 +55,6 @@ void EventAction::UpdateProgressBar(int event_id, int events_to_generate, double
     std::cout << message.str() << std::flush;
 
     if (percent_complete == 100) {
-        std::cout << std::endl << "Event generation complete!" << std::endl;
+        std::cout << std::endl << "-- Event generation complete!" << std::endl;
     }
 }
