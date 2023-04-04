@@ -7,7 +7,7 @@ triplet_lifetime_(material_properties_->triplet_lifetime) {}
 
 Relaxation::~Relaxation() {}
 
-double Relaxation::sample_emission(double linear_transfer, double singlet_to_triplet) {
+/*double Relaxation::sample_emission(double linear_transfer, double singlet_to_triplet) {
     double singlet_abundance = singlet_to_triplet / (1 + singlet_to_triplet);
 
     if (CLHEP::RandBinomial::shoot(1, singlet_abundance)) {
@@ -32,6 +32,16 @@ double Relaxation::sample_emission(double linear_transfer, double singlet_to_tri
             return -1;
         }
     }
+}*/
+
+double Relaxation::sample_emission(double singlet_to_triplet) {
+    double singlet_abundance = singlet_to_triplet / (1 + singlet_to_triplet);
+
+    if (CLHEP::RandBinomial::shoot(1, singlet_abundance)) {
+        return CLHEP::RandExponential::shoot(singlet_lifetime_);
+    } else {
+        return CLHEP::RandExponential::shoot(triplet_lifetime_);
+    }
 }
 
 double Relaxation::quenched_lifetime(double excited_rate) {
@@ -39,6 +49,8 @@ double Relaxation::quenched_lifetime(double excited_rate) {
 }
 
 OpticalPhoton Relaxation::create_photon(const EnergyDeposit* energy_deposit, double singlet_to_triplet) {
-    double emission_time = sample_emission(energy_deposit->get_linear_transfer(), singlet_to_triplet);
+    //double emission_time = sample_emission(energy_deposit->get_linear_transfer(), singlet_to_triplet);
+    double emission_time = sample_emission(singlet_to_triplet);
     return (emission_time < 0) ? OpticalPhoton() : OpticalPhoton(energy_deposit->get_time() + emission_time);
 }
+

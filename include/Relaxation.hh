@@ -20,7 +20,8 @@ public:
     Relaxation();
     ~Relaxation();
 
-    double sample_emission(double linear_transfer, double singlet_to_triplet);
+    //double sample_emission(double linear_transfer, double singlet_to_triplet);
+    double sample_emission(double singlet_to_triplet);
     OpticalPhoton create_photon(const EnergyDeposit* energy_deposit, double singlet_to_triplet);
 
 private:

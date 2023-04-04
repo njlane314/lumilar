@@ -5,7 +5,6 @@
 /process/verbose 0
 
 /run/initialize
-/output/filename marley_mono.root
 
 # general, marley
 /generator/set marley
