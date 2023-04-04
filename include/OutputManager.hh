@@ -22,14 +22,12 @@
 #include "Scintillation.hh"
 #include "Ionisation.hh"
 
-class OutputManager :  public G4UImessenger{
+class OutputManager {
 public:
     OutputManager();
     virtual ~OutputManager();
 
     static OutputManager* Instance();
-
-    void SetNewValue(G4UIcommand* cmd, G4String new_value);
 
     void RecordEntry(const G4Run* run);
     void RecordEntry(const G4Event* event);
@@ -38,14 +36,11 @@ public:
     void RecordEntry(const Scintillation* scintillation, const Ionisation* ionisation);
 
     void SaveFile();
-
-private:
     void CreateFile();
 
-    static OutputManager* instance_;
+private:
 
-    G4UIdirectory* output_directory_;
-    G4UIcmdWithAString* set_filename_cmd_;
+    static OutputManager* instance_;
 
     std::string filename_;
     TFile* file_ = nullptr;

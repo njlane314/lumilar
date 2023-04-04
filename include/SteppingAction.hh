@@ -7,17 +7,11 @@
 #include "Signal.hh"
 
 class SteppingAction : public G4UserSteppingAction {
-public:
+ public:
     SteppingAction();
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
-    
-    void PrintStep(const G4Step* step);
-
-private:
-    OutputManager* output_manager_;
-    int verbose_level_;
 };
 
 #endif // STEPPING_ACTION_HH

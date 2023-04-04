@@ -5,6 +5,8 @@
 #include "EventAction.hh"
 #include "SteppingAction.hh"
 #include "TrackingAction.hh"
+#include "OutputManager.hh"
+#include "AnalysisManager.hh"
 
 ActionInitialisation::ActionInitialisation() : G4VUserActionInitialization()
 {}

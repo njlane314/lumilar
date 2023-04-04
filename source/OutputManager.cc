@@ -2,28 +2,9 @@
 
 OutputManager* OutputManager::instance_ = nullptr;
 
-OutputManager::OutputManager() 
-: filename_("an_output.root") {
-    output_directory_ = new G4UIdirectory("/output/");
-    output_directory_->SetGuidance("Output control commands");
+OutputManager::OutputManager() {}
 
-    set_filename_cmd_ = new G4UIcmdWithAString("/output/filename", this);
-    set_filename_cmd_->SetGuidance("Sets the output filename");
-    set_filename_cmd_->SetParameterName("Filename", false, false);
-}
-
-OutputManager::~OutputManager() {
-    delete set_filename_cmd_;
-    delete output_directory_;
-}
-
-void OutputManager::SetNewValue(G4UIcommand* cmd, G4String new_value) {
-    if (cmd == set_filename_cmd_) {
-        filename_ = new_value;
-    }
-
-    CreateFile();
-}
+OutputManager::~OutputManager() {}
 
 OutputManager* OutputManager::Instance() {
     if (!instance_) {
@@ -34,6 +15,7 @@ OutputManager* OutputManager::Instance() {
 }
 
 void OutputManager::CreateFile() {
+    filename_ = "output.root";
     std::cout << "-- Creating output file: " << filename_ << std::endl;
     file_ = new TFile(filename_.c_str(), "RECREATE");
 

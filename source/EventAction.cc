@@ -5,7 +5,35 @@ EventAction::EventAction() {}
 EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event* event) {
-    signal_ = new Signal();
+    auto signal = new Signal();
+}
+
+void EventAction::EndOfEventAction(const G4Event* event) {
+    auto signal = Signal::get_instance();
+    auto analysis_manager = AnalysisManager::Instance();
+    auto output_manager = OutputManager::Instance();
+
+    output_manager->RecordEntry(event);
+    output_manager->RecordEntry(signal->get_scintillation(), signal->get_ionisation());
+    
+    analysis_manager->DiscreteResponse(signal->get_scintillation(), signal->get_ionisation());
+    analysis_manager->EventResponse(event, signal, signal->get_scintillation(), signal->get_ionisation());
+    analysis_manager->SignalYield(signal, signal->get_scintillation(), signal->get_ionisation());
+
+    analysis_manager->StackPulseShape(signal->get_scintillation());
+    analysis_manager->RandomPulseShape(signal->get_scintillation());
+    analysis_manager->PulseShapeDiscrimination(signal->get_scintillation(), signal->get_ionisation());
+
+    signal->delete_signal();
+
+    // update progress bar
+    int event_idx = event->GetEventID();
+    events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+    progress_interval_ = events_to_generate_ / 100.;
+
+    if (event_idx % progress_interval_ == 0) {
+        UpdateProgressBar(event_idx++, events_to_generate_, progress_interval_);
+    }
 }
 
 void EventAction::UpdateProgressBar(int event_id, int events_to_generate, double progress_interval) {
@@ -28,32 +56,5 @@ void EventAction::UpdateProgressBar(int event_id, int events_to_generate, double
 
     if (percent_complete == 100) {
         std::cout << std::endl << "Event generation complete!" << std::endl;
-    }
-}
-
-void EventAction::EndOfEventAction(const G4Event* event) {
-
-    //output_manager_->RecordEntry(event); 
-    //output_manager_->RecordEntry(signal_->get_scintillation(), signal_->get_ionisation());
-
-    //pulse_shape_manager_->RecordEntry(signal_->get_scintillation());
-    
-    analysis_manager_->DiscreteResponse(signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->EventResponse(event, signal_, signal_->get_scintillation(), signal_->get_ionisation());
-    analysis_manager_->SignalYield(signal_, signal_->get_scintillation(), signal_->get_ionisation());
-
-    analysis_manager_->StackPulseShape(signal_->get_scintillation());
-    analysis_manager_->RandomPulseShape(signal_->get_scintillation());
-    analysis_manager_->PulseShapeDiscrimination(signal_->get_scintillation(), signal_->get_ionisation());
-
-    signal_->delete_signal();
-
-    // update progress bar
-    int event_idx = event->GetEventID();
-    events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-    progress_interval_ = events_to_generate_ / 100.;
-
-    if (event_idx % progress_interval_ == 0) {
-        UpdateProgressBar(event_idx++, events_to_generate_, progress_interval_);
     }
 }

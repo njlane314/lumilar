@@ -16,12 +16,6 @@ public:
 
     void PreUserTrackingAction(const G4Track* track);
     void PostUserTrackingAction(const G4Track* track);
-    
-    void PrintTrack(const G4Track* track);
-
-private:
-    OutputManager* output_manager_;
-    G4int verbose_level_;
 };
 
 #endif // TRACKING_ACTION_HH
