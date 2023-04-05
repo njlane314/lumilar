@@ -30,8 +30,7 @@ public:
     double time_resolution_;
     int nbins_;
     std::vector<double> probability_lookup_table_;
-
-    
+    std::vector<double> temporal_correlations_;
 
 private:
     void CreateFile();
@@ -39,7 +38,9 @@ private:
     void WritePulseShape(TH1F* pulse_shape);
     TProfile* CrossCorrelation(const TH1F* pulse_shape, const std::string& name);
     void WriteCrossCorrelation(TProfile* cross_correlation);
-    double TemporalEnergyCorrelation(const TProfile* profile);
+    //double TemporalEnergyCorrelation(const TProfile* profile, double xmin, double xmax);
+    void WriteTemporalCorrelation(TProfile* temporal_correlation);
+    TProfile* TemporalCorrelation(const TProfile* cross_correlation, const std::string& name);
 
     double ReferencePulse(double t);
 
