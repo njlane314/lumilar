@@ -6,10 +6,33 @@
 #include <Eigen/Core>
 #include "DetectorConstruction.hh"
 #include "G4RunManager.hh"
+#include <variant>
 
 class SensorConstruction {
-    
 public:
+    class SensorShape {
+    public:
+        virtual double GetArea() const = 0;
+    };
+
+    class SquareSensor : public SensorShape {
+    public:
+        double size;
+        double GetArea() const override { return size * size; }
+    };
+
+    class RectangularSensor : public SensorShape {
+    public:
+        double width;
+        double height;
+        double GetArea() const override { return width * height; }
+    };
+
+    class CircularSensor : public SensorShape {
+    public:
+        double radius;
+        double GetArea() const override { return M_PI * radius * radius; }
+    };
     struct OpticalSensor {
         std::variant<std::unique_ptr<SquareSensor>, std::unique_ptr<RectangularSensor>, std::unique_ptr<CircularSensor>> shape;
         Eigen::Vector3d position;
@@ -41,30 +64,6 @@ private:
     std::vector<OpticalSensor*> optical_sensors_;
 
     void ConstructPlane(const PlaneOrientation& orientation, double& plane_width, double& plane_height, Eigen::Vector3d& plane_center);
-
-    class SensorShape {
-    public:
-        virtual double GetArea() const = 0;
-    };
-
-    class SquareSensor : public SensorShape {
-    public:
-        double size;
-        double GetArea() const override { return size * size; }
-    };
-
-    class RectangularSensor : public SensorShape {
-    public:
-        double width;
-        double height;
-        double GetArea() const override { return width * height; }
-    };
-
-    class CircularSensor : public SensorShape {
-    public:
-        double radius;
-        double GetArea() const override { return M_PI * radius * radius; }
-    };
 };
 
 #endif  // SENSOR_CONSTRUCTION_H

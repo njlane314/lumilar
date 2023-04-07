@@ -1,27 +1,62 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
-
 project(energyloss)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../system)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow -Wno-sign-compare -Wunused-parameter -g")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 
 find_package(Geant4 REQUIRED)
 find_package(ROOT REQUIRED)
 
 include(${Geant4_USE_FILE})
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
 include(${ROOT_USE_FILE})
-link_libraries(${ROOT_LIBRARIES})
 
-include_directories(/home/lane/Software/src/marley/include)
-add_library(marley SHARED IMPORTED)
-set_target_properties(marley PROPERTIES IMPORTED_LOCATION  /home/lane/Software/src/marley/build/libMARLEY.so)
+set(MAIN_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/source")
 
-file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/*.cc)
-file(GLOB_RECURSE HEADERS ${PROJECT_SOURCE_DIR}/*.hh)
+set(MARLEY_DIR "/home/lane/Software/src/marley")
+message(STATUS "MARLEY_DIR is set to ${MARLEY_DIR}")
+
+find_library(MARLEY
+  NAMES MARLEY
+  PATHS "${MARLEY_DIR}/build/"
+  REQUIRED
+  NO_DEFAULT_PATH
+  )
+find_library(MARLEY_ROOT
+  NAMES MARLEY_ROOT
+  PATHS "${MARLEY_DIR}/build"
+  REQUIRED
+  NO_DEFAULT_PATH
+  )
+
+file(GLOB SOURCES   ${MAIN_SOURCE_DIR}/*.cc
+                    ${MAIN_SOURCE_DIR}/physics/*.cc
+                    ${MAIN_SOURCE_DIR}/analysis/*.cc
+                    ${MAIN_SOURCE_DIR}/generators/*.cc
+                    ${MAIN_SOURCE_DIR}/geometry/*.cc
+                    )
+
+file(GLOB HEADERS   ${MAIN_INCLUDE_DIR}/*.hh
+                    ${MAIN_INCLUDE_DIR}/physics/*.hh
+                    ${MAIN_INCLUDE_DIR}/analysis/*.hh
+                    ${MAIN_INCLUDE_DIR}/generators/*.hh
+                    ${MAIN_INCLUDE_DIR}/geometry/*.hh
+                    )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CLHEP_LIBRARIES} marley)
+target_include_directories( ${PROJECT_NAME} PRIVATE
+                            ${MAIN_INCLUDE_DIR}
+                            ${MARLEY_DIR}/include
+                            ${MAIN_INCLUDE_DIR}/physics
+                            ${MAIN_INCLUDE_DIR}/analysis
+                            ${MAIN_INCLUDE_DIR}/generators
+                            ${MAIN_INCLUDE_DIR}/geometry
+                            )
+
+target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${MARLEY} ${MARLEY_ROOT})
+target_link_libraries(${PROJECT_NAME} ${CLHEP_LIBRARIES})
