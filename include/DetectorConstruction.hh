@@ -42,10 +42,12 @@ public:
     ~DetectorConstruction();
 
     G4VPhysicalVolume* Construct();
+    void GetDetectorDimensions(double& width, double& height, double& depth);
 
 private:
     std::string detector_config_;
 
+    void ConstructAnodePlane();
     Detector ReadDetector(std::stringstream& ss);
 };
 
