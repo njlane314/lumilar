@@ -38,6 +38,7 @@ DetectorConstruction::Detector DetectorConstruction::ReadDetector(std::stringstr
     return detector;
 }
 
+
 G4VPhysicalVolume* DetectorConstruction::Construct() { 
     std::ifstream config_file(detector_config_);
     std::stringstream ss;
@@ -56,6 +57,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Transform3D detector_transform(G4Translate3D(detector_position) * G4Rotate3D());
 
     G4VPhysicalVolume* detector_physical = new G4PVPlacement(detector_transform, detector_logical, "detector.physical", 0, false, 0);
-   
+
     return detector_physical;
+}
+
+void DetectorConstruction::GetDetectorDimensions(double& width, double& height, double& depth) {
+    width = detector_.width;
+    height = detector_.height;
+    depth = detector_.depth;
 }

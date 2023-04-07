@@ -9,3 +9,5 @@
 - [] Visualisation
 - [] Supernova events
 - [] Remake CMakeLists.txt files
+
+- [] Add detector gdml files, requires reinstalling geant4 with gdml enabled
