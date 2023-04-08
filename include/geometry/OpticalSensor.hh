@@ -69,6 +69,14 @@ public:
         return std::make_unique<OpticalSensor>(std::make_unique<Circle>(radius), position, orientation);
     }
 
+    std::pair<double, double> getDimensions() const {
+        if (auto rectangleShape = dynamic_cast<const OpticalSensor::Rectangle*>(shape_.get())) {
+            return std::make_pair(rectangleShape->getWidth(), rectangleShape->getHeight());
+        } else {
+            return std::make_pair(0.0, 0.0);
+        }
+    }
+
 private:
     std::unique_ptr<Shape> shape_;
     Eigen::Vector3d position_;

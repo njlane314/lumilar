@@ -31,7 +31,6 @@ void SensorConstruction::ConstructRectangularOpticalSensors(PlaneOrientation pla
     const int num_sensors_width = floor(plane_width / sensor_separation);
     const int num_sensors_height = floor(plane_height / sensor_separation);
 
-    std::unique_ptr<OpticalSensor::Shape> rectangle_template = std::make_unique<OpticalSensor::Rectangle>(sensor_width, sensor_height);
     for (int i = 0; i < num_sensors_width; ++i) {
         for (int j = 0; j < num_sensors_height; ++j) {
             Eigen::Vector3d sensor_position = plane_center;
@@ -56,8 +55,8 @@ void SensorConstruction::ConstructRectangularOpticalSensors(PlaneOrientation pla
                 default:
                     throw std::invalid_argument("-- Invalid sensor orientation");
             }
-            OpticalSensor optical_sensor(std::move(rectangle_template), sensor_position, plane_orientation);
-            optical_sensors_.push_back(std::make_unique<OpticalSensor>(std::move(optical_sensor)));
+            std::unique_ptr<OpticalSensor> optical_sensor = OpticalSensor::createRectangle(sensor_width, sensor_height, sensor_position, plane_orientation);
+            optical_sensors_.push_back(std::move(optical_sensor));
         }
     }
 }
@@ -106,4 +105,8 @@ void SensorConstruction::ConstructPlane(const PlaneOrientation& orientation, dou
 
 const OpticalSensorVector& SensorConstruction::GetOpticalSensors() {
     return optical_sensors_;
+}
+
+int SensorConstruction::GetNumOpticalSensors() const {
+    return optical_sensors_.size();
 }

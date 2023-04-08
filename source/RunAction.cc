@@ -7,8 +7,7 @@ RunAction::~RunAction() {}
 void RunAction::BeginOfRunAction(const G4Run* run) {
 	start_time_ = std::chrono::high_resolution_clock::now();
 
-	std::cout << "-- Beginning run..." << std::endl;
-	std::cout << "-- Run ID: " << run->GetRunID() << std::endl;
+	std::cout << "-- Beginning run... " << std::endl;
 	
 	new AnalysisManager();
 	new OutputManager();
@@ -22,9 +21,11 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 
 	for (const auto& sensor : optical_sensors) {
 		std::cout << "Sensor position: (" << sensor->getPosition().x() << ", " << sensor->getPosition().y() << ", " << sensor->getPosition().z() << ")\n";
-		std::cout << "Sensor orientation: " << static_cast<int>(sensor->getOrientation()) << "\n";
-		std::cout << "\n";
+		auto [width, height] = sensor->getDimensions();
+		std::cout << "Sensor dimensions: (" << width << ", " << height << ")\n";
 	}
+
+	std::cout << "Number of optical sensors: " << SensorConstruction::GetInstance()->GetNumOpticalSensors() << "\n";
 
 	OutputManager::Instance()->CreateFile();
 }
