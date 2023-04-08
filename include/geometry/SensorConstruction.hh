@@ -10,6 +10,15 @@
 
 class SensorConstruction {
 public:
+    enum class PlaneOrientation {
+        X_POSITIVE,
+        X_NEGATIVE,
+        Y_POSITIVE,
+        Y_NEGATIVE,
+        Z_POSITIVE,
+        Z_NEGATIVE
+    };
+    
     class SensorShape {
     public:
         virtual double GetArea() const = 0;
@@ -33,20 +42,13 @@ public:
         double radius;
         double GetArea() const override { return M_PI * radius * radius; }
     };
+    
     struct OpticalSensor {
         std::variant<std::unique_ptr<SquareSensor>, std::unique_ptr<RectangularSensor>, std::unique_ptr<CircularSensor>> shape;
         Eigen::Vector3d position;
+        PlaneOrientation orientation;
     };
 
-    enum class PlaneOrientation {
-        X_POSITIVE,
-        X_NEGATIVE,
-        Y_POSITIVE,
-        Y_NEGATIVE,
-        Z_POSITIVE,
-        Z_NEGATIVE
-    };
-    
     SensorConstruction();
     ~SensorConstruction();
     static SensorConstruction* GetInstance();

@@ -24,6 +24,12 @@ Properties* MaterialProperties::get_material_properties() {
     return &material_properties_;
 }
 
+void MaterialProperties::get_recombination_parameters(double& ARecomb, double& BRecomb, double& CRecomb) {
+    ARecomb = 0.05 * std::pow(material_properties_.electric_field, -0.85);
+    BRecomb = 0.06 * std::pow(material_properties_.electric_field, -0.85);
+    CRecomb = 1/6;
+}
+
 Properties MaterialProperties::initialise_properties(std::string material = "lAr") {
     Properties material_properties = {};
     if (material == "lAr") {
