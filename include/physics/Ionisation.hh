@@ -3,13 +3,14 @@
 
 #include <vector>
 #include <iostream>
+#include <Eigen/Dense>
 
 #include "ThermalElectron.hh"
 #include "Ejection.hh"
 #include "Excitation.hh"
 
 struct ElectronCloud {
-    std::vector<double> position;
+    Eigen::Vector3d position;
     std::vector<ThermalElectron> electrons;
 };
 
@@ -19,7 +20,7 @@ class Ionisation {
     ~Ionisation();
 
     void add_cloud(const EnergyDeposit* energy_deposit, int cloud_size);
-    std::vector<std::vector<double>> get_cloud_positions() const;
+    std::vector<Eigen::Vector3d> get_cloud_positions() const;
     std::vector<double> get_cloud_sizes() const;
     void print_ionisation() const;
 

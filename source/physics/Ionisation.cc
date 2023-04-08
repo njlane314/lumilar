@@ -26,8 +26,8 @@ std::vector<double> Ionisation::get_cloud_sizes() const {
     return cloud_sizes;
 }
 
-std::vector<std::vector<double>> Ionisation::get_cloud_positions() const {
-    std::vector<std::vector<double>> cloud_positions;
+std::vector<Eigen::Vector3d> Ionisation::get_cloud_positions() const {
+    std::vector<Eigen::Vector3d> cloud_positions;
     for (const auto& a_cloud : ionisation_) {
         cloud_positions.push_back(a_cloud.position);
     }
