@@ -25,6 +25,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     analysis_manager->RandomPulseShape(signal->get_scintillation());
     analysis_manager->PulseShapeDiscrimination(signal->get_scintillation(), signal->get_ionisation());
 
+
     pulse_shape_output->RecordEntry(signal->get_scintillation());
 
     signal->delete_signal();

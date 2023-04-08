@@ -8,6 +8,7 @@
 #include "OutputManager.hh"
 #include "AnalysisManager.hh"
 #include "PulseShapeOutput.hh"
+#include "SensorConstruction.hh"
 
 #include "MaterialProperties.hh"
 

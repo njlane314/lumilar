@@ -9,6 +9,7 @@
 
 #include "G4Step.hh"
 #include <memory>
+#include <Eigen/Dense>
 
 class Signal {
  public:

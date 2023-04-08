@@ -5,21 +5,21 @@
 #include <stdexcept>
 
 #include <Eigen/Dense>
+#include "Scintillation.hh"
 #include "SensorConstruction.hh"
-
 
 class AnalyticalOptics {
 public:
     AnalyticalOptics();
     virtual ~AnalyticalOptics();
 
-    double GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor);
-    double RectangularSolidAngle(const Eigen::Vector3d& separation, const OpticalSensor& sensor);
+    double GeometricQuenching(const PhotonRadiant* a_photon_radiant, const SensorConstruction::OpticalSensor* sensor);
+    double RectangularSolidAngle(const Eigen::Vector3d* separation, const SensorConstruction::OpticalSensor* sensor);
 
 private:
-    double CalculateSolidAngle(const OpticalSensor& sensor, const Eigen::Vector3d& separation);
-    Eigen::Vector3d CreateProjectionGeometry(const OpticalSensor& sensor, const Eigen::Vector3d& separation);
+    double CalculateSolidAngle(const SensorConstruction::OpticalSensor* sensor, const Eigen::Vector3d* separation);
+    Eigen::Vector3d CreateProjectionGeometry(const SensorConstruction::OpticalSensor* sensor, const Eigen::Vector3d* separation);
 
     double AbsorptionQuenching(double distance);
-} 
+}; 
 #endif // ANALYTICALOPTICS_HH

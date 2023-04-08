@@ -1,9 +1,11 @@
 #ifndef ENERGY_DEPOSIT_HH
 #define ENERGY_DEPOSIT_HH
 
+#include <Eigen/Dense>
+
 class EnergyDeposit {
 public:
-    EnergyDeposit(double visible, double linear_transfer, std::string particle_type, std::vector<double> position, double length, double time) : visible(visible), linear_transfer(linear_transfer), particle_type(particle_type), position(position), length(length), time(time) {};
+    EnergyDeposit(double visible, double linear_transfer, std::string particle_type, Eigen::Vector3d position, double length, double time) : visible(visible), linear_transfer(linear_transfer), particle_type(particle_type), position(position), length(length), time(time) {};
     ~EnergyDeposit() {};
 
     double get_visible_energy() const { return visible; }
@@ -15,8 +17,8 @@ public:
     std::string get_particle_type() const { return particle_type; }
     void set_particle_type(std::string value) { particle_type = value; }
     
-    std::vector<double> get_position() const { return position; }
-    void set_position(std::vector<double> value) { position = value; }
+    Eigen::Vector3d get_position() const { return position; }
+    void set_position(Eigen::Vector3d value) { position = value; }
 
     double get_length() const { return length; }
     void set_length(double value) { length = value; }
@@ -28,7 +30,7 @@ private:
     double visible;
     double linear_transfer;
     std::string particle_type;
-    std::vector<double> position;
+    Eigen::Vector3d position;
     double length;
     double time;
 };

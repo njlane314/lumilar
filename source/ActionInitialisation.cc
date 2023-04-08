@@ -14,8 +14,7 @@ ActionInitialisation::ActionInitialisation() : G4VUserActionInitialization()
 ActionInitialisation::~ActionInitialisation()
 {}
 
-void ActionInitialisation::Build() const
-{
+void ActionInitialisation::Build() const {
     SetUserAction(new PrimaryGeneratorAction());
     SetUserAction(new RunAction());
 	SetUserAction(new EventAction());

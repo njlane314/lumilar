@@ -78,7 +78,7 @@ void Signal::create_energy_deposit(const G4Step* step) {
     double linear_transfer = step->GetTotalEnergyDeposit() / step->GetStepLength();
     std::string particle_type = step->GetTrack()->GetDefinition()->GetParticleName();
     double length = step->GetStepLength();
-    std::vector<double> position = { step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z() };
+    Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
     double time = step->GetPreStepPoint()->GetGlobalTime();
 
     energy_deposit_ = std::make_unique<EnergyDeposit>(visible, linear_transfer, particle_type, position, length, time);
