@@ -9,4 +9,5 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 	output_manager_->RecordEntry(step);
 
 	Signal::get_instance()->process_response(step);
+
 }

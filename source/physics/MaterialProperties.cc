@@ -55,6 +55,8 @@ Properties MaterialProperties::initialise_properties(std::string material = "lAr
 
         material_properties.excited_rate_heavy = 0.0;
         material_properties.quenched_rate_heavy = 2.3 * 1e-3 * ns;
+
+        material_properties.absorption_length = 20. * m;
     } 
     else if (material == "lArXe") {
         // change these values, and add Xe doping concentration
@@ -80,6 +82,9 @@ Properties MaterialProperties::initialise_properties(std::string material = "lAr
 
         material_properties.excited_rate_heavy = 0.0;
         material_properties.quenched_rate_heavy = 2.3 * 1e-3 * ns;
+
+        material_properties.absorption_length = -1.;
     }
+    
     return material_properties;
 }

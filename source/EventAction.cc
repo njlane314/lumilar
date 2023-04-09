@@ -28,6 +28,25 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     pulse_shape_output->RecordEntry(signal->get_scintillation());
 
+
+    std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
+    const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
+    
+    int num_photons;
+    int num_photons_detected;
+    for (const auto& a_optical_sensor : optical_sensors) {
+        for (auto& a_photon_radiant : photon_radiants) {
+            num_photons = a_photon_radiant.photons.size();
+            num_photons_detected = AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) * a_photon_radiant.photons.size();
+            //std::cout << "Geometric quenching factor: " << AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) << "\n";
+        }
+    }
+
+    std::cout << "Number of photons detected: " << num_photons_detected << "\n";
+    std::cout << "Number of photons: " << num_photons << "\n";
+    std::cout << "Geometric quenching factor: " << num_photons_detected / num_photons << "\n";
+
+
     signal->delete_signal();
 
     // update progress bar

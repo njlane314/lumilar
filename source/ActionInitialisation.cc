@@ -8,16 +8,14 @@
 #include "OutputManager.hh"
 #include "AnalysisManager.hh"
 
-ActionInitialisation::ActionInitialisation() : G4VUserActionInitialization()
-{}
+ActionInitialisation::ActionInitialisation() : G4VUserActionInitialization() {}
 
-ActionInitialisation::~ActionInitialisation()
-{}
+ActionInitialisation::~ActionInitialisation() {}
 
 void ActionInitialisation::Build() const {
-    SetUserAction(new PrimaryGeneratorAction());
-    SetUserAction(new RunAction());
+	SetUserAction(new PrimaryGeneratorAction());
+	SetUserAction(new RunAction());
 	SetUserAction(new EventAction());
 	SetUserAction(new TrackingAction());
-  	SetUserAction(new SteppingAction());
+	SetUserAction(new SteppingAction());
 }

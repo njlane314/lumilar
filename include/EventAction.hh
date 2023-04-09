@@ -14,6 +14,9 @@
 #include "AnalysisManager.hh"
 #include "PulseShapeOutput.hh"
 
+#include "SensorConstruction.hh"
+#include "AnalyticalOptics.hh"
+
 class EventAction : public G4UserEventAction {
  public:
 	EventAction();

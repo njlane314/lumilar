@@ -30,6 +30,8 @@ struct Properties {
 
     double excited_rate_heavy;
     double quenched_rate_heavy;
+
+    double absorption_length;
 };
 
 class MaterialProperties {

@@ -21,6 +21,10 @@ void Scintillation::add_radiant(const EnergyDeposit* energy_deposit, int radiant
     scintillation_.push_back(current_radiant);
 }
 
+std::vector<PhotonRadiant> Scintillation::get_photon_radiants() const {
+    return scintillation_;
+}
+
 std::vector<Eigen::Vector3d> Scintillation::get_radiant_positions() const {
     std::vector<Eigen::Vector3d> radiant_positions;
     for (const auto& a_radiant : scintillation_) {

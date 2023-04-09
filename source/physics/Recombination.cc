@@ -15,6 +15,8 @@ std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposi
         optical_photons += num_ionisations - thermal_electrons;
     }
 
+    std::cout << "Recombination: " << thermal_electrons << " thermal electrons, " << optical_photons << " optical photons" << std::endl;
+
     return std::make_pair(thermal_electrons, optical_photons);
 }
 

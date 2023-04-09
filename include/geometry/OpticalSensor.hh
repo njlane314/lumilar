@@ -77,6 +77,13 @@ public:
         }
     }
 
+    bool isRectangular() const {
+        const OpticalSensor::Shape* shape = getShape();
+        const OpticalSensor::Rectangle* rectangleShape = dynamic_cast<const OpticalSensor::Rectangle*>(shape);
+        return (rectangleShape != nullptr);
+    }
+
+
 private:
     std::unique_ptr<Shape> shape_;
     Eigen::Vector3d position_;
