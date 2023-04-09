@@ -7,7 +7,7 @@ AnalyticalOptics::~AnalyticalOptics() {}
 double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor) {
     // https://arxiv.org/pdf/2010.00324.pdf
     Eigen::Vector3d separation = sensor->getPosition() - a_photon_radiant->position;
-    double distance = separation.norm();
+    double distance = separation.norm() * m;
 
     double solid_angle = CalculateSolidAngle(sensor, &separation);
     double visibility = solid_angle / (4 * M_PI);

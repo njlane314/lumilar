@@ -5,6 +5,7 @@
 #include "Scintillation.hh"
 #include "OpticalSensor.hh"
 #include "MaterialProperties.hh"
+#include "G4SystemOfUnits.hh"
 
 class AnalyticalOptics {
 public:
