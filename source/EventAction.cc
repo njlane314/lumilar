@@ -10,24 +10,6 @@ void EventAction::BeginOfEventAction(const G4Event* event) {
 
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::get_instance();
-    auto analysis_manager = AnalysisManager::Instance();
-    auto output_manager = OutputManager::Instance();
-    auto pulse_shape_output = PulseShapeOutput::Instance();
-
-    output_manager->RecordEntry(event);
-    output_manager->RecordEntry(signal->get_scintillation(), signal->get_ionisation());
-    
-    analysis_manager->DiscreteResponse(signal->get_scintillation(), signal->get_ionisation());
-    analysis_manager->EventResponse(event, signal, signal->get_scintillation(), signal->get_ionisation());
-    analysis_manager->SignalYield(signal, signal->get_scintillation(), signal->get_ionisation());
-
-    analysis_manager->StackPulseShape(signal->get_scintillation());
-    analysis_manager->RandomPulseShape(signal->get_scintillation());
-    analysis_manager->PulseShapeDiscrimination(signal->get_scintillation(), signal->get_ionisation());
-
-
-    pulse_shape_output->RecordEntry(signal->get_scintillation());
-
 
     std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
     const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
@@ -46,6 +28,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     std::cout << "Number of photons: " << num_photons << "\n";
     std::cout << "Geometric quenching factor: " << num_photons_detected / num_photons << "\n";
 
+    calorimetry_->processSignal(signal);
 
     signal->delete_signal();
 
@@ -56,6 +39,10 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     if (event_idx % progress_interval_ == 0) {
         UpdateProgressBar(event_idx + 1, events_to_generate_, progress_interval_);
+    }
+
+    if (event_idx == events_to_generate_ - 1) {
+        calorimetry_->writeToFile("results.root");
     }
 }
 

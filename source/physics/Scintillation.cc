@@ -41,6 +41,14 @@ std::vector<double> Scintillation::get_radiant_sizes() const {
     return radiant_sizes;
 }
 
+int Scintillation::get_total_photons() const {
+    int total_photons = 0;
+    for (const auto& a_radiant : scintillation_) {
+        total_photons += a_radiant.photons.size();
+    }
+    return total_photons;
+}
+
 std::vector<double> Scintillation::get_emission_times() const {
     std::vector<double> emission_times;
     for (const auto& a_radiant : scintillation_) {

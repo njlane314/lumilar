@@ -16,6 +16,5 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track) {
 }
 
 void TrackingAction::PostUserTrackingAction(const G4Track* track) {
-	auto output_manager = OutputManager::Instance();
-    output_manager->RecordEntry(track);
+	
 }

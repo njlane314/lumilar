@@ -3,8 +3,6 @@
 
 #include "G4UserTrackingAction.hh"
 
-#include "OutputManager.hh"
-
 #include "G4ParticleDefinition.hh"
 #include "G4VProcess.hh"
 #include "G4SystemOfUnits.hh"

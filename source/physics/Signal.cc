@@ -29,7 +29,7 @@ Signal* Signal::get_instance() {
     return instance_;
 }
 
-Scintillation* Signal::get_scintillation() {
+Scintillation* Signal::get_scintillation() const {
     return scintillation_.get();
 }
 
@@ -73,6 +73,7 @@ void Signal::delete_signal() {
     instance_ = nullptr;
 }
 
+// move to medium response
 void Signal::create_energy_deposit(const G4Step* step) {
     double visible = step->GetTotalEnergyDeposit() - step->GetNonIonizingEnergyDeposit();
     double linear_transfer = step->GetTotalEnergyDeposit() / step->GetStepLength();

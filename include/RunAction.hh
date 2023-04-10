@@ -5,9 +5,6 @@
 
 #include "G4UserRunAction.hh"
 
-#include "OutputManager.hh"
-#include "AnalysisManager.hh"
-#include "PulseShapeOutput.hh"
 #include "SensorConstruction.hh"
 
 #include "MaterialProperties.hh"
