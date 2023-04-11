@@ -21,7 +21,7 @@ public:
 
     template<typename... Args>
     void fillHistogram(const std::string& signalID, const std::string& name, Args... args) {
-        std::cout << "-- Filling histogram \"" << name << "\" for signal ID \"" << signalID << "\"" << std::endl;
+        //std::cout << "-- Filling histogram \"" << name << "\" for signal ID \"" << signalID << "\"" << std::endl;
         for (const auto& hist : histograms_[signalID]) {
             if (hist->GetName() == name) {
                 if constexpr (sizeof...(args) == 1) {

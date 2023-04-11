@@ -13,7 +13,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	new SensorConstruction();
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
-	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 1.0, 0.5, 0.5);
+	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 600., 600., 600.);
 	const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
 
 	for (const auto& sensor : optical_sensors) {
@@ -26,8 +26,6 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 }
 
 void RunAction::EndOfRunAction(const G4Run* run) {
-
-
 	auto end_time = std::chrono::high_resolution_clock::now();
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time_);
     std::cout << "-- Time taken to complete: " << duration_s.count() << " s" << std::endl;

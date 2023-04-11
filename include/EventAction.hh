@@ -14,6 +14,7 @@
 #include "SensorConstruction.hh"
 #include "AnalyticalOptics.hh"
 #include "Calorimetry.hh"
+#include "PulseShape.hh"
 
 class EventAction : public G4UserEventAction {
  public:
@@ -29,6 +30,7 @@ class EventAction : public G4UserEventAction {
 	
 	Signal* signal_;
 	Calorimetry* calorimetry_;
+	PulseShape* pulse_shape_;
 
 	int events_to_generate_;
 	int progress_interval_;

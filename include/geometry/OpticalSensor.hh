@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+#include "OpticalPhoton.hh"
+
 enum class PlaneOrientation {
     X_POS,
     X_NEG,
@@ -83,11 +85,28 @@ public:
         return (rectangleShape != nullptr);
     }
 
+    void addPhoton(const OpticalPhoton& photon) {
+        detected_photons_.push_back(photon);
+    }
+
+    const std::vector<OpticalPhoton>& getPhotons() const {
+        return detected_photons_;
+    }
+
+    const std::vector<double> getPhotonTimes() const {
+        std::vector<double> photon_times;
+        for (const auto& photon : detected_photons_) {
+            photon_times.push_back(photon.get_emission_time());
+        }
+        return photon_times;
+    }
+
 
 private:
     std::unique_ptr<Shape> shape_;
     Eigen::Vector3d position_;
     PlaneOrientation orientation_;
+    std::vector<OpticalPhoton> detected_photons_;
 };
 
 using OpticalSensorVector = std::vector<std::unique_ptr<OpticalSensor>>;

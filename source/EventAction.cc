@@ -13,22 +13,12 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
     const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
-    
-    int num_photons;
-    int num_photons_detected;
-    for (const auto& a_optical_sensor : optical_sensors) {
-        for (auto& a_photon_radiant : photon_radiants) {
-            num_photons = a_photon_radiant.photons.size();
-            num_photons_detected = AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) * a_photon_radiant.photons.size();
-            //std::cout << "Geometric quenching factor: " << AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) << "\n";
-        }
-    }
+    AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
 
-    std::cout << "Number of photons detected: " << num_photons_detected << "\n";
-    std::cout << "Number of photons: " << num_photons << "\n";
-    std::cout << "Geometric quenching factor: " << num_photons_detected / num_photons << "\n";
+    pulse_shape_->processSensors(optical_sensors);
+    pulse_shape_->writeToFile("results.root");
 
-    calorimetry_->processSignal(signal);
+    //calorimetry_->processSignal(signal);
 
     signal->delete_signal();
 
@@ -42,7 +32,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     }
 
     if (event_idx == events_to_generate_ - 1) {
-        calorimetry_->writeToFile("results.root");
+        //calorimetry_->writeToFile("results.root");
     }
 }
 
