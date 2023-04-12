@@ -18,13 +18,14 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     pulse_shape_->processSensors(optical_sensors);
     pulse_shape_->writeToFile("results.root");
 
-    //calorimetry_->processSignal(signal);
+    calorimetry_->processSignal(signal);
 
     signal->delete_signal();
 
     // update progress bar
     int event_idx = event->GetEventID();
     events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+    
     progress_interval_ = events_to_generate_ / 100.;
 
     if (event_idx % progress_interval_ == 0) {
@@ -32,7 +33,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     }
 
     if (event_idx == events_to_generate_ - 1) {
-        //calorimetry_->writeToFile("results.root");
+        calorimetry_->writeToFile("results.root");
     }
 }
 

@@ -61,10 +61,10 @@ public:
         std::cout << "-- Creating histogram \"" << name << "\" for signal ID \"" << signalID << "\"" << std::endl;
 
         if constexpr (std::is_same_v<HistType, TH1F>) {
-            hist = std::make_unique<HistType>(name.c_str(), name.c_str(), nBinsX, xMin, xMax);
+            hist = std::make_unique<HistType>((name+signalID).c_str(), name.c_str(), nBinsX, xMin, xMax);
         }
         else if constexpr (std::is_same_v<HistType, TH2F>) {
-            hist = std::make_unique<HistType>(name.c_str(), name.c_str(), nBinsX, xMin, xMax, nBinsY, yMin, yMax);
+            hist = std::make_unique<HistType>((name+signalID).c_str(), name.c_str(), nBinsX, xMin, xMax, nBinsY, yMin, yMax);
         }
         else {
             static_assert(std::is_same_v<HistType, TH1F> || std::is_same_v<HistType, TH2F>, "Incorrect histogram type");
@@ -72,6 +72,7 @@ public:
 
         hist->GetXaxis()->SetTitle(xTitle.c_str());
         hist->GetYaxis()->SetTitle(yTitle.c_str());
+        
         histograms_[signalID].push_back(std::move(hist));
         std::cout << "-- Histogram \"" << name << "\" created for signal ID \"" << signalID << "\"" << std::endl;
     }

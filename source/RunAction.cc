@@ -13,7 +13,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	new SensorConstruction();
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
-	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 600., 600., 600.);
+	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100.);
 	const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
 
 	for (const auto& sensor : optical_sensors) {
