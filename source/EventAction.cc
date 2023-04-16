@@ -11,14 +11,13 @@ void EventAction::BeginOfEventAction(const G4Event* event) {
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::get_instance();
 
-    std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
-    const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
-    AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
+    // memeory leak here
+    //std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
+    //const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
+    //AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
 
-    pulse_shape_->processSensors(optical_sensors);
+    pulse_shape_->processSignal(signal);
     pulse_shape_->writeToFile("results.root");
-
-    calorimetry_->processSignal(signal);
 
     signal->delete_signal();
 
@@ -33,7 +32,9 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     }
 
     if (event_idx == events_to_generate_ - 1) {
-        calorimetry_->writeToFile("results.root");
+        std::cout << "writing ratio plots" << std::endl;
+        std::cout << "##############################################" << std::endl;
+        pulse_shape_->writeAndFinish("results.root");
     }
 }
 

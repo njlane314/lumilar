@@ -14,6 +14,8 @@
 #include "marley/Generator.hh"
 #include "marley/JSONConfig.hh"
 
+#include "Signal.hh"
+
 #include <CLHEP/Random/RandExponential.h>
 
 class MarleyGenerator {

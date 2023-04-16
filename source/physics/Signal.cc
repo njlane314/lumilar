@@ -69,6 +69,22 @@ std::vector<double> Signal::get_lengths() const {
     return lengths;
 }
 
+void Signal::record_delay_time(const double delay_time) {
+    delay_times_.push_back(delay_time);
+}
+
+std::vector<double> Signal::get_delay_times() const {
+    return delay_times_;
+}
+
+void Signal::record_primary_energy(const double primary_energy) {
+    primary_energy_ = primary_energy;
+}
+
+double Signal::get_primary_energy() const {
+    return primary_energy_;
+}
+
 void Signal::delete_signal() {
     instance_ = nullptr;
 }

@@ -13,9 +13,9 @@
     source: {
         type: "histogram",
         neutrino: "ve",
-        E_bin_lefts: [ 10., 20., 30. ],   // Low edges of energy bins (MeV)
-        weights: [ 0.2, 0.5, 0.3 ],       // Bin weights (dimensionless)
-        Emax: 40.,                        // Upper edge of the final bin (MeV)
+        E_bin_lefts: [ 40., ],   // Low edges of energy bins (MeV)
+        weights: [ 1 ],       // Bin weights (dimensionless)
+        Emax: 50.,                        // Upper edge of the final bin (MeV)
     },
   
     // Incident neutrino direction 3-vector

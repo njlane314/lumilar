@@ -24,6 +24,10 @@ class Signal {
   std::vector<double> get_linear_transfers() const;
   std::vector<double> get_lengths() const;
   void delete_signal();
+  void record_delay_time(const double delay_time);
+  std::vector<double> get_delay_times() const;
+  void record_primary_energy(const double primary_energy);
+  double get_primary_energy() const;
 
  private:
   void create_energy_deposit(const G4Step* step);
@@ -36,6 +40,8 @@ class Signal {
   std::unique_ptr<Ionisation> ionisation_;
   std::unique_ptr<EnergyDeposit> energy_deposit_;
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
+  std::vector<double> delay_times_;
+  double primary_energy_;
 };
 
 #endif // SIGNAL_HH
