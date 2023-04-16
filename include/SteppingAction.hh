@@ -3,7 +3,6 @@
 
 #include "G4UserSteppingAction.hh"
 
-#include "OutputManager.hh"
 #include "Signal.hh"
 
 class SteppingAction : public G4UserSteppingAction {

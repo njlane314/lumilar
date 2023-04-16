@@ -23,6 +23,7 @@ class Scintillation {
 
     void add_radiant(const EnergyDeposit* energy_depsoit, int radiant_size, double singlet_to_triplet);
     std::vector<PhotonRadiant> get_photon_radiants() const;
+    int get_total_photons() const;
     std::vector<double> get_emission_times() const;
     std::vector<Eigen::Vector3d> get_radiant_positions() const;
     std::vector<double> get_radiant_sizes() const;

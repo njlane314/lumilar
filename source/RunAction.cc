@@ -9,14 +9,11 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 
 	std::cout << "-- Beginning run... " << std::endl;
 	
-	new AnalysisManager();
-	new OutputManager();
 	new MaterialProperties("lAr");
-	new PulseShapeOutput();
 	new SensorConstruction();
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
-	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 1.0, 0.5, 0.5);
+	SensorConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100.);
 	const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
 
 	for (const auto& sensor : optical_sensors) {
@@ -26,18 +23,9 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	}
 
 	std::cout << "Number of optical sensors: " << SensorConstruction::GetInstance()->GetNumOpticalSensors() << "\n";
-
-	OutputManager::Instance()->CreateFile();
 }
 
 void RunAction::EndOfRunAction(const G4Run* run) {
-	AnalysisManager::Instance()->SaveFile();
-
-	OutputManager::Instance()->RecordEntry(run);
-	OutputManager::Instance()->SaveFile();
-
-	PulseShapeOutput::Instance()->SaveFile();
-
 	auto end_time = std::chrono::high_resolution_clock::now();
     auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time_);
     std::cout << "-- Time taken to complete: " << duration_s.count() << " s" << std::endl;

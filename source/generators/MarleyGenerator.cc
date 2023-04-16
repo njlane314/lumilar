@@ -19,6 +19,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::Generator marley_generator = marley_config.create_generator();
     marley::Event marley_event = marley_generator.create_event();
 
+    auto primary_energy = marley_event.projectile().kinetic_energy();
+    Signal::get_instance()->record_primary_energy(primary_energy);
+
     double global_time = 0.;
 
     const auto& marley_cascades = marley_event.get_cascade_levels();
@@ -44,6 +47,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
                 double decay_time = sample_decay_time(iter->second);
                 primary_vertex->SetT0(global_time + decay_time);
                 std::cout << "Decay time: " << decay_time << std::endl;
+                Signal::get_instance()->record_delay_time(decay_time);
             }
 
             cascade_idx++;

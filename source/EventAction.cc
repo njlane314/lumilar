@@ -10,52 +10,31 @@ void EventAction::BeginOfEventAction(const G4Event* event) {
 
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::get_instance();
-    auto analysis_manager = AnalysisManager::Instance();
-    auto output_manager = OutputManager::Instance();
-    auto pulse_shape_output = PulseShapeOutput::Instance();
 
-    output_manager->RecordEntry(event);
-    output_manager->RecordEntry(signal->get_scintillation(), signal->get_ionisation());
-    
-    analysis_manager->DiscreteResponse(signal->get_scintillation(), signal->get_ionisation());
-    analysis_manager->EventResponse(event, signal, signal->get_scintillation(), signal->get_ionisation());
-    analysis_manager->SignalYield(signal, signal->get_scintillation(), signal->get_ionisation());
+    // memeory leak here
+    //std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
+    //const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
+    //AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
 
-    analysis_manager->StackPulseShape(signal->get_scintillation());
-    analysis_manager->RandomPulseShape(signal->get_scintillation());
-    analysis_manager->PulseShapeDiscrimination(signal->get_scintillation(), signal->get_ionisation());
-
-
-    pulse_shape_output->RecordEntry(signal->get_scintillation());
-
-
-    std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
-    const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
-    
-    int num_photons;
-    int num_photons_detected;
-    for (const auto& a_optical_sensor : optical_sensors) {
-        for (auto& a_photon_radiant : photon_radiants) {
-            num_photons = a_photon_radiant.photons.size();
-            num_photons_detected = AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) * a_photon_radiant.photons.size();
-            //std::cout << "Geometric quenching factor: " << AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get()) << "\n";
-        }
-    }
-
-    std::cout << "Number of photons detected: " << num_photons_detected << "\n";
-    std::cout << "Number of photons: " << num_photons << "\n";
-    std::cout << "Geometric quenching factor: " << num_photons_detected / num_photons << "\n";
-
+    pulse_shape_->processSignal(signal);
+    pulse_shape_->writeToFile("results.root");
 
     signal->delete_signal();
 
     // update progress bar
     int event_idx = event->GetEventID();
     events_to_generate_ = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+    
     progress_interval_ = events_to_generate_ / 100.;
 
     if (event_idx % progress_interval_ == 0) {
         UpdateProgressBar(event_idx + 1, events_to_generate_, progress_interval_);
+    }
+
+    if (event_idx == events_to_generate_ - 1) {
+        std::cout << "writing ratio plots" << std::endl;
+        std::cout << "##############################################" << std::endl;
+        pulse_shape_->writeAndFinish("results.root");
     }
 }
 

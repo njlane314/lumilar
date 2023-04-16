@@ -1,0 +1,9 @@
+Detector:
+    Name: dune
+    Material: G4_lAr
+    Shape: Box
+    Width: 3.5 # m
+    Height: 12 # m
+    Depth: 60 # m
+    Position: 0 0 0 # m
+    Step: 0.1 # mm

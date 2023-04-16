@@ -6,6 +6,7 @@
 #include "OpticalSensor.hh"
 #include "MaterialProperties.hh"
 #include "G4SystemOfUnits.hh"
+#include "Signal.hh"
 
 class AnalyticalOptics {
 public:
@@ -16,6 +17,7 @@ public:
     static double CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation);
     static Eigen::Vector3d CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation);
     static double RectangularSolidAngle(const Eigen::Vector3d* projection, const double& width, const double& height);
+    static void CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors);
 
 private:
     static double AbsorptionQuenching(double distance);
