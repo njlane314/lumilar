@@ -20,6 +20,7 @@ Signal::Signal()
 
 Signal::~Signal() {
     delete instance_;
+    instance_ = nullptr;
 }
 
 Signal* Signal::get_instance() {
@@ -33,7 +34,7 @@ Scintillation* Signal::get_scintillation() const {
     return scintillation_.get();
 }
 
-Ionisation* Signal::get_ionisation() {
+Ionisation* Signal::get_ionisation() const {
     return ionisation_.get();
 }
 

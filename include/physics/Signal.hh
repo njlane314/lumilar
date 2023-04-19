@@ -19,7 +19,7 @@ class Signal {
   static Signal* get_instance();
   void process_response(const G4Step* step);
   Scintillation* get_scintillation() const;
-  Ionisation* get_ionisation();
+  Ionisation* get_ionisation() const;
   std::vector<double> get_visible_deposits() const;
   std::vector<double> get_linear_transfers() const;
   std::vector<double> get_lengths() const;

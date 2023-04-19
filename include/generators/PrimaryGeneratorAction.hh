@@ -24,15 +24,15 @@
 #include "G4PrimaryVertex.hh"
 #include "G4SystemOfUnits.hh"
 
-class G4Event;
-
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction, public G4UImessenger {
 public:
-    PrimaryGeneratorAction();
+    PrimaryGeneratorAction(std::string output_filename);
     ~PrimaryGeneratorAction();
 
     void SetNewValue(G4UIcommand* cmd, G4String new_value);
     void GeneratePrimaries(G4Event* anEvent);
+
+    inline std::string getOutputFilename() const { return output_filename_; }
 
 private:
     double detector_width_;
@@ -52,6 +52,8 @@ private:
     
     MarleyGenerator* marley_generator_;
     G4String marley_source_;
+
+    std::string output_filename_;
 };
 
 #endif // PRIMARY_GENERATOR_ACTION_HH

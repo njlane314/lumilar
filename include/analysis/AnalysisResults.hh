@@ -8,6 +8,8 @@
 #include <iostream>
 #include <ostream>
 
+#include "AnalysisManager.hh"
+
 #include <TFile.h>
 #include <TH1.h>
 #include <TH2.h>
@@ -22,7 +24,7 @@ public:
     ~AnalysisResults() {}
 
     template<typename... Args>
-    void fillHistogram(const std::string& name, Args... args) {
+    void fillHistogram(const std::string& name, Args... args) { // not sure if this function works properly
         for (const auto& hist : histograms_) {
             if (hist->GetName() == name) {
                 if constexpr (std::is_same_v<HistType, TH1F>) {
@@ -55,18 +57,6 @@ public:
                 return;
             }
         }
-        
-        /*if constexpr (sizeof...(args) == 1) {
-            createHistogram(name, "", "", 100, 1, 0);
-            fillHistogram(name, args...);
-        }
-        else if constexpr (sizeof...(args) == 2) {
-            createHistogram(name, "", "", 100, 1, 0, 100, 1, 0);
-            fillHistogram(name, args...);
-        }
-        else {
-            static_assert(sizeof...(args) == 1 || sizeof...(args) == 2, "-- Incorrect number of arguments for fillHistogram");
-        }*/
     }
 
     void createHistogram(const std::string& name, const std::string& xTitle, const std::string& yTitle, int nBinsX = 100, double xMin = 1., double xMax = 0., int nBinsY = 100, double yMin = 1., double yMax = 0.) {
@@ -90,6 +80,8 @@ public:
         
         histograms_.push_back(std::move(hist));
     }
+
+    //for unstacked histograms, need to create canvas and draw each histogram with "same" parameter
 
     HistType* getHistogram(const std::string& name) {
         for (const auto& hist : histograms_) {
@@ -123,6 +115,22 @@ public:
         file.Close();
     }
 
+    void saveHistograms() {
+        std::string output_filename = AnalysisManager::GetInstance()->getOutputFilename();
+
+        TFile file(output_filename.c_str(), "UPDATE");
+        if (!file.IsOpen()) {
+            std::cerr << "-- Error opening file \"" << output_filename << "\"" << std::endl;
+            return;
+        }
+
+        for (const auto& hist : histograms_) {
+            hist->Write(hist->GetName(), TObject::kOverwrite);
+        }
+
+        clearHistograms();
+    }
+
     void appendToFile(const std::string& filename) {
         std::cout << "-- Appending histograms to file \"" << filename << "\"" << std::endl;
         TFile file(filename.c_str(), "UPDATE");
@@ -143,7 +151,7 @@ public:
         file.Close();
     }
 
-    void clear() {
+    void clearHistograms() {
         histograms_.clear();
     }
 
