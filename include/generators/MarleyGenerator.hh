@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "G4Event.hh"
+#include "G4Run.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4PrimaryParticle.hh"
 #include "G4RunManager.hh"
@@ -15,12 +16,21 @@
 #include "marley/JSONConfig.hh"
 
 #include "Signal.hh"
+#include "AnalysisResults.hh"
 
 #include <CLHEP/Random/RandExponential.h>
 
+#include "TFile.h"
+#include "TH1F.h"
+#include "TGraph.h"
+#include "TCanvas.h"
+#include "TAxis.h"
+#include "TMultiGraph.h"
+#include "TH2F.h"
+
 class MarleyGenerator {
 public:
-    MarleyGenerator(std::string marley_source);
+    MarleyGenerator(std::string marley_source, std::string output_filename);
     ~MarleyGenerator();
 
     std::map<double, double> half_lifes_;
@@ -32,7 +42,13 @@ public:
 
 private:
     std::string source_;
-    int delay_states_;
+    std::string output_filename_;
+    TH1F* energy_hist_;
+    TH1F* delayed_hist_;
+    TH1F* delay_times_;
+    static AnalysisResults<TH1F> TH1F_plots_;
+    std::string energy_dist_name_;
+    std::string time_dist_name_;
 };
 
 #endif // MARLEY_GENERATOR_HH

@@ -11,13 +11,11 @@
 
 class PulseShape {
 public:
-    static AnalysisResults<TH1F> results_;
-    static AnalysisResults<TProfile> auto_correlation_;
-    static AnalysisResults<TH2F> run_analysis_;
+    static AnalysisResults<TH1F> TH1F_evt_plots_;
+    static AnalysisResults<TH2F> TProfile_evt_plots_;
 
-    static void processSignal(const Signal* signal);
-    static void writeToFile(const std::string& filename);
-    static void writeAndFinish(const std::string& filename);
+    static void eventAnalysis(const Signal* signal);
+    static void plotEmissionTimes(const Signal* signal);
 };
 
 #endif // PULSESHAPE_HH

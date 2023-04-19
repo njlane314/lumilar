@@ -1,7 +1,9 @@
 #include "MarleyGenerator.hh"
 
-MarleyGenerator::MarleyGenerator(std::string marley_source)
-: source_(marley_source), delay_states_(0) {
+AnalysisResults<TH1F> MarleyGenerator::TH1F_plots_;
+
+MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_filename)
+: source_(marley_source), output_filename_(output_filename) {
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
     half_lifes_ = {
         //{ 0.0298299*MeV, 4.25*ns },
@@ -10,6 +12,12 @@ MarleyGenerator::MarleyGenerator(std::string marley_source)
         //{ 1.95907*MeV, 0.54*ps },
         //{ 2.010368*MeV, 0.32*ps },
     };
+
+    energy_dist_name_ = "neutrino_energy_dist";
+    time_dist_name_ = "cascade_time_dist";
+
+    TH1F_plots_.createHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 100, 1, 0);
+    TH1F_plots_.createHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 }
 
 MarleyGenerator::~MarleyGenerator() {}
@@ -21,6 +29,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
     auto primary_energy = marley_event.projectile().kinetic_energy();
     Signal::get_instance()->record_primary_energy(primary_energy);
+    
+    TH1F* energy_hist = TH1F_plots_.getHistogram(energy_dist_name_);
+    energy_hist->Fill(primary_energy);
 
     double global_time = 0.;
 
@@ -46,20 +57,27 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
             if (iter != half_lifes_.end()) {
                 double decay_time = sample_decay_time(iter->second);
                 primary_vertex->SetT0(global_time + decay_time);
-                std::cout << "Decay time: " << decay_time << std::endl;
-                Signal::get_instance()->record_delay_time(decay_time);
+                TH1F* time_hist = TH1F_plots_.getHistogram(time_dist_name_);
+                if (decay_time > 300) {
+                    time_hist->Fill(decay_time);
+                }
             }
-
             cascade_idx++;
         }
 
         primary_vertices.push_back(primary_vertex);
-
         particle_idx++;
     }
 
     for (const auto& primary_vertex : primary_vertices) {
         event->AddPrimaryVertex(primary_vertex);
+    }
+
+    int event_idx = event->GetEventID();
+    int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+
+    if (event_idx == events_to_generate - 1) {
+        TH1F_plots_.writeToFile(output_filename_);
     }
 }
 
@@ -96,6 +114,5 @@ void MarleyGenerator::print_event(const marley::Event& event) {
         
         particle_idx++;
     }
-    std::cout << "Number of delayed states: " << delay_states_ << std::endl;
     std::cout << std::endl;
 }

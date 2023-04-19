@@ -8,11 +8,12 @@
 
 class Calorimetry {
 public:
-    static void processSignal(const Signal* signal);
-    static void writeToFile(const std::string& filename);
+    static void eventAnalysis(const Signal* signal);
+    static void plotEnergyYields(const Signal* signal);
+    static void runAnalysis();
 
 private:
-    static AnalysisResults<TH1F> results_;
+    static AnalysisResults<TH2F> TH2F_run_plots_;
 };
 
 #endif // CALORIMETRY_HH

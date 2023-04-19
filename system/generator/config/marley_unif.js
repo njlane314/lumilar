@@ -13,8 +13,8 @@
     source: {
         type: "histogram",
         neutrino: "ve",
-        E_bin_lefts: [ 40., ],   // Low edges of energy bins (MeV)
-        weights: [ 1 ],       // Bin weights (dimensionless)
+        E_bin_lefts: [ 10., 20., 30., 40., ],   // Low edges of energy bins (MeV)
+        weights: [ 0.2, 0.2, 0.2, 0.2 ],       // Bin weights (dimensionless)
         Emax: 50.,                        // Upper edge of the final bin (MeV)
     },
   

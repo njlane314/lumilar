@@ -5,7 +5,6 @@
 /process/verbose 0
 
 /run/initialize
-/output/filename gun_electron_lin.root
 
 # general, marley
 /generator/set general
@@ -25,4 +24,4 @@
 /gps/ene/mono 15 MeV
 
 # run
-/run/beamOn 1000
+/run/beamOn 100

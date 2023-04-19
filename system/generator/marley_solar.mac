@@ -5,13 +5,12 @@
 /process/verbose 0
 
 /run/initialize
-/output/filename marley_solar.root
 
 # general, marley
 /generator/set marley
 
 # marley_mono.js, marley_solar.js, marley_unif.js
-/generator/marley/source config/marley_solar.js
+/generator/marley/source generator/config/marley_config_B8_CC.js
 
 # run
 /run/beamOn 1000

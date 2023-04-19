@@ -1,6 +1,7 @@
 #include "PrimaryGeneratorAction.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() {
+PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
+: output_filename_(output_filename) {
 	generator_directory_ = new G4UIdirectory("/generator/");
   	generator_directory_->SetGuidance("Primary generator control commands.");
 
@@ -32,7 +33,7 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 	if (generator_type_ == "marley") {
 		if (cmd == set_marley_source_cmd_) {
 			marley_source_ = new_value;
-			marley_generator_ = new MarleyGenerator(marley_source_);
+			marley_generator_ = new MarleyGenerator(marley_source_, output_filename_);
 		}
 	}
 	else if (generator_type_ == "general") {
