@@ -4,14 +4,19 @@
 
 AnalysisResults<TH1F> PulseShape::TH1F_evt_plots_;
 AnalysisResults<TH2F> PulseShape::TProfile_evt_plots_;
+AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 
 void PulseShape::eventAnalysis(const Signal* signal){
-    plotEmissionTimes(signal);
+    int evt_id = CLHEP::RandFlat::shootInt(1000);
+    plotEmissionTimes(signal, evt_id);
+    plotAmplitudeRatio(signal, evt_id);
 } 
 
-void PulseShape::plotEmissionTimes(const Signal* signal) {
-    int evt_id = CLHEP::RandFlat::shootInt(1000);
+void PulseShape::runAnalysis() {
+    TH2F_run_plots_.saveHistograms();
+}
 
+void PulseShape::plotEmissionTimes(const Signal* signal, int evt_id) {
     std::vector<double> emission_times = signal->get_scintillation()->get_emission_times();
     std::stringstream emission_hist_name;
     emission_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_emission_times";
@@ -45,4 +50,41 @@ void PulseShape::plotEmissionTimes(const Signal* signal) {
 
     TProfile_evt_plots_.saveHistograms();
     TH1F_evt_plots_.saveHistograms();
+}
+
+void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
+    std::vector<double> emission_times = signal->get_scintillation()->get_emission_times();
+    std::vector<double> decay_times = signal->get_delay_times();
+
+    double time_window = 30.; // ns
+    double prompt_sum = 0.;
+    double delayed_sum = 0.;
+
+    if (decay_times.size() == 0) {
+        return;
+    }
+
+    for (auto time : emission_times) {
+        if (time > 0 && time < time_window) {
+            prompt_sum += 1.;
+        }
+        
+        if (time > decay_times[0] && time < decay_times[0] + time_window) {
+            delayed_sum += 1.;
+        }
+    }
+
+    double amplitude_ratio = delayed_sum / prompt_sum;
+    std::cout << "Amplitude ratio: " << amplitude_ratio << " for event " << evt_id << " with decay time " << decay_times[0] << std::endl;
+
+    std::string amplitude_ratio_hist_name = "amplitude_ratio";
+
+    TH2F* amplitude_ratio_hist = TH2F_run_plots_.getHistogram(amplitude_ratio_hist_name);
+
+    if (amplitude_ratio_hist == nullptr) {
+        TH2F_run_plots_.createHistogram(amplitude_ratio_hist_name, "Neutrino energy [MeV]", "Amplitude ratio", 100, 1, 0, 100, 1, 0);
+        amplitude_ratio_hist = TH2F_run_plots_.getHistogram(amplitude_ratio_hist_name);
+    }
+
+    amplitude_ratio_hist->Fill(signal->get_primary_energy(), amplitude_ratio);
 }

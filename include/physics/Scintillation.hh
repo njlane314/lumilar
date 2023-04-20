@@ -26,7 +26,7 @@ class Scintillation {
     int get_total_photons() const;
     std::vector<double> get_emission_times() const;
     std::vector<Eigen::Vector3d> get_radiant_positions() const;
-    std::vector<double> get_radiant_sizes() const;
+    std::vector<int> get_radiant_sizes() const;
     void print_scintillation() const;
 
  private:

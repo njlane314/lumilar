@@ -123,6 +123,8 @@ void Signal::process_response(const G4Step* step) {
 
             std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
             scintillation_->add_radiant(energy_deposit, optical_photons_size, singlet_to_triplet);
+            //std::cout << "thermal_electrons_size: " << thermal_electrons_size << std::endl;
+            //std::cout << "optical_photons_size: " << optical_photons_size << std::endl;
             ionisation_->add_cloud(energy_deposit, thermal_electrons_size);
         }
     }

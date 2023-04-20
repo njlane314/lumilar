@@ -12,7 +12,7 @@ ActionInitialisation::ActionInitialisation(std::string output_filename)
 ActionInitialisation::~ActionInitialisation() {}
 
 void ActionInitialisation::Build() const {
-	bool signal_physics = false;
+	bool signal_physics = true;
 
 	SetUserAction(new PrimaryGeneratorAction(output_filename_));
 	SetUserAction(new RunAction());

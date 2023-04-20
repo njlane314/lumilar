@@ -18,13 +18,28 @@ void Ionisation::add_cloud(const EnergyDeposit* energy_deposit, int cloud_size) 
     ionisation_.push_back(current_cloud);
 }
 
-std::vector<double> Ionisation::get_cloud_sizes() const {
-    std::vector<double> cloud_sizes;
+std::vector<int> Ionisation::get_cloud_sizes() const {
+    std::vector<int> cloud_sizes;
     for (const auto& a_cloud : ionisation_) {
-        cloud_sizes.push_back(a_cloud.electrons.size());
+        int electron_count = 0;
+        for (const auto& electron : a_cloud.electrons) {
+            electron_count += 1;
+        }
+        cloud_sizes.push_back(electron_count);
     }
     return cloud_sizes;
 }
+
+int Ionisation::get_total_electrons() const {
+    int total_electrons = 0;
+    for (const auto& a_cloud : ionisation_) {
+        for (const auto& electron : a_cloud.electrons) {
+            total_electrons += 1;
+        }
+    }
+    return total_electrons;
+}
+
 
 std::vector<Eigen::Vector3d> Ionisation::get_cloud_positions() const {
     std::vector<Eigen::Vector3d> cloud_positions;

@@ -58,9 +58,8 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
                 double decay_time = sample_decay_time(iter->second);
                 primary_vertex->SetT0(global_time + decay_time);
                 TH1F* time_hist = TH1F_plots_.getHistogram(time_dist_name_);
-                if (decay_time > 300) {
-                    time_hist->Fill(decay_time);
-                }
+                time_hist->Fill(decay_time);
+                Signal::get_instance()->record_delay_time(decay_time);
             }
             cascade_idx++;
         }

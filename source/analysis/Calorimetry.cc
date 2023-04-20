@@ -15,27 +15,25 @@ void Calorimetry::plotEnergyYields(const Signal* signal) {
     TH2F* scint_yield_hist = TH2F_run_plots_.getHistogram(scint_yield_hist_name.str());
     TH2F* ionis_yield_hist = TH2F_run_plots_.getHistogram(ionis_yield_hist_name.str());
     if (scint_yield_hist == nullptr) {
-        TH2F_run_plots_.createHistogram(scint_yield_hist_name.str(), "Electronic Linear Energy Transfer [MeV / cm]", "Scintillation Yield [/ MeV]", 100, 1, 0, 100, 1, 0);
-        TH2F_run_plots_.createHistogram(ionis_yield_hist_name.str(), "Electronic Linear Energy Transfer [MeV / cm]", "Ionisation Yield [/ MeV]", 100, 1, 0, 100, 1, 0);
+        TH2F_run_plots_.createHistogram(scint_yield_hist_name.str(), "Energy Deposit [MeV]", "Scintillation Yield [/ MeV]", 100, 1, 0, 100, 1, 0);
+        TH2F_run_plots_.createHistogram(ionis_yield_hist_name.str(), "Energy Deposit [MeV]", "Ionisation Yield [/ MeV]", 100, 1, 0, 100, 1, 0);
         scint_yield_hist = TH2F_run_plots_.getHistogram(scint_yield_hist_name.str());
         ionis_yield_hist = TH2F_run_plots_.getHistogram(ionis_yield_hist_name.str());
     }
 
-    auto energy_deposit_vec = signal->get_visible_deposits();
-    auto radiant_size_vec = signal->get_scintillation()->get_radiant_sizes();
-    auto cloud_size_vec = signal->get_ionisation()->get_cloud_sizes();
+    auto visible_deposits_vec = signal->get_visible_deposits();
     auto linear_transfer_vec = signal->get_linear_transfers();
-    for (int i = 0; i < energy_deposit_vec.size(); ++i) {
-        auto energy_deposit = energy_deposit_vec[i];
-        auto radiant_size = radiant_size_vec[i];
-        auto cloud_size = cloud_size_vec[i];
-        auto linear_transfer = linear_transfer_vec[i];
-        
-        if (linear_transfer > 0) {
-            scint_yield_hist->Fill(linear_transfer, (double)radiant_size / (double)energy_deposit);
-            ionis_yield_hist->Fill(linear_transfer, (double)cloud_size / (double)energy_deposit);
-        }
+
+    double total_energy_dep = 0.;
+    auto total_photons = signal->get_scintillation()->get_total_photons();
+    auto total_electrons = signal->get_ionisation()->get_total_electrons();
+
+    for (auto visible_deposit : visible_deposits_vec) {
+        total_energy_dep += visible_deposit;
     }
+    
+    scint_yield_hist->Fill(total_energy_dep, (double)total_photons / (double)total_energy_dep);
+    ionis_yield_hist->Fill(total_energy_dep, (double)total_electrons / (double)total_energy_dep);
 }
 
 void Calorimetry::runAnalysis() {

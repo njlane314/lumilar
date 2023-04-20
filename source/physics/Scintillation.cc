@@ -33,10 +33,14 @@ std::vector<Eigen::Vector3d> Scintillation::get_radiant_positions() const {
     return radiant_positions;
 }
 
-std::vector<double> Scintillation::get_radiant_sizes() const {
-    std::vector<double> radiant_sizes;
+std::vector<int> Scintillation::get_radiant_sizes() const {
+    std::vector<int> radiant_sizes;
     for (const auto& a_radiant : scintillation_) {
-        radiant_sizes.push_back(a_radiant.photons.size());
+        int photon_count = 0;
+        for (const auto& photon : a_radiant.photons) {
+            photon_count += 1;
+        }
+        radiant_sizes.push_back(photon_count);
     }
     return radiant_sizes;
 }
@@ -44,7 +48,9 @@ std::vector<double> Scintillation::get_radiant_sizes() const {
 int Scintillation::get_total_photons() const {
     int total_photons = 0;
     for (const auto& a_radiant : scintillation_) {
-        total_photons += a_radiant.photons.size();
+        for (const auto& photon : a_radiant.photons) {
+            total_photons += 1;
+        }
     }
     return total_photons;
 }
