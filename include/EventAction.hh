@@ -18,7 +18,7 @@
 
 class EventAction : public G4UserEventAction {
  public:
-	EventAction();
+	EventAction(bool signal_physics);
   	virtual ~EventAction();
 
   	void BeginOfEventAction(const G4Event* event);
@@ -26,14 +26,14 @@ class EventAction : public G4UserEventAction {
 
  private:
 	void PrintEvent(const G4Event* event);
-	void UpdateProgressBar(int event_id, int events_to_generate, double progress_interval);
-	
+	void UpdateProgressBar(const G4Event* event);
+	void runAnalysis(const G4Event* event, const Signal* signal);
+
 	Signal* signal_;
 	Calorimetry* calorimetry_;
 	PulseShape* pulse_shape_;
 
-	int events_to_generate_;
-	int progress_interval_;
+	bool signal_physics_;
 };
 
 #endif // EVENT_ACTION_HH

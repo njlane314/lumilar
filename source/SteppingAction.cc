@@ -1,9 +1,12 @@
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction() {}
+SteppingAction::SteppingAction(bool signal_physics)
+: signal_physics_(signal_physics) {}
 
 SteppingAction::~SteppingAction() {}
 
 void SteppingAction::UserSteppingAction(const G4Step* step) {
-	Signal::get_instance()->process_response(step);
+	if (signal_physics_ == true) {
+		Signal::get_instance()->process_response(step);
+	}
 }

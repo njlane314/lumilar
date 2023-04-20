@@ -6,7 +6,7 @@ std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposi
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;
 
-    int thermal_electrons = static_cast<int>(std::round(CLHEP::RandBinomial::shoot(num_ionisations, recombination_factor)));
+    int thermal_electrons = static_cast<int>(std::round(CLHEP::RandBinomial::shoot(num_ionisations, 1 - recombination_factor)));
     int optical_photons = num_excitations;
 
     if (thermal_electrons < 0) {
