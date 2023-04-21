@@ -21,7 +21,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     //const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
     //AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
 
-    //this->UpdateProgressBar(event);
+    this->UpdateProgressBar(event);
 }
 
 void EventAction::runAnalysis(const G4Event* event, const Signal* signal) {

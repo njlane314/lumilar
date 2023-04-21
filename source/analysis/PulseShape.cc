@@ -69,13 +69,16 @@ void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
             prompt_sum += 1.;
         }
         
-        if (time > decay_times[0] && time < decay_times[0] + time_window) {
-            delayed_sum += 1.;
+        if (decay_times[0] > time_window) {
+            if (time > decay_times[0] && time < decay_times[0] + time_window) {
+                delayed_sum += 1.;
+            }
+        } else {
+            return;
         }
     }
 
     double amplitude_ratio = delayed_sum / prompt_sum;
-    std::cout << "Amplitude ratio: " << amplitude_ratio << " for event " << evt_id << " with decay time " << decay_times[0] << std::endl;
 
     std::string amplitude_ratio_hist_name = "amplitude_ratio";
 
@@ -87,4 +90,30 @@ void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
     }
 
     amplitude_ratio_hist->Fill(signal->get_primary_energy(), amplitude_ratio);
+
+    //////////
+
+    std::string delayed_sum_hist_name = "delayed_sum";
+
+    TH2F* delayed_sum_hist = TH2F_run_plots_.getHistogram(delayed_sum_hist_name);
+
+    if (delayed_sum_hist == nullptr) {
+        TH2F_run_plots_.createHistogram(delayed_sum_hist_name, "Neutrino energy [MeV]", "L2", 100, 1, 0);
+        delayed_sum_hist = TH2F_run_plots_.getHistogram(delayed_sum_hist_name);
+    }
+
+    delayed_sum_hist->Fill(signal->get_primary_energy(), delayed_sum);
+
+    /////////
+
+    std::string prompt_sum_hist_name = "prompt_sum";
+
+    TH2F* prompt_sum_hist = TH2F_run_plots_.getHistogram(prompt_sum_hist_name);
+
+    if (prompt_sum_hist == nullptr) {
+        TH2F_run_plots_.createHistogram(prompt_sum_hist_name, "Neutrino energy [MeV]", "L1", 100, 1, 0);
+        prompt_sum_hist = TH2F_run_plots_.getHistogram(prompt_sum_hist_name);
+    }
+
+    prompt_sum_hist->Fill(signal->get_primary_energy(), prompt_sum);
 }
