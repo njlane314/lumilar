@@ -16,23 +16,23 @@ class Signal {
   Signal();
   ~Signal();
   
-  static Signal* get_instance();
+  static Signal* getInstance();
   void process_response(const G4Step* step);
-  Scintillation* get_scintillation() const;
-  Ionisation* get_ionisation() const;
-  std::vector<double> get_visible_deposits() const;
-  std::vector<double> get_linear_transfers() const;
-  std::vector<double> get_lengths() const;
-  void delete_signal();
+  Scintillation* getScintillation() const;
+  Ionisation* getIonisation() const;
+  std::vector<double> getVisibleDeposits() const;
+  std::vector<double> getLinearTransfers() const;
+  std::vector<double> getLengths() const;
+  void DeleteSignal();
   void record_delay_time(const double delay_time);
   std::vector<double> get_delay_times() const;
   void record_primary_energy(const double primary_energy);
-  double get_primary_energy() const;
+  double getPrimaryEnergy() const;
 
  private:
   void create_energy_deposit(const G4Step* step);
-  EnergyDeposit* get_current_energy_deposit();
-  void add_energy_deposit(const EnergyDeposit* energy_deposit);
+  EnergyDeposit* getCurrentEnergyDeposit();
+  void addEnergyDeposit(const EnergyDeposit* energy_deposit);
 
   static Signal* instance_;
   Properties* material_properties_;

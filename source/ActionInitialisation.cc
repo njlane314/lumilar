@@ -12,11 +12,11 @@ ActionInitialisation::ActionInitialisation(std::string output_filename)
 ActionInitialisation::~ActionInitialisation() {}
 
 void ActionInitialisation::Build() const {
-	bool signal_physics = true;
+	bool is_signal_physics = true;
 
 	SetUserAction(new PrimaryGeneratorAction(output_filename_));
 	SetUserAction(new RunAction());
-	SetUserAction(new EventAction(signal_physics));
+	SetUserAction(new EventAction(is_signal_physics));
 	SetUserAction(new TrackingAction());
-	SetUserAction(new SteppingAction(signal_physics));
+	SetUserAction(new SteppingAction(is_signal_physics));
 }

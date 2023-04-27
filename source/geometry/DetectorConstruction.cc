@@ -61,7 +61,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     return detector_physical;
 }
 
-void DetectorConstruction::GetDetectorDimensions(double& width, double& height, double& depth) {
+void DetectorConstruction::getDetectorDimensions(double& width, double& height, double& depth) {
     width = detector_.width;
     height = detector_.height;
     depth = detector_.depth;

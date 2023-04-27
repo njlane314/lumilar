@@ -101,7 +101,6 @@ public:
         return photon_times;
     }
 
-
 private:
     std::unique_ptr<Shape> shape_;
     Eigen::Vector3d position_;

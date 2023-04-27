@@ -28,7 +28,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::Event marley_event = marley_generator.create_event();
 
     auto primary_energy = marley_event.projectile().kinetic_energy();
-    Signal::get_instance()->record_primary_energy(primary_energy);
+    Signal::getInstance()->record_primary_energy(primary_energy);
     
     TH1F* energy_hist = TH1F_plots_.getHistogram(energy_dist_name_);
     energy_hist->Fill(primary_energy);
@@ -55,11 +55,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
             auto iter = half_lifes_.find(excited_state);
             if (iter != half_lifes_.end()) {
-                double decay_time = sample_decay_time(iter->second);
-                primary_vertex->SetT0(global_time + decay_time);
+                double time_of_decay = SampleFiniteParticleTime(iter->second);
+                primary_vertex->SetT0(global_time + time_of_decay);
                 TH1F* time_hist = TH1F_plots_.getHistogram(time_dist_name_);
-                time_hist->Fill(decay_time);
-                Signal::get_instance()->record_delay_time(decay_time);
+                time_hist->Fill(time_of_decay);
+                Signal::getInstance()->record_delay_time(time_of_decay);
             }
             cascade_idx++;
         }
@@ -80,11 +80,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     }
 }
 
-double MarleyGenerator::sample_decay_time(double half_life) {
+double MarleyGenerator::SampleFiniteParticleTime(double half_life) {
     return CLHEP::RandExponential::shoot(half_life / log(2.));
 }
 
-void MarleyGenerator::print_event(const marley::Event& event) {
+void MarleyGenerator::PrintEvent(const marley::Event& event) {
     std::cout << "\nGenerated event data:" << std::endl;
     std::cout << "Projectile energy: " << event.projectile().total_energy() << std::endl;
     std::cout << "Initial excitation energy: " << event.Ex() << " MeV" << std::endl;

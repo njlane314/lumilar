@@ -8,7 +8,7 @@ AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 
 void PulseShape::eventAnalysis(const Signal* signal){
     int evt_id = CLHEP::RandFlat::shootInt(1000);
-    plotEmissionTimes(signal, evt_id);
+    //plotEmissionTimes(signal, evt_id);
     plotAmplitudeRatio(signal, evt_id);
 } 
 
@@ -17,7 +17,7 @@ void PulseShape::runAnalysis() {
 }
 
 void PulseShape::plotEmissionTimes(const Signal* signal, int evt_id) {
-    std::vector<double> emission_times = signal->get_scintillation()->get_emission_times();
+    std::vector<double> emission_times = signal->getScintillation()->get_emission_times();
     std::stringstream emission_hist_name;
     emission_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_emission_times";
 
@@ -53,7 +53,7 @@ void PulseShape::plotEmissionTimes(const Signal* signal, int evt_id) {
 }
 
 void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
-    std::vector<double> emission_times = signal->get_scintillation()->get_emission_times();
+    std::vector<double> emission_times = signal->getScintillation()->get_emission_times();
     std::vector<double> decay_times = signal->get_delay_times();
 
     double time_window = 30.; // ns
@@ -89,7 +89,7 @@ void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
         amplitude_ratio_hist = TH2F_run_plots_.getHistogram(amplitude_ratio_hist_name);
     }
 
-    amplitude_ratio_hist->Fill(signal->get_primary_energy(), amplitude_ratio);
+    amplitude_ratio_hist->Fill(signal->getPrimaryEnergy(), amplitude_ratio);
 
     //////////
 
@@ -102,7 +102,7 @@ void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
         delayed_sum_hist = TH2F_run_plots_.getHistogram(delayed_sum_hist_name);
     }
 
-    delayed_sum_hist->Fill(signal->get_primary_energy(), delayed_sum);
+    delayed_sum_hist->Fill(signal->getPrimaryEnergy(), delayed_sum);
 
     /////////
 
@@ -115,5 +115,37 @@ void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
         prompt_sum_hist = TH2F_run_plots_.getHistogram(prompt_sum_hist_name);
     }
 
-    prompt_sum_hist->Fill(signal->get_primary_energy(), prompt_sum);
+    prompt_sum_hist->Fill(signal->getPrimaryEnergy(), prompt_sum);
+
+    /////////
+
+    /////////
+
+    std::string prompt_sum_greater_hist_name = "prompt_sum_greater_16000";
+
+    TH2F* prompt_sum_greater_hist = TH2F_run_plots_.getHistogram(prompt_sum_greater_hist_name);
+
+    if (prompt_sum_hist == nullptr) {
+        TH2F_run_plots_.createHistogram(prompt_sum_greater_hist_name, "Neutrino energy [MeV]", "L1", 100, 1, 0);
+        prompt_sum_greater_hist = TH2F_run_plots_.getHistogram(prompt_sum_greater_hist_name);
+    }
+
+    if (delayed_sum > 16000.) {
+        prompt_sum_greater_hist->Fill(signal->getPrimaryEnergy(), prompt_sum);
+    }
+
+    /////////
+
+    std::string prompt_sum_lesser_hist_name = "prompt_sum_lesser_16000";
+
+    TH2F* prompt_sum_lesser_hist = TH2F_run_plots_.getHistogram(prompt_sum_lesser_hist_name);
+
+    if (prompt_sum_hist == nullptr) {
+        TH2F_run_plots_.createHistogram(prompt_sum_lesser_hist_name, "Neutrino energy [MeV]", "L1", 100, 1, 0);
+        prompt_sum_hist = TH2F_run_plots_.getHistogram(prompt_sum_lesser_hist_name);
+    }
+
+    if (delayed_sum < 16000.) {
+        prompt_sum_lesser_hist->Fill(signal->getPrimaryEnergy(), prompt_sum);
+    }
 }

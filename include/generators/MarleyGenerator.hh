@@ -36,9 +36,9 @@ public:
     std::map<double, double> half_lifes_;
 
     void GeneratePrimaryVertex(G4Event* event);
-    double sample_decay_time(double half_life);
+    double SampleFiniteParticleTime(double half_life);
     
-    void print_event(const marley::Event& event);
+    void PrintEvent(const marley::Event& event);
 
 private:
     std::string source_;

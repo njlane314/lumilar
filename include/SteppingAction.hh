@@ -7,12 +7,12 @@
 
 class SteppingAction : public G4UserSteppingAction {
  public:
-    SteppingAction(bool signal_physics);
+    SteppingAction(bool is_signal_physics);
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
  private:
-    bool signal_physics_;
+    bool is_signal_physics_;
 };
 
 #endif // STEPPING_ACTION_HH

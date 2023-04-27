@@ -1,7 +1,7 @@
 #include "Relaxation.hh"
 
 Relaxation::Relaxation() : 
-material_properties_(MaterialProperties::get_instance()->get_material_properties()), 
+material_properties_(MaterialProperties::getInstance()->getMaterialProperties()), 
 singlet_lifetime_(material_properties_->singlet_lifetime),
 triplet_lifetime_(material_properties_->triplet_lifetime) {}
 

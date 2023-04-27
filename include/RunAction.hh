@@ -5,8 +5,7 @@
 
 #include "G4UserRunAction.hh"
 
-#include "SensorConstruction.hh"
-
+#include "InstrumentConstruction.hh"
 #include "MaterialProperties.hh"
 
 class RunAction : public G4UserRunAction {

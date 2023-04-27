@@ -7,30 +7,24 @@ MaterialProperties::MaterialProperties(std::string material = "lAr")
 : material_(material) {
     if (!instance_) {
         instance_ = this;
-        material_properties_ = initialise_properties(material_); 
+        material_properties_ = InitialiseProperties(material_); 
     } 
 }
 
 MaterialProperties::~MaterialProperties() {}
 
-MaterialProperties* MaterialProperties::get_instance() {
+MaterialProperties* MaterialProperties::getInstance() {
     if (!instance_) {
         instance_ = new MaterialProperties();
     }
     return instance_;
 }
 
-Properties* MaterialProperties::get_material_properties() {
+Properties* MaterialProperties::getMaterialProperties() {
     return &material_properties_;
 }
 
-void MaterialProperties::get_recombination_parameters(double& ARecomb, double& BRecomb, double& CRecomb) {
-    ARecomb = 0.05 * std::pow(material_properties_.electric_field, -0.85);
-    BRecomb = 0.06 * std::pow(material_properties_.electric_field, -0.85);
-    CRecomb = 1/6;
-}
-
-Properties MaterialProperties::initialise_properties(std::string material = "lAr") {
+Properties MaterialProperties::InitialiseProperties(std::string material = "lAr") {
     Properties material_properties = {};
     if (material == "lAr") {
         material_properties.material = "lAr";

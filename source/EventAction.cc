@@ -1,37 +1,35 @@
 #include "EventAction.hh"
 
-EventAction::EventAction(bool signal_physics)
-: signal_physics_(signal_physics) {}
+EventAction::EventAction(bool is_signal_physics)
+: is_signal_physics_(is_signal_physics) {}
 
 EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event* event) {}
 
 void EventAction::EndOfEventAction(const G4Event* event) {
-    if (signal_physics_ == true) {
-        auto signal = Signal::get_instance();
+    if (is_signal_physics_ == true) {
+        auto signal = Signal::getInstance();
 
-        this->runAnalysis(event, signal);
-        signal->delete_signal();
-        delete signal;
-        signal = nullptr;
+        this->RunAnalysis(event, signal);
+        signal->DeleteSignal();
     }
 
-    //std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
-    //const OpticalSensorVector& optical_sensors = SensorConstruction::GetInstance()->GetOpticalSensors();
-    //AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);
+    /*std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
+    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);*/
 
     this->UpdateProgressBar(event);
 }
 
-void EventAction::runAnalysis(const G4Event* event, const Signal* signal) {
+void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
     pulse_shape_->eventAnalysis(signal);
-    calorimetry_->eventAnalysis(signal);
+    //calorimetry_->eventAnalysis(signal);
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
         pulse_shape_->runAnalysis();
-        calorimetry_->runAnalysis();
+        //calorimetry_->runAnalysis();
     }
 }
 

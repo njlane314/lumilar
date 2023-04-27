@@ -3,7 +3,7 @@
 Signal* Signal::instance_ = nullptr;
 
 Signal::Signal()
-: material_properties_(MaterialProperties::get_instance()->get_material_properties()) {
+: material_properties_(MaterialProperties::getInstance()->getMaterialProperties()) {
     if (!instance_) {
         instance_ = this;
     }
@@ -23,30 +23,30 @@ Signal::~Signal() {
     instance_ = nullptr;
 }
 
-Signal* Signal::get_instance() {
+Signal* Signal::getInstance() {
     if (!instance_) {
         instance_ = new Signal();
     }
     return instance_;
 }
 
-Scintillation* Signal::get_scintillation() const {
+Scintillation* Signal::getScintillation() const {
     return scintillation_.get();
 }
 
-Ionisation* Signal::get_ionisation() const {
+Ionisation* Signal::getIonisation() const {
     return ionisation_.get();
 }
 
-EnergyDeposit* Signal::get_current_energy_deposit() {
+EnergyDeposit* Signal::getCurrentEnergyDeposit() {
     return energy_deposit_.get();
 }
 
-void Signal::add_energy_deposit(const EnergyDeposit* energy_deposit) {
+void Signal::addEnergyDeposit(const EnergyDeposit* energy_deposit) {
     track_structure_->push_back(*energy_deposit);
 }
 
-std::vector<double> Signal::get_visible_deposits() const {
+std::vector<double> Signal::getVisibleDeposits() const {
     std::vector<double> visible_deposits;
     for (const auto& a_deposit : *track_structure_) {
         visible_deposits.push_back(a_deposit.get_visible_energy());
@@ -54,7 +54,7 @@ std::vector<double> Signal::get_visible_deposits() const {
     return visible_deposits;
 }
 
-std::vector<double> Signal::get_linear_transfers() const {
+std::vector<double> Signal::getLinearTransfers() const {
     std::vector<double> linear_transfers;
     for (const auto& a_deposit : *track_structure_) {
         linear_transfers.push_back(a_deposit.get_linear_transfer());
@@ -62,7 +62,7 @@ std::vector<double> Signal::get_linear_transfers() const {
     return linear_transfers;
 }
 
-std::vector<double> Signal::get_lengths() const {
+std::vector<double> Signal::getLengths() const {
     std::vector<double> lengths;
     for (const auto& a_deposit : *track_structure_) {
         lengths.push_back(a_deposit.get_length());
@@ -82,12 +82,13 @@ void Signal::record_primary_energy(const double primary_energy) {
     primary_energy_ = primary_energy;
 }
 
-double Signal::get_primary_energy() const {
+double Signal::getPrimaryEnergy() const {
     return primary_energy_;
 }
 
-void Signal::delete_signal() {
+void Signal::DeleteSignal() {
     instance_ = nullptr;
+    delete this;
 }
 
 // move to medium response
@@ -100,12 +101,12 @@ void Signal::create_energy_deposit(const G4Step* step) {
     double time = step->GetPreStepPoint()->GetGlobalTime();
 
     energy_deposit_ = std::make_unique<EnergyDeposit>(visible, linear_transfer, particle_type, position, length, time);
-    add_energy_deposit(energy_deposit_.get());
+    addEnergyDeposit(energy_deposit_.get());
 }
 
 void Signal::process_response(const G4Step* step) {
     create_energy_deposit(step);
-    EnergyDeposit* energy_deposit = get_current_energy_deposit();
+    EnergyDeposit* energy_deposit = getCurrentEnergyDeposit();
 
     int particle_charge = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPDGCharge();
 	int entering_material = (int) step->GetPreStepPoint()->GetMaterial()->GetZ();

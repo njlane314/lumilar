@@ -42,7 +42,7 @@ public:
     ~DetectorConstruction();
 
     G4VPhysicalVolume* Construct();
-    void GetDetectorDimensions(double& width, double& height, double& depth);
+    void getDetectorDimensions(double& width, double& height, double& depth);
 
 private:
     std::string detector_config_;

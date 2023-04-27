@@ -21,12 +21,12 @@ void Calorimetry::plotEnergyYields(const Signal* signal) {
         ionis_yield_hist = TH2F_run_plots_.getHistogram(ionis_yield_hist_name.str());
     }
 
-    auto visible_deposits_vec = signal->get_visible_deposits();
-    auto linear_transfer_vec = signal->get_linear_transfers();
+    auto visible_deposits_vec = signal->getVisibleDeposits();
+    auto linear_transfer_vec = signal->getLinearTransfers();
 
     double total_energy_dep = 0.;
-    auto total_photons = signal->get_scintillation()->get_total_photons();
-    auto total_electrons = signal->get_ionisation()->get_total_electrons();
+    auto total_photons = signal->getScintillation()->get_total_photons();
+    auto total_electrons = signal->getIonisation()->get_total_electrons();
 
     for (auto visible_deposit : visible_deposits_vec) {
         total_energy_dep += visible_deposit;

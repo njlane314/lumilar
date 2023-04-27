@@ -11,14 +11,14 @@
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
 
-#include "SensorConstruction.hh"
+#include "InstrumentConstruction.hh"
 #include "AnalyticalOptics.hh"
 #include "Calorimetry.hh"
 #include "PulseShape.hh"
 
 class EventAction : public G4UserEventAction {
  public:
-	EventAction(bool signal_physics);
+	EventAction(bool is_signal_physics);
   	virtual ~EventAction();
 
   	void BeginOfEventAction(const G4Event* event);
@@ -27,13 +27,13 @@ class EventAction : public G4UserEventAction {
  private:
 	void PrintEvent(const G4Event* event);
 	void UpdateProgressBar(const G4Event* event);
-	void runAnalysis(const G4Event* event, const Signal* signal);
+	void RunAnalysis(const G4Event* event, const Signal* signal);
 
 	Signal* signal_;
 	Calorimetry* calorimetry_;
 	PulseShape* pulse_shape_;
 
-	bool signal_physics_;
+	bool is_signal_physics_;
 };
 
 #endif // EVENT_ACTION_HH

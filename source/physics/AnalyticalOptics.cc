@@ -5,7 +5,7 @@ AnalyticalOptics::AnalyticalOptics() {}
 AnalyticalOptics::~AnalyticalOptics() {}
 
 void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
-    std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
+    std::vector<PhotonRadiant> photon_radiants = signal->getScintillation()->get_photon_radiants();
 
     int total_photons_detected = 0;
     for (const auto& a_photon_radiant : photon_radiants) {
@@ -128,5 +128,5 @@ double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection
 }
 
 double AnalyticalOptics::AbsorptionQuenching(double distance) {
-    return std::exp(- distance / MaterialProperties::get_instance()->get_material_properties()->absorption_length);
+    return std::exp(- distance / MaterialProperties::getInstance()->getMaterialProperties()->absorption_length);
 }

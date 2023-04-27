@@ -39,10 +39,9 @@ class MaterialProperties {
     MaterialProperties(std::string material);
     ~MaterialProperties();
 
-    static MaterialProperties* get_instance();
-    Properties initialise_properties(std::string material);
-    Properties* get_material_properties();
-    void get_recombination_parameters(double& ARecomb, double& BRecomb, double& CRecomb);
+    static MaterialProperties* getInstance();
+    Properties InitialiseProperties(std::string material);
+    Properties* getMaterialProperties();
 
     static MaterialProperties* instance_;
     std::string material_;

@@ -1,7 +1,7 @@
 #include "MediumResponse.hh"
 
 MediumResponse::MediumResponse() 
-: material_properties_(MaterialProperties::get_instance()->get_material_properties()) {}
+: material_properties_(MaterialProperties::getInstance()->getMaterialProperties()) {}
 
 MediumResponse::~MediumResponse() {}
 
