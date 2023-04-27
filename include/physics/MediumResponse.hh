@@ -11,12 +11,12 @@
 #include <tuple>
 
 class MediumResponse {
- public:
+public:
    MediumResponse();
    ~MediumResponse();
-   std::pair<double, double> create_response(const EnergyDeposit* energy_deposit);
+   std::pair<double, double> CreateResponse(const EnergyDeposit* energy_deposit);
     
- private:
+private:
    Properties* material_properties_;
 };
 

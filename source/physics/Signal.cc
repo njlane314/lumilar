@@ -42,14 +42,14 @@ EnergyDeposit* Signal::getCurrentEnergyDeposit() {
     return energy_deposit_.get();
 }
 
-void Signal::addEnergyDeposit(const EnergyDeposit* energy_deposit) {
+void Signal::AddEnergyDeposit(const EnergyDeposit* energy_deposit) {
     track_structure_->push_back(*energy_deposit);
 }
 
 std::vector<double> Signal::getVisibleDeposits() const {
     std::vector<double> visible_deposits;
     for (const auto& a_deposit : *track_structure_) {
-        visible_deposits.push_back(a_deposit.get_visible_energy());
+        visible_deposits.push_back(a_deposit.getVisibleEnergy());
     }
     return visible_deposits;
 }
@@ -57,7 +57,7 @@ std::vector<double> Signal::getVisibleDeposits() const {
 std::vector<double> Signal::getLinearTransfers() const {
     std::vector<double> linear_transfers;
     for (const auto& a_deposit : *track_structure_) {
-        linear_transfers.push_back(a_deposit.get_linear_transfer());
+        linear_transfers.push_back(a_deposit.getLinearTransfer());
     }
     return linear_transfers;
 }
@@ -65,20 +65,20 @@ std::vector<double> Signal::getLinearTransfers() const {
 std::vector<double> Signal::getLengths() const {
     std::vector<double> lengths;
     for (const auto& a_deposit : *track_structure_) {
-        lengths.push_back(a_deposit.get_length());
+        lengths.push_back(a_deposit.getLength());
     }
     return lengths;
 }
 
-void Signal::record_delay_time(const double delay_time) {
+void Signal::RecordDelayTime(const double delay_time) {
     delay_times_.push_back(delay_time);
 }
 
-std::vector<double> Signal::get_delay_times() const {
+std::vector<double> Signal::getDelayTimes() const {
     return delay_times_;
 }
 
-void Signal::record_primary_energy(const double primary_energy) {
+void Signal::RecordPrimaryEnergy(const double primary_energy) {
     primary_energy_ = primary_energy;
 }
 
@@ -92,7 +92,7 @@ void Signal::DeleteSignal() {
 }
 
 // move to medium response
-void Signal::create_energy_deposit(const G4Step* step) {
+void Signal::CreateEnergyDeposit(const G4Step* step) {
     double visible = step->GetTotalEnergyDeposit() - step->GetNonIonizingEnergyDeposit();
     double linear_transfer = step->GetTotalEnergyDeposit() / step->GetStepLength();
     std::string particle_type = step->GetTrack()->GetDefinition()->GetParticleName();
@@ -101,11 +101,11 @@ void Signal::create_energy_deposit(const G4Step* step) {
     double time = step->GetPreStepPoint()->GetGlobalTime();
 
     energy_deposit_ = std::make_unique<EnergyDeposit>(visible, linear_transfer, particle_type, position, length, time);
-    addEnergyDeposit(energy_deposit_.get());
+    AddEnergyDeposit(energy_deposit_.get());
 }
 
-void Signal::process_response(const G4Step* step) {
-    create_energy_deposit(step);
+void Signal::ProcessResponse(const G4Step* step) {
+    CreateEnergyDeposit(step);
     EnergyDeposit* energy_deposit = getCurrentEnergyDeposit();
 
     int particle_charge = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPDGCharge();
@@ -122,11 +122,9 @@ void Signal::process_response(const G4Step* step) {
             MediumResponse medium_response;
             double singlet_to_triplet = material_properties_->singlet_to_triplet_light;
 
-            std::tie(thermal_electrons_size, optical_photons_size) = medium_response.create_response(energy_deposit);
-            scintillation_->add_radiant(energy_deposit, optical_photons_size, singlet_to_triplet);
-            //std::cout << "thermal_electrons_size: " << thermal_electrons_size << std::endl;
-            //std::cout << "optical_photons_size: " << optical_photons_size << std::endl;
-            ionisation_->add_cloud(energy_deposit, thermal_electrons_size);
+            std::tie(thermal_electrons_size, optical_photons_size) = medium_response.CreateResponse(energy_deposit);
+            scintillation_->AddRadiant(energy_deposit, optical_photons_size, singlet_to_triplet);
+            ionisation_->AddCloud(energy_deposit, thermal_electrons_size);
         }
     }
 }

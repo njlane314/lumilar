@@ -12,27 +12,27 @@
 #include <Eigen/Dense>
 
 class Signal {
- public:
+public:
   Signal();
   ~Signal();
   
   static Signal* getInstance();
-  void process_response(const G4Step* step);
+  void ProcessResponse(const G4Step* step);
   Scintillation* getScintillation() const;
   Ionisation* getIonisation() const;
   std::vector<double> getVisibleDeposits() const;
   std::vector<double> getLinearTransfers() const;
   std::vector<double> getLengths() const;
   void DeleteSignal();
-  void record_delay_time(const double delay_time);
-  std::vector<double> get_delay_times() const;
-  void record_primary_energy(const double primary_energy);
+  void RecordDelayTime(const double delay_time);
+  std::vector<double> getDelayTimes() const;
+  void RecordPrimaryEnergy(const double primary_energy);
   double getPrimaryEnergy() const;
 
- private:
-  void create_energy_deposit(const G4Step* step);
+private:
+  void CreateEnergyDeposit(const G4Step* step);
   EnergyDeposit* getCurrentEnergyDeposit();
-  void addEnergyDeposit(const EnergyDeposit* energy_deposit);
+  void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
 
   static Signal* instance_;
   Properties* material_properties_;

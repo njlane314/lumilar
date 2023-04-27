@@ -96,7 +96,7 @@ public:
     const std::vector<double> getPhotonTimes() const {
         std::vector<double> photon_times;
         for (const auto& photon : detected_photons_) {
-            photon_times.push_back(photon.get_emission_time());
+            photon_times.push_back(photon.getEmissionTime());
         }
         return photon_times;
     }

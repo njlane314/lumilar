@@ -21,17 +21,17 @@ class Scintillation {
     Scintillation();
     ~Scintillation();
 
-    void add_radiant(const EnergyDeposit* energy_depsoit, int radiant_size, double singlet_to_triplet);
-    std::vector<PhotonRadiant> get_photon_radiants() const;
-    int get_total_photons() const;
-    std::vector<double> get_emission_times() const;
-    std::vector<Eigen::Vector3d> get_radiant_positions() const;
-    std::vector<int> get_radiant_sizes() const;
-    void print_scintillation() const;
+    void AddRadiant(const EnergyDeposit* energy_depsoit, int radiant_size, double singlet_to_triplet);
+    std::vector<PhotonRadiant> getPhotonRadiants() const;
+    int getTotalPhotonCount() const;
+    std::vector<double> getEmissionTimes() const;
+    std::vector<Eigen::Vector3d> getRadiantPositions() const;
+    std::vector<int> getRadiantSizes() const;
+    void PrintScintillation() const;
 
  private:
-    std::vector<PhotonRadiant> scintillation_;
     static Scintillation* instance_;
+    std::vector<PhotonRadiant> photon_radiants_;
     Relaxation relaxation_generator_;
 };
 

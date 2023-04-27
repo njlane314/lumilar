@@ -1,7 +1,7 @@
 #include "Recombination.hh"
 
 std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposit* energy_deposit, const Properties* material_properties, const std::pair<double, double> intrinsic_response) {
-    double recombination_factor = charge_recombination(energy_deposit->get_linear_transfer(), material_properties->electric_field); 
+    double recombination_factor = ChargeRecombination(energy_deposit->getLinearTransfer(), material_properties->electric_field); 
 
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;
@@ -15,23 +15,21 @@ std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposi
         optical_photons += num_ionisations - thermal_electrons;
     }
 
-    //std::cout << "Recombination: " << recombination_factor << " ," << thermal_electrons << " thermal electrons, " << optical_photons << " optical photons" << std::endl;
-
     return std::make_pair(thermal_electrons, optical_photons);
 }
 
-double Recombination::charge_recombination(double linear_transfer, double electric_field) {
-    return birks_recombination(linear_transfer, electric_field) + escape_recombination(linear_transfer, electric_field);
+double Recombination::ChargeRecombination(double linear_transfer, double electric_field) {
+    return BirksRecombination(linear_transfer, electric_field) + EscapeRecombination(linear_transfer, electric_field);
 }
 
-double Recombination::birks_recombination(double linear_transfer, double electric_field) {
+double Recombination::BirksRecombination(double linear_transfer, double electric_field) {
     double ARecomb = 0.800;
     double kRecomb = 0.0486;
 
     return ARecomb / (1. + linear_transfer * kRecomb / electric_field);
 }
 
-double Recombination::escape_recombination(double linear_transfer, double electric_field) {
+double Recombination::EscapeRecombination(double linear_transfer, double electric_field) {
     double larqlChi0A = 0.00338427;
     double larqlChi0B = -6.57037;
     double larqlChi0C = 1.88418;

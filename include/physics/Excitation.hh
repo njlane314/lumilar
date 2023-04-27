@@ -9,8 +9,8 @@
 #include <random>
 
 class Excitation {
- public: 
-    static std::pair<double, double> create_exctiation(const EnergyDeposit* energy_deposit, const Properties* material_properties);
+public: 
+    static std::pair<double, double> CreateExctiation(const EnergyDeposit* energy_deposit, const Properties* material_properties);
 };
 
 #endif // EXCITATION_HH

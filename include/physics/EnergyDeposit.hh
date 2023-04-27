@@ -8,23 +8,23 @@ public:
     EnergyDeposit(double visible, double linear_transfer, std::string particle_type, Eigen::Vector3d position, double length, double time) : visible(visible), linear_transfer(linear_transfer), particle_type(particle_type), position(position), length(length), time(time) {};
     ~EnergyDeposit() {};
 
-    double get_visible_energy() const { return visible; }
-    void set_visible_energy(double value) { visible = value; }
+    double getVisibleEnergy() const { return visible; }
+    void setVisibleEnergy(double value) { visible = value; }
     
-    double get_linear_transfer() const { return linear_transfer; }
-    void set_linear_transfer(double value) { linear_transfer = value; }
+    double getLinearTransfer() const { return linear_transfer; }
+    void setLinearTransfer(double value) { linear_transfer = value; }
     
-    std::string get_particle_type() const { return particle_type; }
-    void set_particle_type(std::string value) { particle_type = value; }
+    std::string getParticleType() const { return particle_type; }
+    void setParticleType(std::string value) { particle_type = value; }
     
-    Eigen::Vector3d get_position() const { return position; }
-    void set_position(Eigen::Vector3d value) { position = value; }
+    Eigen::Vector3d getPosition() const { return position; }
+    void setPosition(Eigen::Vector3d value) { position = value; }
 
-    double get_length() const { return length; }
-    void set_length(double value) { length = value; }
+    double getLength() const { return length; }
+    void setLength(double value) { length = value; }
     
-    double get_time() const { return time; }
-    void set_time(double value) { time = value; }
+    double getTime() const { return time; }
+    void setTime(double value) { time = value; }
     
 private:
     double visible;

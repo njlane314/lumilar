@@ -35,7 +35,7 @@ struct Properties {
 };
 
 class MaterialProperties {
- public:
+public:
     MaterialProperties(std::string material);
     ~MaterialProperties();
 

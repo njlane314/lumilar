@@ -25,8 +25,8 @@ void Calorimetry::plotEnergyYields(const Signal* signal) {
     auto linear_transfer_vec = signal->getLinearTransfers();
 
     double total_energy_dep = 0.;
-    auto total_photons = signal->getScintillation()->get_total_photons();
-    auto total_electrons = signal->getIonisation()->get_total_electrons();
+    auto total_photons = signal->getScintillation()->getTotalPhotonCount();
+    auto total_electrons = signal->getIonisation()->getTotalElectronCount();
 
     for (auto visible_deposit : visible_deposits_vec) {
         total_energy_dep += visible_deposit;

@@ -15,18 +15,17 @@ struct ElectronCloud {
 };
 
 class Ionisation {
- public:
+public:
     Ionisation();
     ~Ionisation();
 
-    void add_cloud(const EnergyDeposit* energy_deposit, int cloud_size);
-    std::vector<Eigen::Vector3d> get_cloud_positions() const;
-    std::vector<int> get_cloud_sizes() const;
-    void print_ionisation() const;
+    void AddCloud(const EnergyDeposit* energy_deposit, int cloud_size);
+    std::vector<int> getCloudSizes() const;
+    int getTotalElectronCount() const;
+    std::vector<Eigen::Vector3d> getCloudPositions() const;
+    void PrintIonisation() const;
 
-    int get_total_electrons() const;
-
- private:
+private:
     static Ionisation* instance_;
     std::vector<ElectronCloud> ionisation_;
     Ejection ejection_generator_;

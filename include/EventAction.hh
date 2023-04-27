@@ -17,14 +17,14 @@
 #include "PulseShape.hh"
 
 class EventAction : public G4UserEventAction {
- public:
+public:
 	EventAction(bool is_signal_physics);
   	virtual ~EventAction();
 
   	void BeginOfEventAction(const G4Event* event);
   	void EndOfEventAction(const G4Event* event);
 
- private:
+private:
 	void PrintEvent(const G4Event* event);
 	void UpdateProgressBar(const G4Event* event);
 	void RunAnalysis(const G4Event* event, const Signal* signal);

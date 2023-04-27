@@ -28,7 +28,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::Event marley_event = marley_generator.create_event();
 
     auto primary_energy = marley_event.projectile().kinetic_energy();
-    Signal::getInstance()->record_primary_energy(primary_energy);
+    Signal::getInstance()->RecordPrimaryEnergy(primary_energy);
     
     TH1F* energy_hist = TH1F_plots_.getHistogram(energy_dist_name_);
     energy_hist->Fill(primary_energy);
@@ -59,7 +59,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
                 primary_vertex->SetT0(global_time + time_of_decay);
                 TH1F* time_hist = TH1F_plots_.getHistogram(time_dist_name_);
                 time_hist->Fill(time_of_decay);
-                Signal::getInstance()->record_delay_time(time_of_decay);
+                Signal::getInstance()->RecordDelayTime(time_of_decay);
             }
             cascade_idx++;
         }

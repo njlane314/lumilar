@@ -24,7 +24,7 @@
 #include "G4FieldManager.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
-public:
+ public:
     struct Detector {
         std::string name;
         std::string material;
@@ -44,7 +44,7 @@ public:
     G4VPhysicalVolume* Construct();
     void getDetectorDimensions(double& width, double& height, double& depth);
 
-private:
+ private:
     std::string detector_config_;
 
     void ConstructAnodePlane();

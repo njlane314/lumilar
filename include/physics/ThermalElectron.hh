@@ -2,7 +2,6 @@
 #define THERMAL_ELECTRON_HH
 
 class ThermalElectron {
-    
 public:
     ThermalElectron() {}
 };

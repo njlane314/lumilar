@@ -6,12 +6,12 @@
 #include "Signal.hh"
 
 class SteppingAction : public G4UserSteppingAction {
- public:
+public:
     SteppingAction(bool is_signal_physics);
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
- private:
+private:
     bool is_signal_physics_;
 };
 

@@ -5,7 +5,7 @@ AnalyticalOptics::AnalyticalOptics() {}
 AnalyticalOptics::~AnalyticalOptics() {}
 
 void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
-    std::vector<PhotonRadiant> photon_radiants = signal->getScintillation()->get_photon_radiants();
+    std::vector<PhotonRadiant> photon_radiants = signal->getScintillation()->getPhotonRadiants();
 
     int total_photons_detected = 0;
     for (const auto& a_photon_radiant : photon_radiants) {

@@ -17,7 +17,7 @@ void PulseShape::runAnalysis() {
 }
 
 void PulseShape::plotEmissionTimes(const Signal* signal, int evt_id) {
-    std::vector<double> emission_times = signal->getScintillation()->get_emission_times();
+    std::vector<double> emission_times = signal->getScintillation()->getEmissionTimes();
     std::stringstream emission_hist_name;
     emission_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_emission_times";
 
@@ -53,8 +53,8 @@ void PulseShape::plotEmissionTimes(const Signal* signal, int evt_id) {
 }
 
 void PulseShape::plotAmplitudeRatio(const Signal* signal, int evt_id) {
-    std::vector<double> emission_times = signal->getScintillation()->get_emission_times();
-    std::vector<double> decay_times = signal->get_delay_times();
+    std::vector<double> emission_times = signal->getScintillation()->getEmissionTimes();
+    std::vector<double> decay_times = signal->getDelayTimes();
 
     double time_window = 30.; // ns
     double prompt_sum = 0.;

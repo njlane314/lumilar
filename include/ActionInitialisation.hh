@@ -5,8 +5,7 @@
 
 #include "G4VUserActionInitialization.hh"
 
-class ActionInitialisation : public G4VUserActionInitialization
-{
+class ActionInitialisation : public G4VUserActionInitialization {
 public:
 	ActionInitialisation(std::string output_filename);
 	virtual ~ActionInitialisation();

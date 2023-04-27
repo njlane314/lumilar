@@ -4,11 +4,11 @@
 #include "ThermalElectron.hh"
 
 class Ejection {
- public:
+public:
     Ejection();
     ~Ejection();
     
-    ThermalElectron create_electron();
+    ThermalElectron CreateThermalElectron();
 };
 
 #endif // EJECTION_HH
