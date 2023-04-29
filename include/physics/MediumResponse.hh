@@ -5,6 +5,9 @@
 #include "Excitation.hh"
 #include "Recombination.hh"
 #include "EnergyDeposit.hh"
+#include "Signal.hh"
+
+#include "G4Step.hh"
 
 #include <random>
 #include <string>
@@ -14,10 +17,10 @@ class MediumResponse {
 public:
    MediumResponse();
    ~MediumResponse();
-   std::pair<double, double> CreateResponse(const EnergyDeposit* energy_deposit);
+   static void ProcessResponse(const G4Step* step);
     
 private:
-   Properties* material_properties_;
+   static EnergyDeposit* CreateEnergyDeposit(const G4Step* step);
 };
 
 #endif // MEDIUM_RESPONSE_HH
