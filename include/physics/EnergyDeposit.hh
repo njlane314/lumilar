@@ -2,34 +2,38 @@
 #define ENERGY_DEPOSIT_HH
 
 #include <Eigen/Dense>
+#include <string>
 
 class EnergyDeposit {
 public:
-    EnergyDeposit(double visible, double linear_transfer, std::string particle_type, Eigen::Vector3d position, double length, double time) : visible(visible), linear_transfer(linear_transfer), particle_type(particle_type), position(position), length(length), time(time) {};
-    ~EnergyDeposit() {};
+    EnergyDeposit();
+    EnergyDeposit(double visible, double linear_transfer, const std::string particle_species, const Eigen::Vector3d position, double length, double time);
+    ~EnergyDeposit();
 
-    double getVisibleEnergy() const { return visible; }
-    void setVisibleEnergy(double value) { visible = value; }
-    
-    double getLinearTransfer() const { return linear_transfer; }
-    void setLinearTransfer(double value) { linear_transfer = value; }
-    
-    std::string getParticleType() const { return particle_type; }
-    void setParticleType(std::string value) { particle_type = value; }
-    
-    Eigen::Vector3d getPosition() const { return position; }
-    void setPosition(Eigen::Vector3d value) { position = value; }
+    double getVisibleEnergy() const;
+    void setVisibleEnergy(double value);
 
-    double getLength() const { return length; }
-    void setLength(double value) { length = value; }
-    
-    double getTime() const { return time; }
-    void setTime(double value) { time = value; }
-    
+    double getLinearTransfer() const;
+    void setLinearTransfer(double value);
+
+    std::string getParticleSpecies() const;
+    void setParticleSpecies(const std::string value);
+
+    Eigen::Vector3d getPosition() const;
+    void setPosition(const Eigen::Vector3d value);
+
+    double getLength() const;
+    void setLength(double value);
+
+    double getTime() const;
+    void setTime(double value);
+
+    bool isEmpty() const;
+
 private:
     double visible;
     double linear_transfer;
-    std::string particle_type;
+    std::string particle_species;
     Eigen::Vector3d position;
     double length;
     double time;

@@ -8,7 +8,7 @@ AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 
 void PulseShape::eventAnalysis(const Signal* signal){
     int evt_id = CLHEP::RandFlat::shootInt(1000);
-    //plotEmissionTimes(signal, evt_id);
+    plotEmissionTimes(signal, evt_id);
     plotAmplitudeRatio(signal, evt_id);
 } 
 

@@ -3,7 +3,7 @@
 
 #include "G4UserSteppingAction.hh"
 
-#include "Signal.hh"
+#include "MediumResponse.hh"
 
 class SteppingAction : public G4UserSteppingAction {
 public:

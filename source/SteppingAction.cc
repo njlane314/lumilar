@@ -7,6 +7,6 @@ SteppingAction::~SteppingAction() {}
 
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 	if (is_signal_physics_ == true) {
-		Signal::getInstance()->ProcessResponse(step);
+		MediumResponse::ProcessResponse(step);
 	}
 }

@@ -28,11 +28,11 @@ public:
   std::vector<double> getDelayTimes() const;
   void RecordPrimaryEnergy(const double primary_energy);
   double getPrimaryEnergy() const;
+  void addEnergyDeposit(const EnergyDeposit* energy_deposit);
 
 private:
   void CreateEnergyDeposit(const G4Step* step);
   EnergyDeposit* getCurrentEnergyDeposit();
-  void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
 
   static Signal* instance_;
   Properties* material_properties_;
