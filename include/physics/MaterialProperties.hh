@@ -39,9 +39,9 @@ public:
     MaterialProperties(std::string material);
     ~MaterialProperties();
 
-    static MaterialProperties* getInstance();
+    static MaterialProperties* GetInstance();
     Properties InitialiseProperties(std::string material);
-    Properties* getMaterialProperties();
+    Properties* GetMaterialProperties();
 
     static MaterialProperties* instance_;
     std::string material_;

@@ -10,21 +10,21 @@ Scintillation::~Scintillation() {}
 void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_size, double singlet_to_triplet) {
     PhotonRadiant current_radiant = {};
 
-    current_radiant.position = energy_deposit->getPosition();
+    current_radiant.position = energy_deposit->GetPosition();
     for (int i = 0; i < radiant_size; i++) {
         OpticalPhoton photon = relaxation_generator_.CreateOpticalPhoton(energy_deposit, singlet_to_triplet);
-        if (photon.getEmissionTime() != 0) {
+        if (photon.GetEmissionTime() != 0) {
             current_radiant.photons.push_back(photon);
         }
     }
     photon_radiants_.push_back(current_radiant);
 }
 
-std::vector<PhotonRadiant> Scintillation::getPhotonRadiants() const {
+std::vector<PhotonRadiant> Scintillation::GetPhotonRadiants() const {
     return photon_radiants_;
 }
 
-std::vector<Eigen::Vector3d> Scintillation::getRadiantPositions() const {
+std::vector<Eigen::Vector3d> Scintillation::GetRadiantPositions() const {
     std::vector<Eigen::Vector3d> radiant_positions;
     for (const auto& a_radiant : photon_radiants_) {
         radiant_positions.push_back(a_radiant.position);
@@ -32,7 +32,7 @@ std::vector<Eigen::Vector3d> Scintillation::getRadiantPositions() const {
     return radiant_positions;
 }
 
-std::vector<int> Scintillation::getRadiantSizes() const {
+std::vector<int> Scintillation::GetRadiantSizes() const {
     std::vector<int> radiant_sizes;
     for (const auto& a_radiant : photon_radiants_) {
         int photon_count = 0;
@@ -44,7 +44,7 @@ std::vector<int> Scintillation::getRadiantSizes() const {
     return radiant_sizes;
 }
 
-int Scintillation::getTotalPhotonCount() const {
+int Scintillation::GetTotalPhotonCount() const {
     int photon_count = 0;
     for (const auto& a_radiant : photon_radiants_) {
         for (const auto& photon : a_radiant.photons) {
@@ -54,11 +54,11 @@ int Scintillation::getTotalPhotonCount() const {
     return photon_count;
 }
 
-std::vector<double> Scintillation::getEmissionTimes() const {
+std::vector<double> Scintillation::GetEmissionTimes() const {
     std::vector<double> emission_times;
     for (const auto& a_radiant : photon_radiants_) {
         for (const auto& photon : a_radiant.photons) {
-            emission_times.push_back(photon.getEmissionTime());
+            emission_times.push_back(photon.GetEmissionTime());
         }
     }
     return emission_times;
@@ -79,7 +79,7 @@ void Scintillation::PrintScintillation() const {
 
         std::cout << "  Emission times: ";
         for (const auto& photon : a_radiant.photons) {
-            std::cout << photon.getEmissionTime() << " ";
+            std::cout << photon.GetEmissionTime() << " ";
         }
         std::cout << std::endl;
     }

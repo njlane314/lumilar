@@ -15,10 +15,10 @@ public:
     static AnalysisResults<TH2F> TProfile_evt_plots_;
     static AnalysisResults<TH2F> TH2F_run_plots_;
 
-    static void eventAnalysis(const Signal* signal);
-    static void runAnalysis();
-    static void plotEmissionTimes(const Signal* signal, int evt_id);
-    static void plotAmplitudeRatio(const Signal* signal, int evt_id);
+    static void EventAnalysis(const Signal* signal);
+    static void RunAnalysis();
+    static void PlotEmissionTimes(const Signal* signal, int evt_id);
+    static void PlotAmplitudeRatio(const Signal* signal, int evt_id);
 };
 
 #endif // PULSESHAPE_HH

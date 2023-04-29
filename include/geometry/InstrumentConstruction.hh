@@ -21,7 +21,7 @@ public:
     double detector_height_;
     double detector_depth_;
 
-    void ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_separation, double sensor_width, double sensor_height);
+    void ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation,  double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height);
     const OpticalSensorVector& GetOpticalSensors();
     int GetNumOpticalSensors() const;
 

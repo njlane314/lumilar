@@ -10,25 +10,25 @@ public:
     EnergyDeposit(double visible, double linear_transfer, const std::string particle_species, const Eigen::Vector3d position, double length, double time);
     ~EnergyDeposit();
 
-    double getVisibleEnergy() const;
-    void setVisibleEnergy(double value);
+    double GetVisibleEnergy() const;
+    void SetVisibleEnergy(double value);
 
-    double getLinearTransfer() const;
-    void setLinearTransfer(double value);
+    double GetLinearTransfer() const;
+    void SetLinearTransfer(double value);
 
-    std::string getParticleSpecies() const;
-    void setParticleSpecies(const std::string value);
+    std::string GetParticleSpecies() const;
+    void SetParticleSpecies(const std::string value);
 
-    Eigen::Vector3d getPosition() const;
-    void setPosition(const Eigen::Vector3d value);
+    Eigen::Vector3d GetPosition() const;
+    void SetPosition(const Eigen::Vector3d value);
 
-    double getLength() const;
-    void setLength(double value);
+    double GetLength() const;
+    void SetLength(double value);
 
-    double getTime() const;
-    void setTime(double value);
+    double GetTime() const;
+    void SetTime(double value);
 
-    bool isEmpty() const;
+    bool IsEmpty() const;
 
 private:
     double visible;

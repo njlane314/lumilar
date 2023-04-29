@@ -13,14 +13,14 @@ MaterialProperties::MaterialProperties(std::string material = "lAr")
 
 MaterialProperties::~MaterialProperties() {}
 
-MaterialProperties* MaterialProperties::getInstance() {
+MaterialProperties* MaterialProperties::GetInstance() {
     if (!instance_) {
         instance_ = new MaterialProperties();
     }
     return instance_;
 }
 
-Properties* MaterialProperties::getMaterialProperties() {
+Properties* MaterialProperties::GetMaterialProperties() {
     return &material_properties_;
 }
 

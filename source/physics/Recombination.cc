@@ -1,7 +1,7 @@
 #include "Recombination.hh"
 
 std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposit* energy_deposit, const Properties* material_properties, const std::pair<double, double> intrinsic_response) {
-    double recombination_factor = ChargeRecombination(energy_deposit->getLinearTransfer(), material_properties->electric_field); 
+    double recombination_factor = ChargeRecombination(energy_deposit->GetLinearTransfer(), material_properties->electric_field); 
 
     double num_ionisations = intrinsic_response.first;
     double num_excitations = intrinsic_response.second;

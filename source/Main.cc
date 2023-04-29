@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     run_manager->SetUserInitialization(new ActionInitialisation(output_filename));
     run_manager->Initialize();
 
-    AnalysisManager::GetInstance()->setOutputFilename(output_filename);
+    AnalysisManager::GetInstance()->SetOutputFilename(output_filename);
 
     std::cout << "-- Initialisation complete!" << std::endl;
 

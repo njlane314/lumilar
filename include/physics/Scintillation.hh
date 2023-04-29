@@ -22,11 +22,11 @@ class Scintillation {
     ~Scintillation();
 
     void AddRadiant(const EnergyDeposit* energy_depsoit, int radiant_size, double singlet_to_triplet);
-    std::vector<PhotonRadiant> getPhotonRadiants() const;
-    int getTotalPhotonCount() const;
-    std::vector<double> getEmissionTimes() const;
-    std::vector<Eigen::Vector3d> getRadiantPositions() const;
-    std::vector<int> getRadiantSizes() const;
+    std::vector<PhotonRadiant> GetPhotonRadiants() const;
+    int GetTotalPhotonCount() const;
+    std::vector<double> GetEmissionTimes() const;
+    std::vector<Eigen::Vector3d> GetRadiantPositions() const;
+    std::vector<int> GetRadiantSizes() const;
     void PrintScintillation() const;
 
  private:

@@ -9,27 +9,24 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 
 void EventAction::EndOfEventAction(const G4Event* event) {
     if (is_signal_physics_ == true) {
-        auto signal = Signal::getInstance();
-
-        this->RunAnalysis(event, signal);
+        auto signal = Signal::GetInstance();
+        AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+        
+        //this->RunAnalysis(event, signal);
         signal->DeleteSignal();
     }
-
-    /*std::vector<PhotonRadiant> photon_radiants = signal->get_scintillation()->get_photon_radiants();
-    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
-    AnalyticalOptics::CalculateOpticalSignal(signal, optical_sensors);*/
 
     this->UpdateProgressBar(event);
 }
 
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
-    pulse_shape_->eventAnalysis(signal);
-    calorimetry_->eventAnalysis(signal);
+    pulse_shape_->EventAnalysis(signal);
+    calorimetry_->EventAnalysis(signal);
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
-        pulse_shape_->runAnalysis();
-        calorimetry_->runAnalysis();
+        pulse_shape_->RunAnalysis();
+        calorimetry_->RunAnalysis();
     }
 }
 

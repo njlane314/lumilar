@@ -16,8 +16,8 @@ MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_f
     energy_dist_name_ = "neutrino_energy_dist";
     time_dist_name_ = "cascade_time_dist";
 
-    TH1F_plots_.createHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 100, 1, 0);
-    TH1F_plots_.createHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
+    TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 100, 1, 0);
+    TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 }
 
 MarleyGenerator::~MarleyGenerator() {}
@@ -28,9 +28,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::Event marley_event = marley_generator.create_event();
 
     auto primary_energy = marley_event.projectile().kinetic_energy();
-    Signal::getInstance()->RecordPrimaryEnergy(primary_energy);
+    Signal::GetInstance()->RecordPrimaryEnergy(primary_energy);
     
-    TH1F* energy_hist = TH1F_plots_.getHistogram(energy_dist_name_);
+    TH1F* energy_hist = TH1F_plots_.GetHistogram(energy_dist_name_);
     energy_hist->Fill(primary_energy);
 
     double global_time = 0.;
@@ -57,9 +57,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
             if (iter != half_lifes_.end()) {
                 double time_of_decay = SampleFiniteParticleTime(iter->second);
                 primary_vertex->SetT0(global_time + time_of_decay);
-                TH1F* time_hist = TH1F_plots_.getHistogram(time_dist_name_);
+                TH1F* time_hist = TH1F_plots_.GetHistogram(time_dist_name_);
                 time_hist->Fill(time_of_decay);
-                Signal::getInstance()->RecordDelayTime(time_of_decay);
+                Signal::GetInstance()->RecordDelayTime(time_of_decay);
             }
             cascade_idx++;
         }
@@ -76,7 +76,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
 
     if (event_idx == events_to_generate - 1) {
-        TH1F_plots_.writeToFile(output_filename_);
+        TH1F_plots_.WriteToFile(output_filename_);
     }
 }
 

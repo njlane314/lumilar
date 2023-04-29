@@ -5,7 +5,7 @@ InstrumentConstruction* InstrumentConstruction::instance_ = nullptr;
 InstrumentConstruction::InstrumentConstruction() {
     std::cout << "-- Constructing instruments" << std::endl;
     DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
-    detector_construction->getDetectorDimensions(detector_width_, detector_height_, detector_depth_);
+    detector_construction->GetDetectorDimensions(detector_width_, detector_height_, detector_depth_);
     
     detector_width_ = detector_width_ * m / cm;
     detector_height_ = detector_height_ * m / cm;
@@ -24,10 +24,9 @@ InstrumentConstruction* InstrumentConstruction::GetInstance() {
     return instance_;
 }
 
-// add sensor_width_separation and sensor_height_separation
-void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_separation, double sensor_width, double sensor_height) {
+void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height) {
     std::cout << "-- Constructing rectangular optical sensors" << std::endl;
-    if (sensor_width > sensor_separation || sensor_height > sensor_separation) {
+    if (sensor_width > sensor_width_separation || sensor_height > sensor_height_separation) {
         throw std::invalid_argument("-- Invalid sensor dimensions");
     }
 
@@ -35,14 +34,14 @@ void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation
     Eigen::Vector3d plane_center;
     ConstructPlane(plane_orientation, plane_width, plane_height, plane_center);
 
-    const int num_sensors_width = floor(plane_width / sensor_separation);
-    const int num_sensors_height = floor(plane_height / sensor_separation);
+    const int num_sensors_width = floor(plane_width / sensor_width_separation);
+    const int num_sensors_height = floor(plane_height / sensor_height_separation);
 
     for (int i = 0; i < num_sensors_width; ++i) {
         for (int j = 0; j < num_sensors_height; ++j) {
             Eigen::Vector3d sensor_position = plane_center;
-            double along_width = (i * sensor_separation) + (sensor_separation / 2) - (plane_width / 2);
-            double along_height = (j * sensor_separation) + (sensor_separation / 2) - (plane_height / 2);
+            double along_width = (i * sensor_width_separation) + (sensor_width_separation / 2) - (plane_width / 2);
+            double along_height = (j * sensor_height_separation) + (sensor_height_separation / 2) - (plane_height / 2);
             switch (plane_orientation) {
                 case PlaneOrientation::X_POS:
                 case PlaneOrientation::X_NEG:
@@ -62,7 +61,7 @@ void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation
                 default:
                     throw std::invalid_argument("-- Invalid sensor orientation");
             }
-            std::unique_ptr<OpticalSensor> optical_sensor = OpticalSensor::createRectangle(sensor_width, sensor_height, sensor_position, plane_orientation);
+            std::unique_ptr<OpticalSensor> optical_sensor = OpticalSensor::CreateRectangle(sensor_width, sensor_height, sensor_position, plane_orientation);
             optical_sensors_.push_back(std::move(optical_sensor));
         }
     }

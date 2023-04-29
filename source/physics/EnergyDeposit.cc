@@ -7,54 +7,54 @@ EnergyDeposit::EnergyDeposit(double visible, double linear_transfer, std::string
 
 EnergyDeposit::~EnergyDeposit() {}
 
-double EnergyDeposit::getVisibleEnergy() const {
+double EnergyDeposit::GetVisibleEnergy() const {
     return visible;
 }
 
-void EnergyDeposit::setVisibleEnergy(double value) {
+void EnergyDeposit::SetVisibleEnergy(double value) {
     visible = value;
 }
 
-double EnergyDeposit::getLinearTransfer() const {
+double EnergyDeposit::GetLinearTransfer() const {
     return linear_transfer;
 }
 
-void EnergyDeposit::setLinearTransfer(double value) {
+void EnergyDeposit::SetLinearTransfer(double value) {
     linear_transfer = value;
 }
 
-std::string EnergyDeposit::getParticleSpecies() const {
+std::string EnergyDeposit::GetParticleSpecies() const {
     return particle_species;
 }
 
-void EnergyDeposit::setParticleSpecies(std::string value) {
+void EnergyDeposit::SetParticleSpecies(std::string value) {
     particle_species = value;
 }
 
-Eigen::Vector3d EnergyDeposit::getPosition() const {
+Eigen::Vector3d EnergyDeposit::GetPosition() const {
     return position;
 }
 
-void EnergyDeposit::setPosition(Eigen::Vector3d value) {
+void EnergyDeposit::SetPosition(Eigen::Vector3d value) {
     position = value;
 }
 
-double EnergyDeposit::getLength() const {
+double EnergyDeposit::GetLength() const {
     return length;
 }
 
-void EnergyDeposit::setLength(double value) {
+void EnergyDeposit::SetLength(double value) {
     length = value;
 }
 
-double EnergyDeposit::getTime() const {
+double EnergyDeposit::GetTime() const {
     return time;
 }
 
-void EnergyDeposit::setTime(double value) {
+void EnergyDeposit::SetTime(double value) {
     time = value;
 }
 
-bool EnergyDeposit::isEmpty() const {
+bool EnergyDeposit::IsEmpty() const {
     return visible == 0 || linear_transfer == 0 || particle_species.empty() || position.isZero() || length == 0 || time == 0;
 }

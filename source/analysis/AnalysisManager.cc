@@ -13,10 +13,10 @@ AnalysisManager* AnalysisManager::GetInstance() {
     return instance_;
 }
 
-void AnalysisManager::setOutputFilename(std::string output_filename) {
+void AnalysisManager::SetOutputFilename(std::string output_filename) {
     this->output_filename = output_filename;
 }
 
-std::string AnalysisManager::getOutputFilename() const {
+std::string AnalysisManager::GetOutputFilename() const {
     return output_filename;
 }

@@ -8,9 +8,9 @@
 
 class Calorimetry {
 public:
-    static void eventAnalysis(const Signal* signal);
-    static void plotEnergyYields(const Signal* signal);
-    static void runAnalysis();
+    static void EventAnalysis(const Signal* signal);
+    static void PlotEnergyYields(const Signal* signal);
+    static void RunAnalysis();
 
 private:
     static AnalysisResults<TH2F> TH2F_run_plots_;

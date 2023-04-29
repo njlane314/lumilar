@@ -24,7 +24,7 @@ public:
     ~AnalysisResults() {}
 
     template<typename... Args>
-    void fillHistogram(const std::string& name, Args... args) { // not sure if this function works properly
+    void FillHistogram(const std::string& name, Args... args) { // not sure if this function works properly
         for (const auto& hist : histograms_) {
             if (hist->GetName() == name) {
                 if constexpr (std::is_same_v<HistType, TH1F>) {
@@ -59,7 +59,7 @@ public:
         }
     }
 
-    void createHistogram(const std::string& name, const std::string& xTitle, const std::string& yTitle, int nBinsX = 100, double xMin = 1., double xMax = 0., int nBinsY = 100, double yMin = 1., double yMax = 0.) {
+    void CreateHistogram(const std::string& name, const std::string& xTitle, const std::string& yTitle, int nBinsX = 100, double xMin = 1., double xMax = 0., int nBinsY = 100, double yMin = 1., double yMax = 0.) {
         std::unique_ptr<HistType> hist;
 
         if constexpr (std::is_same_v<HistType, TH1F>) {
@@ -83,7 +83,7 @@ public:
 
     //for unstacked histograms, need to create canvas and draw each histogram with "same" parameter
 
-    HistType* getHistogram(const std::string& name) {
+    HistType* GetHistogram(const std::string& name) {
         for (const auto& hist : histograms_) {
             if (hist->GetName() == name) {
                 if constexpr (std::is_same_v<HistType, TH1F>) {
@@ -101,7 +101,7 @@ public:
         return nullptr;
     }
 
-    void writeToFile(const std::string& filename) {
+    void WriteToFile(const std::string& filename) {
         TFile file(filename.c_str(), "UPDATE");
         if (!file.IsOpen()) {
             std::cerr << "-- Error opening file \"" << filename << "\"" << std::endl;
@@ -115,8 +115,8 @@ public:
         file.Close();
     }
 
-    void saveHistograms() {
-        std::string output_filename = AnalysisManager::GetInstance()->getOutputFilename();
+    void SaveHistograms() {
+        std::string output_filename = AnalysisManager::GetInstance()->GetOutputFilename();
 
         TFile file(output_filename.c_str(), "UPDATE");
         if (!file.IsOpen()) {
@@ -128,10 +128,10 @@ public:
             hist->Write(hist->GetName(), TObject::kOverwrite);
         }
 
-        clearHistograms();
+        ClearHistograms();
     }
 
-    void appendToFile(const std::string& filename) {
+    void AppendToFile(const std::string& filename) {
         std::cout << "-- Appending histograms to file \"" << filename << "\"" << std::endl;
         TFile file(filename.c_str(), "UPDATE");
         if (!file.IsOpen()) {
@@ -151,7 +151,7 @@ public:
         file.Close();
     }
 
-    void clearHistograms() {
+    void ClearHistograms() {
         histograms_.clear();
     }
 

@@ -12,12 +12,12 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	new MaterialProperties("lAr");
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
-	InstrumentConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100.);
+	InstrumentConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100., 100.);
 	
 	const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
 	for (const auto& sensor : optical_sensors) {
-		std::cout << "Sensor position: (" << sensor->getPosition().x() << ", " << sensor->getPosition().y() << ", " << sensor->getPosition().z() << ")\n";
-		auto [width, height] = sensor->getDimensions();
+		std::cout << "Sensor position: (" << sensor->GetPosition().x() << ", " << sensor->GetPosition().y() << ", " << sensor->GetPosition().z() << ")\n";
+		auto [width, height] = sensor->GetDimensions();
 		std::cout << "Sensor dimensions: (" << width << ", " << height << ")\n";
 	}
 }

@@ -42,7 +42,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
     ~DetectorConstruction();
 
     G4VPhysicalVolume* Construct();
-    void getDetectorDimensions(double& width, double& height, double& depth);
+    void GetDetectorDimensions(double& width, double& height, double& depth);
 
  private:
     std::string detector_config_;

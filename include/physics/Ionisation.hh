@@ -20,9 +20,9 @@ public:
     ~Ionisation();
 
     void AddCloud(const EnergyDeposit* energy_deposit, int cloud_size);
-    std::vector<int> getCloudSizes() const;
-    int getTotalElectronCount() const;
-    std::vector<Eigen::Vector3d> getCloudPositions() const;
+    std::vector<int> GetCloudSizes() const;
+    int GetTotalElectronCount() const;
+    std::vector<Eigen::Vector3d> GetCloudPositions() const;
     void PrintIonisation() const;
 
 private:

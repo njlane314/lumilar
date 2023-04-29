@@ -1,7 +1,7 @@
 #include "Relaxation.hh"
 
 Relaxation::Relaxation() : 
-material_properties_(MaterialProperties::getInstance()->getMaterialProperties()), 
+material_properties_(MaterialProperties::GetInstance()->GetMaterialProperties()), 
 singlet_lifetime_(material_properties_->singlet_lifetime),
 triplet_lifetime_(material_properties_->triplet_lifetime) {}
 
@@ -50,6 +50,6 @@ double Relaxation::QuenchedLifetime(double excited_rate) {
 
 OpticalPhoton Relaxation::CreateOpticalPhoton(const EnergyDeposit* energy_deposit, double singlet_to_triplet) {
     double emission_time = SampleEmissionTime(singlet_to_triplet);
-    return (emission_time < 0) ? OpticalPhoton() : OpticalPhoton(energy_deposit->getTime() + emission_time);
+    return (emission_time < 0) ? OpticalPhoton() : OpticalPhoton(energy_deposit->GetTime() + emission_time);
 }
 

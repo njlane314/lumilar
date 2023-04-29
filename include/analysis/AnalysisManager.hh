@@ -9,8 +9,8 @@ public:
     ~AnalysisManager();
 
     static AnalysisManager* GetInstance();
-    void setOutputFilename(std::string output_filename);
-    std::string getOutputFilename() const;
+    void SetOutputFilename(std::string output_filename);
+    std::string GetOutputFilename() const;
 
 private:
     static AnalysisManager* instance_;

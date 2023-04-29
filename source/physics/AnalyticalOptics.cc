@@ -5,16 +5,17 @@ AnalyticalOptics::AnalyticalOptics() {}
 AnalyticalOptics::~AnalyticalOptics() {}
 
 void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
-    std::vector<PhotonRadiant> photon_radiants = signal->getScintillation()->getPhotonRadiants();
+    std::vector<int> photon_radiant_sizes = signal->GetScintillation()->GetRadiantSizes();
+    std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
 
-    int total_photons_detected = 0;
-    for (const auto& a_photon_radiant : photon_radiants) {
+    int photon_radiant_idx = 0;
+    for (const int& a_photon_radiant_size : photon_radiant_sizes) {
+        const auto& a_photon_radiant = photon_radiants[photon_radiant_idx];
         for (const auto& a_optical_sensor : optical_sensors) {
             double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get());
-            int num_photons_detected = floor(geometric_quenching_factor * (double)a_photon_radiant.photons.size());
-            total_photons_detected += num_photons_detected;
-            for (int i = 0; i < num_photons_detected; i++) {
-                a_optical_sensor->addPhoton(a_photon_radiant.photons[i]);
+            int num_photons_detected = floor(geometric_quenching_factor * a_photon_radiant_size);
+            for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
+                a_optical_sensor->AddPhoton(a_photon_radiant.photons[photon_idx]);
             }
         }
     }
@@ -22,7 +23,7 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
 
 double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor) {
     // https://arxiv.org/pdf/2010.00324.pdf
-    Eigen::Vector3d separation = (sensor->getPosition() - (a_photon_radiant->position * mm));
+    Eigen::Vector3d separation = (sensor->GetPosition() - (a_photon_radiant->position * mm));
     double distance = separation.norm();
 
     double solid_angle = CalculateSolidAngle(sensor, &separation);
@@ -36,8 +37,8 @@ double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const 
     double solid_angle = 0.;
 
     Eigen::Vector3d projection = CreateProjectionGeometry(sensor, separation);
-    if (sensor->isRectangular()) {
-        auto [width, height] = sensor->getDimensions();
+    if (sensor->IsRectangular()) {
+        auto [width, height] = sensor->GetDimensions();
         solid_angle = RectangularSolidAngle(separation, width, height);
     }
     else {
@@ -49,13 +50,13 @@ double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const 
 
 Eigen::Vector3d AnalyticalOptics::CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     Eigen::Vector3d projection;
-    if (sensor->getOrientation() == PlaneOrientation::X_POS || sensor->getOrientation() == PlaneOrientation::X_NEG) {
+    if (sensor->GetOrientation() == PlaneOrientation::X_POS || sensor->GetOrientation() == PlaneOrientation::X_NEG) {
         projection = *separation;
     } 
-    else if (sensor->getOrientation() == PlaneOrientation::Y_POS || sensor->getOrientation() == PlaneOrientation::Y_NEG) {
+    else if (sensor->GetOrientation() == PlaneOrientation::Y_POS || sensor->GetOrientation() == PlaneOrientation::Y_NEG) {
         projection = Eigen::Vector3d(separation->y(), separation->x(), separation->z());
     } 
-    else if (sensor->getOrientation() == PlaneOrientation::Z_POS || sensor->getOrientation() == PlaneOrientation::Z_NEG) {
+    else if (sensor->GetOrientation() == PlaneOrientation::Z_POS || sensor->GetOrientation() == PlaneOrientation::Z_NEG) {
         projection = Eigen::Vector3d(separation->z(), separation->y(), separation->x());
     } 
     else {
@@ -128,5 +129,5 @@ double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection
 }
 
 double AnalyticalOptics::AbsorptionQuenching(double distance) {
-    return std::exp(- distance / MaterialProperties::getInstance()->getMaterialProperties()->absorption_length);
+    return std::exp(- distance / MaterialProperties::GetInstance()->GetMaterialProperties()->absorption_length);
 }
