@@ -10,15 +10,46 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
 
     int photon_radiant_idx = 0;
     for (const int& a_photon_radiant_size : photon_radiant_sizes) {
-        const auto& a_photon_radiant = photon_radiants[photon_radiant_idx];
+        PhotonRadiant a_photon_radiant_copy = photon_radiants[photon_radiant_idx];
+        std::vector<double> geometric_quenching_factors;
         for (const auto& a_optical_sensor : optical_sensors) {
-            double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&a_photon_radiant, a_optical_sensor.get());
+            double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&a_photon_radiant_copy, a_optical_sensor.get());
             int num_photons_detected = floor(geometric_quenching_factor * a_photon_radiant_size);
-            for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
-                a_optical_sensor->AddPhoton(a_photon_radiant.photons[photon_idx]);
+            if (num_photons_detected < 1) {
+                continue;
+            } else {
+                std::vector<OpticalPhoton> photons_copy = a_photon_radiant_copy.photons;
+                for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
+                    if (photons_copy.empty()) {
+                        break;
+                    }
+                    auto selected_photon = photons_copy[0];
+                    a_optical_sensor->AddPhoton(CreateArrivalPhoton(&a_photon_radiant_copy, selected_photon, a_optical_sensor.get()));
+                    
+                    auto it = std::find(photons_copy.begin(), photons_copy.end(), selected_photon);
+                    if (it != photons_copy.end()) {
+                        photons_copy.erase(it);
+                    }
+                }
+                a_photon_radiant_copy.photons = photons_copy;
             }
         }
+        photon_radiant_idx++;
     }
+}
+
+OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
+    //memory leak here
+    Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position * mm));
+    double distance = separation.norm();
+
+    double group_velocity = MaterialProperties::GetInstance()->GetGroupVelocity(optical_photon.GetWavelength())*1e-9*1e2;
+    double arrival_time = optical_photon.GetEmissionTime() + distance / group_velocity;
+    //std::cout << "Arrival time: " << arrival_time << std::endl;
+    //std::cout << "Emission time: " << optical_photon.GetEmissionTime() << std::endl;
+    OpticalPhoton arrival_photon = optical_photon;
+    arrival_photon.SetArrivalTime(arrival_time);
+    return arrival_photon;
 }
 
 double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor) {

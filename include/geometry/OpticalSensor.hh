@@ -96,9 +96,13 @@ public:
     const std::vector<double> GetPhotonTimes() const {
         std::vector<double> photon_times;
         for (const auto& photon : detected_photons_) {
-            photon_times.push_back(photon.GetEmissionTime());
+            photon_times.push_back(photon.GetArrivalTime());
         }
         return photon_times;
+    }
+
+    void ClearPhotons() {
+        detected_photons_.clear();
     }
 
 private:

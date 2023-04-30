@@ -24,6 +24,7 @@ public:
     void ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation,  double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height);
     const OpticalSensorVector& GetOpticalSensors();
     int GetNumOpticalSensors() const;
+    void ClearOpticalSensors();
 
 private:
     static InstrumentConstruction* instance_;

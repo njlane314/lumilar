@@ -20,16 +20,11 @@ class Relaxation {
     Relaxation();
     ~Relaxation();
 
-    OpticalPhoton CreateOpticalPhoton(const EnergyDeposit* energy_deposit, double singlet_to_triplet);
+    static OpticalPhoton CreateOpticalPhoton(const EnergyDeposit* energy_deposit);
 
  private:
-    Properties* material_properties_;
-
-    double singlet_lifetime_;
-    double triplet_lifetime_;
-
-    double SampleEmissionTime(double singlet_to_triplet);
-    double QuenchedLifetime(double excited_rate);
+    static double SampleEmissionTime(double singlet_lifetime, double triplet_lifetime, double singlet_to_triplet);
+	static double SampleWavelength(double wavelength_mean, double wavelength_fwhm);
 };
 
 #endif

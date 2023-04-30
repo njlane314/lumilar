@@ -113,6 +113,16 @@ const OpticalSensorVector& InstrumentConstruction::GetOpticalSensors() {
     return optical_sensors_;
 }
 
+void InstrumentConstruction::ClearOpticalSensors() {
+    for (const auto& sensor : optical_sensors_) {
+        sensor->ClearPhotons();
+    }
+}
+
 int InstrumentConstruction::GetNumOpticalSensors() const {
-    return optical_sensors_.size();
+    int num_sensors = 0;
+    for (const auto& sensor : optical_sensors_) {
+        num_sensors += 1;
+    }
+    return num_sensors;
 }

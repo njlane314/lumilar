@@ -1,9 +1,6 @@
 #include "Relaxation.hh"
 
-Relaxation::Relaxation() : 
-material_properties_(MaterialProperties::GetInstance()->GetMaterialProperties()), 
-singlet_lifetime_(material_properties_->singlet_lifetime),
-triplet_lifetime_(material_properties_->triplet_lifetime) {}
+Relaxation::Relaxation() {}
 
 Relaxation::~Relaxation() {}
 
@@ -32,24 +29,51 @@ Relaxation::~Relaxation() {}
             return -1;
         }
     }
-}*/
-
-double Relaxation::SampleEmissionTime(double singlet_to_triplet) {
-    double singlet_abundance = singlet_to_triplet / (1 + singlet_to_triplet);
-
-    if (CLHEP::RandBinomial::shoot(1, singlet_abundance)) {
-        return CLHEP::RandExponential::shoot(singlet_lifetime_);
-    } else {
-        return CLHEP::RandExponential::shoot(triplet_lifetime_);
-    }
 }
 
 double Relaxation::QuenchedLifetime(double excited_rate) {
     return 1. / ((1. / triplet_lifetime_) + excited_rate);
+}*/
+
+double Relaxation::SampleEmissionTime(double singlet_lifetime, double triplet_lifetime, double singlet_to_triplet) {
+    double singlet_abundance = singlet_to_triplet / (1 + singlet_to_triplet);
+
+    if (CLHEP::RandBinomial::shoot(1, singlet_abundance)) {
+        return CLHEP::RandExponential::shoot(singlet_lifetime);
+    } else {
+        return CLHEP::RandExponential::shoot(triplet_lifetime);
+    }
 }
 
-OpticalPhoton Relaxation::CreateOpticalPhoton(const EnergyDeposit* energy_deposit, double singlet_to_triplet) {
-    double emission_time = SampleEmissionTime(singlet_to_triplet);
-    return (emission_time < 0) ? OpticalPhoton() : OpticalPhoton(energy_deposit->GetTime() + emission_time);
+double Relaxation::SampleWavelength(double wavelength_mean, double wavelength_fwhm) {
+    //https://pubs.aip.org/aip/jcp/article/91/3/1469/220871/Argon-krypton-and-xenon-excimer-luminescence-From
+    double wavelength_sigma = wavelength_fwhm / (2 * sqrt(2 * log(2)));
+    return CLHEP::RandGauss::shoot(wavelength_mean, wavelength_sigma);
+}
+
+OpticalPhoton Relaxation::CreateOpticalPhoton(const EnergyDeposit* energy_deposit) {
+    auto material_properties = MaterialProperties::GetInstance()->GetMaterialProperties();
+    double singlet_lifetime, triplet_lifetime, singlet_to_triplet, wavelength_mean, wavelength_fwhm;
+    
+    if (material_properties->material == "lAr") {
+        singlet_lifetime = material_properties->singlet_lifetime;
+        triplet_lifetime = material_properties->triplet_lifetime;
+        singlet_to_triplet = material_properties->singlet_to_triplet_light;
+        
+        wavelength_mean = material_properties->wavelength_mean;
+        wavelength_fwhm = material_properties->wavelength_fwhm;
+    } 
+    else {
+        throw std::runtime_error("-- Medium not supported for optical photon creation. Aborting.");
+    }
+
+    double emission_time = SampleEmissionTime(singlet_lifetime, triplet_lifetime, singlet_to_triplet);
+    double wavelength = SampleWavelength(wavelength_mean, wavelength_fwhm);
+
+    if (emission_time < 0 || wavelength < 0) {
+        return OpticalPhoton();
+    } else {
+        return OpticalPhoton(energy_deposit->GetTime() + emission_time, wavelength);
+    }
 }
 

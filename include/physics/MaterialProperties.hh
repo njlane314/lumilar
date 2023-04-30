@@ -32,6 +32,9 @@ struct Properties {
     double quenched_rate_heavy;
 
     double absorption_length;
+
+    double wavelength_mean;
+    double wavelength_fwhm;
 };
 
 class MaterialProperties {
@@ -42,6 +45,7 @@ public:
     static MaterialProperties* GetInstance();
     Properties InitialiseProperties(std::string material);
     Properties* GetMaterialProperties();
+    double GetGroupVelocity(double wavelength) const;
 
     static MaterialProperties* instance_;
     std::string material_;

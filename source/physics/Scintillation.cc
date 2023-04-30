@@ -12,8 +12,8 @@ void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_
 
     current_radiant.position = energy_deposit->GetPosition();
     for (int i = 0; i < radiant_size; i++) {
-        OpticalPhoton photon = relaxation_generator_.CreateOpticalPhoton(energy_deposit, singlet_to_triplet);
-        if (photon.GetEmissionTime() != 0) {
+        OpticalPhoton photon = Relaxation::CreateOpticalPhoton(energy_deposit);
+        if (photon.GetEmissionTime() > 0 && photon.GetWavelength() > 0) {
             current_radiant.photons.push_back(photon);
         }
     }

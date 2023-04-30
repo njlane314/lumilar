@@ -9,7 +9,8 @@ AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 void PulseShape::EventAnalysis(const Signal* signal){
     int evt_id = CLHEP::RandFlat::shootInt(1000);
     PlotEmissionTimes(signal, evt_id);
-    PlotAmplitudeRatio(signal, evt_id);
+    //PlotAmplitudeRatio(signal, evt_id);
+    PlotArrivalTimes(evt_id);
 } 
 
 void PulseShape::RunAnalysis() {
@@ -49,6 +50,27 @@ void PulseShape::PlotEmissionTimes(const Signal* signal, int evt_id) {
     }
 
     TProfile_evt_plots_.SaveHistograms();
+    TH1F_evt_plots_.SaveHistograms();
+}
+
+void PulseShape::PlotArrivalTimes(int evt_id) {
+    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    std::stringstream arrival_hist_name;
+    arrival_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_arrival_times";
+
+    double x_min = 0.;
+    double x_max = 3000.;
+    double time_res = 1.;
+    int n_bins = round((x_max - x_min)/time_res);
+
+    TH1F_evt_plots_.CreateHistogram(arrival_hist_name.str(), "Time of arrival [ns]", "Optical photons/ns", n_bins, x_min, x_max);
+    TH1F* evt_hist = TH1F_evt_plots_.GetHistogram(arrival_hist_name.str());
+    for (const auto& sensor : optical_sensors) {
+        for (const auto& time : sensor->GetPhotonTimes()) {
+            evt_hist->Fill(time);
+        }
+    }
+
     TH1F_evt_plots_.SaveHistograms();
 }
 

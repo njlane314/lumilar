@@ -3,10 +3,13 @@
 
 #include "AnalysisResults.hh"
 #include "OpticalSensor.hh"
+#include "InstrumentConstruction.hh"
+#include "Signal.hh"
+
 #include "CLHEP/Random/RandFlat.h"
 #include <string>
 #include <vector>
-#include "Signal.hh"
+
 #include "TSpectrum.h"
 
 class PulseShape {
@@ -19,6 +22,7 @@ public:
     static void RunAnalysis();
     static void PlotEmissionTimes(const Signal* signal, int evt_id);
     static void PlotAmplitudeRatio(const Signal* signal, int evt_id);
+    static void PlotArrivalTimes(int evt_id);
 };
 
 #endif // PULSESHAPE_HH

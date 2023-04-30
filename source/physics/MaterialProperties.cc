@@ -1,6 +1,6 @@
 #include "Signal.hh"
 #include "MaterialProperties.hh"
-
+//change name to medium properties
 MaterialProperties* MaterialProperties::instance_ = nullptr;
 
 MaterialProperties::MaterialProperties(std::string material = "lAr") 
@@ -51,8 +51,23 @@ Properties MaterialProperties::InitialiseProperties(std::string material = "lAr"
         material_properties.quenched_rate_heavy = 2.3 * 1e-3 * ns;
 
         material_properties.absorption_length = 20. * m;
+
+        material_properties.wavelength_mean = 128.;
+        material_properties.wavelength_fwhm = 6.;
     } 
     //else if (material == "lArXe") {}
     
     return material_properties;
+}
+
+double MaterialProperties::GetGroupVelocity(double wavelength) const {
+    //https://arxiv.org/pdf/2002.09346.pdf
+    const double c = 299792458;
+    double delta_wl = 1e-10; 
+    auto index_of_refraction = [wavelength](double wl) {
+        double x = 0.334 + 0.1*wl*wl/(wl*wl - 106.6*106.6) + 0.008*wl*wl/(wl*wl - 908.3*908.3);
+        return std::sqrt(1 + (3*x/(3-x)));
+    };
+    double dn_dlambda = (index_of_refraction(wavelength + delta_wl/2) - index_of_refraction(wavelength - delta_wl/2)) / delta_wl;
+    return (c / (index_of_refraction(wavelength) - wavelength * dn_dlambda));
 }

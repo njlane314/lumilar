@@ -12,9 +12,11 @@ void EventAction::EndOfEventAction(const G4Event* event) {
         auto signal = Signal::GetInstance();
         AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
         
-        //this->RunAnalysis(event, signal);
+        this->RunAnalysis(event, signal);
         signal->DeleteSignal();
     }
+
+    InstrumentConstruction::GetInstance()->ClearOpticalSensors();
 
     this->UpdateProgressBar(event);
 }
