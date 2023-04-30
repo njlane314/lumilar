@@ -8,6 +8,13 @@
 #include "G4SystemOfUnits.hh"
 #include "Signal.hh"
 
+#include <thread>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <omp.h>
+
+
 class AnalyticalOptics {
 public:
     AnalyticalOptics();

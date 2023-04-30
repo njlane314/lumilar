@@ -8,6 +8,7 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     std::vector<int> photon_radiant_sizes = signal->GetScintillation()->GetRadiantSizes();
     std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
 
+    //multithread this
     int photon_radiant_idx = 0;
     for (const int& a_photon_radiant_size : photon_radiant_sizes) {
         PhotonRadiant a_photon_radiant_copy = photon_radiants[photon_radiant_idx];
@@ -39,14 +40,11 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
 }
 
 OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
-    //memory leak here
     Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position * mm));
     double distance = separation.norm();
 
     double group_velocity = MaterialProperties::GetInstance()->GetGroupVelocity(optical_photon.GetWavelength())*1e-9*1e2;
     double arrival_time = optical_photon.GetEmissionTime() + distance / group_velocity;
-    //std::cout << "Arrival time: " << arrival_time << std::endl;
-    //std::cout << "Emission time: " << optical_photon.GetEmissionTime() << std::endl;
     OpticalPhoton arrival_photon = optical_photon;
     arrival_photon.SetArrivalTime(arrival_time);
     return arrival_photon;

@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+
+# Add OpenMP flags
+find_package(OpenMP REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/system)
 
 find_package(Geant4 REQUIRED)
@@ -48,7 +53,7 @@ file(GLOB HEADERS   ${MAIN_INCLUDE_DIR}/*.hh
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_include_directories( ${PROJECT_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
                             ${MAIN_INCLUDE_DIR}
                             ${MARLEY_DIR}/include
                             ${MAIN_INCLUDE_DIR}/physics
@@ -61,3 +66,5 @@ target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${MARLEY} ${MARLEY_ROOT})
 target_link_libraries(${PROJECT_NAME} ${CLHEP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} Threads::Threads)
+target_link_libraries(${PROJECT_NAME} ${OpenMP_CXX_LIBRARIES}) # Link with OpenMP library

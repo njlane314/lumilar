@@ -23,7 +23,7 @@ class Relaxation {
     static OpticalPhoton CreateOpticalPhoton(const EnergyDeposit* energy_deposit);
 
  private:
-    static double SampleEmissionTime(double singlet_lifetime, double triplet_lifetime, double singlet_to_triplet);
+    static double SampleEmissionTime(double singlet_lifetime, double triplet_lifetime, double singlet_to_triplet, bool enable_quenching);
 	static double SampleWavelength(double wavelength_mean, double wavelength_fwhm);
 };
 
