@@ -1,7 +1,7 @@
 #ifndef MEDIUM_RESPONSE_HH
 #define MEDIUM_RESPONSE_HH
 
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 #include "Excitation.hh"
 #include "Recombination.hh"
 #include "EnergyDeposit.hh"

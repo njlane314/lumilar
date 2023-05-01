@@ -3,13 +3,13 @@
 Signal* Signal::instance_ = nullptr;
 
 Signal::Signal()
-: material_properties_(MaterialProperties::GetInstance()->GetMaterialProperties()) {
+: medium_properties_(MediumProperties::GetInstance()->GetMediumProperties()) {
     if (!instance_) {
         instance_ = this;
     }
 
-    if (!material_properties_) {
-        throw std::runtime_error("-- MaterialProperties instance is null");
+    if (!medium_properties_) {
+        throw std::runtime_error("-- MediumProperties instance is null");
     }
 
     scintillation_ = std::make_unique<Scintillation>();

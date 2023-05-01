@@ -1,7 +1,7 @@
 #ifndef RELAXATION_HH
 #define RELAXATION_HH
 
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 #include "Recombination.hh"
 #include "OpticalPhoton.hh"
 #include "EnergyDeposit.hh"
@@ -15,16 +15,18 @@
 #include <iostream>
 #include <chrono>
 
+#include <TF1.h>
+
 class Relaxation {
- public:
+public:
     Relaxation();
     ~Relaxation();
 
     static OpticalPhoton CreateOpticalPhoton(const EnergyDeposit* energy_deposit);
 
- private:
-    static double SampleEmissionTime(double singlet_lifetime, double triplet_lifetime, double singlet_to_triplet, bool enable_quenching);
-	static double SampleWavelength(double wavelength_mean, double wavelength_fwhm);
+private:
+    static std::pair<double, double> SampleEmissionTime(bool enable_quenching, bool is_doped);
+	static double SampleWavelength(double wavelength_mean, double wavelength_sigma);
 };
 
 #endif

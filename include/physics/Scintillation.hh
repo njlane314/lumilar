@@ -1,5 +1,5 @@
-#ifndef SCINTILLATION_H
-#define SCINTILLATION_H
+#ifndef SCINTILLATION_HH
+#define SCINTILLATION_HH
 
 #include <iostream>
 #include <vector>
@@ -21,7 +21,7 @@ class Scintillation {
     Scintillation();
     ~Scintillation();
 
-    void AddRadiant(const EnergyDeposit* energy_depsoit, int radiant_size, double singlet_to_triplet);
+    void AddRadiant(const EnergyDeposit* energy_depsoit, int radiant_size);
     std::vector<PhotonRadiant> GetPhotonRadiants() const;
     int GetTotalPhotonCount() const;
     std::vector<double> GetEmissionTimes() const;
@@ -35,4 +35,4 @@ class Scintillation {
     Relaxation relaxation_generator_;
 };
 
-#endif // SCINTILLATION_H
+#endif // SCINTILLATION_HH

@@ -12,7 +12,6 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     int photon_radiant_idx = 0;
     for (const int& a_photon_radiant_size : photon_radiant_sizes) {
         PhotonRadiant a_photon_radiant_copy = photon_radiants[photon_radiant_idx];
-        std::vector<double> geometric_quenching_factors;
         for (const auto& a_optical_sensor : optical_sensors) {
             double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&a_photon_radiant_copy, a_optical_sensor.get());
             int num_photons_detected = floor(geometric_quenching_factor * a_photon_radiant_size);
@@ -42,11 +41,14 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
 OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
     Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position * mm));
     double distance = separation.norm();
+    double convert_m_per_s_to_cm_per_ns = 1e2 * 1e-9;
 
-    double group_velocity = MaterialProperties::GetInstance()->GetGroupVelocity(optical_photon.GetWavelength())*1e-9*1e2;
+    double group_velocity = MediumProperties::GetInstance()->GetGroupVelocity(optical_photon.GetWavelength()) * convert_m_per_s_to_cm_per_ns;
     double arrival_time = optical_photon.GetEmissionTime() + distance / group_velocity;
+    
     OpticalPhoton arrival_photon = optical_photon;
     arrival_photon.SetArrivalTime(arrival_time);
+
     return arrival_photon;
 }
 
@@ -158,5 +160,5 @@ double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection
 }
 
 double AnalyticalOptics::AbsorptionQuenching(double distance) {
-    return std::exp(- distance / MaterialProperties::GetInstance()->GetMaterialProperties()->absorption_length);
+    return std::exp(- distance / MediumProperties::GetInstance()->GetMediumProperties()->absorption_length);
 }

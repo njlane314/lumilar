@@ -1,8 +1,9 @@
 #ifndef EXCITATION_HH
 #define EXCITATION_HH
 
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 #include "EnergyDeposit.hh"
+
 #include <CLHEP/Random/RandGauss.h>
 #include <CLHEP/Random/RandPoisson.h>
 

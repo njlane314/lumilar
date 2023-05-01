@@ -7,7 +7,7 @@ Scintillation::Scintillation()
 
 Scintillation::~Scintillation() {}
 
-void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_size, double singlet_to_triplet) {
+void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_size) {
     PhotonRadiant current_radiant = {};
 
     current_radiant.position = energy_deposit->GetPosition();

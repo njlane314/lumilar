@@ -9,7 +9,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 
 	std::cout << "-- Beginning run... " << std::endl;
 	
-	new MaterialProperties("lAr");
+	new MediumProperties("lAr");
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
 	InstrumentConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100., 100.);

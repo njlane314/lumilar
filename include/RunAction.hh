@@ -6,7 +6,7 @@
 #include "G4UserRunAction.hh"
 
 #include "InstrumentConstruction.hh"
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 
 class RunAction : public G4UserRunAction {
 public:

@@ -1,19 +1,19 @@
 #ifndef ANALYTICALOPTICS_HH
 #define ANALYTICALOPTICS_HH
 
-#include <Eigen/Core>
 #include "Scintillation.hh"
 #include "OpticalSensor.hh"
-#include "MaterialProperties.hh"
-#include "G4SystemOfUnits.hh"
+#include "MediumProperties.hh"
 #include "Signal.hh"
 
+#include "G4SystemOfUnits.hh"
+
+#include <Eigen/Core>
 #include <thread>
 #include <vector>
 #include <algorithm>
 #include <cmath>
 #include <omp.h>
-
 
 class AnalyticalOptics {
 public:

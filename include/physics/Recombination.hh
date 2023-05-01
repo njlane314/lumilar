@@ -1,7 +1,7 @@
 #ifndef RECOMBINATION_HH
 #define RECOMBINATION_HH
 
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 #include "Excitation.hh"
 #include "EnergyDeposit.hh"
 

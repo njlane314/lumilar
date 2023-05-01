@@ -1,7 +1,7 @@
 #ifndef SIGNAL_HH
 #define SIGNAL_HH
 
-#include "MaterialProperties.hh"
+#include "MediumProperties.hh"
 #include "MediumResponse.hh"
 
 #include "Scintillation.hh"
@@ -35,7 +35,7 @@ private:
   EnergyDeposit* GetCurrentEnergyDeposit();
 
   static Signal* instance_;
-  Properties* material_properties_;
+  Properties* medium_properties_;
   std::unique_ptr<Scintillation> scintillation_;
   std::unique_ptr<Ionisation> ionisation_;
   std::unique_ptr<EnergyDeposit> energy_deposit_;

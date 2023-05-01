@@ -7,53 +7,29 @@ EnergyDeposit::EnergyDeposit(double visible, double linear_transfer, std::string
 
 EnergyDeposit::~EnergyDeposit() {}
 
-double EnergyDeposit::GetVisibleEnergy() const {
-    return visible;
-}
+double EnergyDeposit::GetVisibleEnergy() const { return visible; }
 
-void EnergyDeposit::SetVisibleEnergy(double value) {
-    visible = value;
-}
+void EnergyDeposit::SetVisibleEnergy(double value) { visible = value; }
 
-double EnergyDeposit::GetLinearTransfer() const {
-    return linear_transfer;
-}
+double EnergyDeposit::GetLinearTransfer() const { return linear_transfer; }
 
-void EnergyDeposit::SetLinearTransfer(double value) {
-    linear_transfer = value;
-}
+void EnergyDeposit::SetLinearTransfer(double value) { linear_transfer = value; }
 
-std::string EnergyDeposit::GetParticleSpecies() const {
-    return particle_species;
-}
+std::string EnergyDeposit::GetParticleSpecies() const { return particle_species; }
 
-void EnergyDeposit::SetParticleSpecies(std::string value) {
-    particle_species = value;
-}
+void EnergyDeposit::SetParticleSpecies(std::string value) { particle_species = value; }
 
-Eigen::Vector3d EnergyDeposit::GetPosition() const {
-    return position;
-}
+Eigen::Vector3d EnergyDeposit::GetPosition() const { return position; }
 
-void EnergyDeposit::SetPosition(Eigen::Vector3d value) {
-    position = value;
-}
+void EnergyDeposit::SetPosition(Eigen::Vector3d value) { position = value; }
 
-double EnergyDeposit::GetLength() const {
-    return length;
-}
+double EnergyDeposit::GetLength() const { return length; }
 
-void EnergyDeposit::SetLength(double value) {
-    length = value;
-}
+void EnergyDeposit::SetLength(double value) { length = value; }
 
-double EnergyDeposit::GetTime() const {
-    return time;
-}
+double EnergyDeposit::GetTime() const { return time; }
 
-void EnergyDeposit::SetTime(double value) {
-    time = value;
-}
+void EnergyDeposit::SetTime(double value) { time = value; }
 
 bool EnergyDeposit::IsEmpty() const {
     return visible == 0 || linear_transfer == 0 || particle_species.empty() || position.isZero() || length == 0 || time == 0;
