@@ -51,7 +51,6 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
                 double shifted_prob = (transfer_rate * doped_concentration) / (transfer_rate * doped_concentration + 1./quenched_lifetime);
                 
                 double quenched_prob = 1 - triplet_prob - shifted_prob;
-                std::cout << "Quenched probability: " << quenched_prob << std::endl;
                 assert(quenched_prob > 0.);
                 if (CLHEP::RandBinomial::shoot(1, quenched_prob)) {
                     return std::make_pair(-1., -1.);
@@ -59,8 +58,7 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
                     emission_time = CLHEP::RandExponential::shoot(remaining_lifetime);
                     wavelength = SampleWavelength(argon_spectra_wavelength_mean, argon_spectra_wavelength_sigma);
                 } else {
-                    double u = CLHEP::RandFlat::shoot();
-                    emission_time = -std::log(1 - (u*(1 - std::exp(-(1/remaining_lifetime - 1/doped_lifetime)))))/(1/doped_lifetime);
+                    emission_time = SampleShiftedEmissionTime(doped_lifetime, remaining_lifetime);
                     wavelength = SampleWavelength(xenon_spectra_wavelength_mean, xenon_spectra_wavelength_sigma);
                 }
             }
@@ -68,6 +66,40 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
     }
 
     return std::make_pair(emission_time, wavelength);
+}
+
+double Relaxation::SampleShiftedEmissionTime(double doped_lifetime, double remaining_lifetime) {
+    double a = 1./doped_lifetime;
+    double b = 1./remaining_lifetime;
+    double prob = CLHEP::RandFlat::shoot(0., 1.);
+    
+    // cumulative distribution function
+    auto CDF = [a, b](double x) {
+        return (1/b) * exp(-b*x) - (1/a) * exp(-a*x);
+    };
+
+   std::vector<double> cdf(3000);
+    double max_cdf = 0;
+    for (int i = 0; i < 3000; i++) {
+        double cdf_val = CDF(i) - CDF(0);
+        cdf[i] = cdf_val;
+        max_cdf = std::max(max_cdf, cdf_val);
+    }
+    for (int i = 0; i < 3000; i++) {
+        cdf[i] /= max_cdf;
+    }
+
+    int index = 0;
+    double min_diff = std::abs(cdf[0] - prob);
+    for (int i = 1; i < 3000; i++) {
+        double diff = std::abs(cdf[i] - prob);
+        if (diff < min_diff) {
+            index = i;
+            min_diff = diff;
+        }
+    }
+
+    return index;
 }
 
 double Relaxation::SampleWavelength(double wavelength_mean, double wavelength_sigma) {

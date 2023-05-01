@@ -27,6 +27,7 @@ public:
 private:
     static std::pair<double, double> SampleEmissionTime(bool enable_quenching, bool is_doped);
 	static double SampleWavelength(double wavelength_mean, double wavelength_sigma);
+    static double SampleShiftedEmissionTime(double doped_lifetime, double remaining_lifetime);
 };
 
 #endif
