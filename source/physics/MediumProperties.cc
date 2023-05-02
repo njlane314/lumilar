@@ -42,7 +42,10 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     medium_properties.singlet_abundance = 0.14;
     medium_properties.triplet_abundance = 0.86;
 
-    medium_properties.absorption_length = 20. * m;
+    medium_properties.absorption_length = 20. * m; // does this change for wavelength?
+
+    medium_properties.excited_rate = 1.3e-4; // / nsec
+    medium_properties.quenched_rate = 2.3e-4; // / nsec
 
     //https://pubs.aip.org/aip/jcp/article/91/3/1469/220871/Argon-krypton-and-xenon-excimer-luminescence-From
     medium_properties.argon_spectra_wavelength_mean = 127.;
@@ -56,6 +59,8 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
         medium_properties.medium = "lAr";  
         medium_properties.is_doped = false;    
         medium_properties.quenching_enabled = true; 
+
+        medium_properties.transfer_rate = 0.; // / ppm nsec
     } 
     else if (medium == "lArXe") {
         std::cout << "-- Setting medium properties for xenon-doped liquid argon." << std::endl;
@@ -63,12 +68,47 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
         medium_properties.is_doped = true;
         medium_properties.quenching_enabled = true;
        
-        medium_properties.doped_concentration = 50.; // / ppm nsec
+        medium_properties.transfer_rate = 8.8e-5; // / ppm nsec
+        medium_properties.doped_concentration = 10.; // ppm 
+
+        medium_properties.xe_scint_profile = ParameteriseXeScintillationProfile(medium_properties.triplet_lifetime, medium_properties.excited_rate, medium_properties.transfer_rate, medium_properties.doped_concentration);
     }
 
     medium_properties.electric_field = 0.5; // kilovolt / cm
     
     return medium_properties;
+}
+
+std::vector<double> MediumProperties::ParameteriseXeScintillationProfile(double triplet_lifetime, double excited_rate, double transfer_rate, double doped_concentration) {
+    std::cout << "-- Parameterising xenon scintillation profile." << std::endl;
+    double quenched_lifetime = 1. / ((1. / triplet_lifetime) + excited_rate);
+    double doped_lifetime = 1./(transfer_rate * doped_concentration);           
+    double remaining_lifetime = 1./(1./doped_lifetime + 1./quenched_lifetime);
+
+    double a = 1./doped_lifetime;
+    double b = 1./remaining_lifetime;
+
+    auto cdf_func = [a, b](double x) { /* Cumulative distribution function */
+        return (1/b) * exp(-b*x) - (1/a) * exp(-a*x);
+    };
+
+    int x_min = 0;
+    int x_max = 3000;
+    int iterations = x_max - x_min;
+
+    std::vector<double> cdf_vector(iterations);
+    double max_cdf = 0;
+    double cdf_0 = cdf_func(0);
+    for (int i = 0; i < iterations; i++) {
+        double cdf_val = cdf_func(i) - cdf_0;
+        cdf_vector[i] = cdf_val;
+        max_cdf = std::max(max_cdf, cdf_val);
+    }
+    for (int i = 0; i < iterations; i++) {
+        cdf_vector[i] /= max_cdf;
+    }
+
+    return cdf_vector;
 }
 
 double MediumProperties::GetGroupVelocity(double wavelength) const {

@@ -15,7 +15,7 @@
 class PulseShape {
 public:
     static AnalysisResults<TH1F> TH1F_evt_plots_;
-    static AnalysisResults<TH2F> TProfile_evt_plots_;
+    static AnalysisResults<TProfile> TProfile_evt_plots_;
     static AnalysisResults<TH2F> TH2F_run_plots_;
 
     static void EventAnalysis(const Signal* signal);

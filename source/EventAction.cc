@@ -10,7 +10,7 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 void EventAction::EndOfEventAction(const G4Event* event) {
     if (is_signal_physics_ == true) {
         auto signal = Signal::GetInstance();
-        AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+        //AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
         
         this->RunAnalysis(event, signal);
         signal->DeleteSignal();
@@ -18,7 +18,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
 
-    //this->UpdateProgressBar(event);
+    this->UpdateProgressBar(event);
 }
 
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {

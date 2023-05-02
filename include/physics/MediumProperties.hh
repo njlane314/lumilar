@@ -6,6 +6,7 @@
 #include <string> 
 #include <vector>
 #include <iostream>
+#include <map>
 
 struct Properties {
     std::string medium;
@@ -25,11 +26,18 @@ struct Properties {
 
     double absorption_length;
 
+    double excited_rate;
+    double quenched_rate;
+
+    double transfer_rate; // need a better name -- this is Xe-doping shifting
+
     double argon_spectra_wavelength_mean;
     double argon_spectra_wavelength_sigma;
 
     double xenon_spectra_wavelength_mean;
     double xenon_spectra_wavelength_sigma;
+
+    std::vector<double> xe_scint_profile;
 
     double electric_field;
 
@@ -46,6 +54,7 @@ public:
 
     static MediumProperties* GetInstance();
     Properties InitialiseProperties(std::string medium);
+    std::vector<double> ParameteriseXeScintillationProfile(double triplet_lifetime, double excited_rate, double transfer_rate, double doped_concentration);
     Properties* GetMediumProperties();
     double GetGroupVelocity(double wavelength) const;
 

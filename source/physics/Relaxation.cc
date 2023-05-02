@@ -25,12 +25,11 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
             emission_time = CLHEP::RandExponential::shoot(triplet_lifetime);
             wavelength = SampleWavelength(argon_spectra_wavelength_mean, argon_spectra_wavelength_sigma);
         } else {
-            double excited_rate = 1.3e-4;
-            double quenched_rate = 2.3e-4;
+            double excited_rate = MediumProperties::GetInstance()->GetMediumProperties()->excited_rate;
+            double quenched_rate = MediumProperties::GetInstance()->GetMediumProperties()->quenched_rate;
             double quenched_lifetime = 1. / ((1. / triplet_lifetime) + excited_rate);
             if (is_doped == false) {
-                double quenched_prob = log(1 + quenched_rate * quenched_lifetime) / (quenched_rate * triplet_lifetime);
-                std::cout << "Quenched probability: " << quenched_prob << std::endl;
+                double quenched_prob = 1 - log(1 + quenched_rate * quenched_lifetime) / (quenched_rate * triplet_lifetime);
                 if (CLHEP::RandBinomial::shoot(1, quenched_prob)) {
                     return std::make_pair(-1., -1.);
                 } else {
@@ -42,7 +41,7 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
                 double xenon_spectra_wavelength_mean = MediumProperties::GetInstance()->GetMediumProperties()->xenon_spectra_wavelength_mean;
                 double xenon_spectra_wavelength_sigma = MediumProperties::GetInstance()->GetMediumProperties()->xenon_spectra_wavelength_sigma;
 
-                double transfer_rate = 8.8e-5; // /ppm nsec
+                double transfer_rate = MediumProperties::GetInstance()->GetMediumProperties()->transfer_rate;
                 double doped_concentration = MediumProperties::GetInstance()->GetMediumProperties()->doped_concentration;
                 double doped_lifetime = 1./(transfer_rate * doped_concentration);
                 
@@ -58,7 +57,7 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
                     emission_time = CLHEP::RandExponential::shoot(remaining_lifetime);
                     wavelength = SampleWavelength(argon_spectra_wavelength_mean, argon_spectra_wavelength_sigma);
                 } else {
-                    emission_time = SampleShiftedEmissionTime(doped_lifetime, remaining_lifetime);
+                    emission_time = SampleXeScintillationProfile();
                     wavelength = SampleWavelength(xenon_spectra_wavelength_mean, xenon_spectra_wavelength_sigma);
                 }
             }
@@ -68,31 +67,14 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
     return std::make_pair(emission_time, wavelength);
 }
 
-double Relaxation::SampleShiftedEmissionTime(double doped_lifetime, double remaining_lifetime) {
-    double a = 1./doped_lifetime;
-    double b = 1./remaining_lifetime;
-    double prob = CLHEP::RandFlat::shoot(0., 1.);
-    
-    // cumulative distribution function
-    auto CDF = [a, b](double x) {
-        return (1/b) * exp(-b*x) - (1/a) * exp(-a*x);
-    };
-
-   std::vector<double> cdf(3000);
-    double max_cdf = 0;
-    for (int i = 0; i < 3000; i++) {
-        double cdf_val = CDF(i) - CDF(0);
-        cdf[i] = cdf_val;
-        max_cdf = std::max(max_cdf, cdf_val);
-    }
-    for (int i = 0; i < 3000; i++) {
-        cdf[i] /= max_cdf;
-    }
+double Relaxation::SampleXeScintillationProfile() {
+    double unif_prob = CLHEP::RandFlat::shoot();
+    std::vector<double> cdf_vector = MediumProperties::GetInstance()->GetMediumProperties()->xe_scint_profile;
 
     int index = 0;
-    double min_diff = std::abs(cdf[0] - prob);
+    double min_diff = std::abs(cdf_vector[0] - unif_prob);
     for (int i = 1; i < 3000; i++) {
-        double diff = std::abs(cdf[i] - prob);
+        double diff = std::abs(cdf_vector[i] - unif_prob);
         if (diff < min_diff) {
             index = i;
             min_diff = diff;

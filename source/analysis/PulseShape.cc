@@ -3,7 +3,7 @@
 //SPARKS (Scintillation Profile Analysis while Recognising Kinetics)
 
 AnalysisResults<TH1F> PulseShape::TH1F_evt_plots_;
-AnalysisResults<TH2F> PulseShape::TProfile_evt_plots_;
+AnalysisResults<TProfile> PulseShape::TProfile_evt_plots_;
 AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 
 void PulseShape::EventAnalysis(const Signal* signal){
