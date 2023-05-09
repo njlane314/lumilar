@@ -38,6 +38,8 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
                 radiant_copy.photons = photons_copy;
             }  
         }
+        std::cout << "Total Geometric Quenching Factor: " << total_geometric_quenching_factor << std::endl;
+        std::cout << radiant_copy.position.x() << ", " << radiant_copy.position.y() << ", " << radiant_copy.position.z() << std::endl;
         radiant_idx++;
     }
 }

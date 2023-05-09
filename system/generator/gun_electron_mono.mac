@@ -21,7 +21,7 @@
 
 # energy distribution
 /gps/ene/type Mono
-/gps/ene/mono 15 MeV
+/gps/ene/mono 10 MeV
 
 # run
 /run/beamOn 1000

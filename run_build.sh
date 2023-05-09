@@ -84,7 +84,7 @@ source ./setup_marley.sh
 
 if [ $RUN_TEST -eq 1 ]; then
     cd "$SOURCE_DIR/system"
-    ./energyloss -g generator/gun_electron_mono.mac -d detector/DUNE.txt  
+    ./energyloss -g generator/gun_electron_mono.mac -d detector/small.txt  
 fi
 
 if [ $RUN_GEN -eq 1 ]; then 
