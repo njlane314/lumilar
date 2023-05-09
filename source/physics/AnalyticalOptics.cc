@@ -8,6 +8,13 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     std::vector<int> radiant_count_vector = signal->GetScintillation()->GetRadiantSizes();
     std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
 
+    int photons_detected = 0;
+    int photons_arrived = 0;
+
+    int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
+
+    double expected_geometric_acceptance = 0;
+
     //multithread this
     int radiant_idx = 0;
     for (const int& a_radiant_count : radiant_count_vector) {
@@ -23,12 +30,14 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
             total_geometric_quenching_factor += geometric_quenching_factor;
 
             int num_photons_detected = floor(geometric_quenching_factor * a_radiant_count);
+            photons_detected += num_photons_detected;
             if (num_photons_detected > 1) {
                 std::vector<OpticalPhoton> photons_copy = radiant_copy.photons;
                 for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
                     if (!photons_copy.empty()) {
                         auto selected_photon = photons_copy[0];
                         a_optical_sensor->AddPhoton(CreateArrivalPhoton(&radiant_copy, selected_photon, a_optical_sensor.get()));
+                        photons_arrived++;
                         
                         photons_copy.erase(photons_copy.begin());
                     } else {
@@ -37,11 +46,16 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
                 }
                 radiant_copy.photons = photons_copy;
             }  
+            expected_geometric_acceptance += geometric_quenching_factor * ((double)a_radiant_count / (double)total_photons);
         }
-        std::cout << "Total Geometric Quenching Factor: " << total_geometric_quenching_factor << std::endl;
-        std::cout << radiant_copy.position.x() << ", " << radiant_copy.position.y() << ", " << radiant_copy.position.z() << std::endl;
+        
         radiant_idx++;
     }
+
+    std::cout << "Expected Geometric Acceptance: " << expected_geometric_acceptance << std::endl;
+    std::cout << "Photons Detected: " << photons_detected << std::endl;
+    std::cout << "Photons Arrived: " << photons_arrived << std::endl;
+    std::cout << "Photons Total: " << signal->GetScintillation()->GetTotalPhotonCount() << std::endl;
 }
 
 OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
