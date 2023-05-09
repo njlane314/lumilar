@@ -1,11 +1,11 @@
 
-[] Add lArXe to detector config file to avoid recompiling each time
-[] Multithread AnalyticalOptics::CalculateOpticalSignal
-[] Simplify recombination model
-[] Add nuclear quenching of alpha particles
-[] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
-[] Optimise lArXe scintillation profile sampling through parameterisation
-[] Add bxdecay0 background generator
-[] Implement random vertex module for marley events
-[] Add supernova neutrino events
-[] Guard against deposits outside world volume
+-[] Add lArXe to detector config file to avoid recompiling each time
+-[] Multithread AnalyticalOptics::CalculateOpticalSignal
+-[] Simplify recombination model
+-[] Add nuclear quenching of alpha particles
+-[] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
+-[] Optimise lArXe scintillation profile sampling through parameterisation
+-[] Add bxdecay0 background generator
+-[] Implement random vertex module for marley events
+-[] Add supernova neutrino events
+-[] Guard against deposits outside world volume
