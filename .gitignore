@@ -36,7 +36,7 @@
 
 # Miscellaneous
 *.root
-*.png
+#*.png
 
 # Directories
 build/
