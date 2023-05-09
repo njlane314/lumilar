@@ -14,10 +14,10 @@ MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_f
     };
 
     energy_dist_name_ = "neutrino_energy_dist";
-    time_dist_name_ = "cascade_time_dist";
+    //time_dist_name_ = "cascade_time_dist";
 
-    TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 100, 1, 0);
-    TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
+    TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
+    //TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 }
 
 MarleyGenerator::~MarleyGenerator() {}
@@ -52,13 +52,24 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
+            std::string cascade_level_hist_name = "cascade_level_" + std::to_string(excited_state) + "_hist";
+
+            TH1F* cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
+
+            if (cascade_level_hist == nullptr) {
+                TH1F_plots_.CreateHistogram(cascade_level_hist_name, "Neutrino energy [MeV]", "Cascade levels/MeV", 20, 0, 20);
+                cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
+            }
+
+            cascade_level_hist->Fill(primary_energy);
 
             auto iter = half_lifes_.find(excited_state);
             if (iter != half_lifes_.end()) {
                 double time_of_decay = SampleFiniteParticleTime(iter->second);
-                primary_vertex->SetT0(global_time + time_of_decay);
-                TH1F* time_hist = TH1F_plots_.GetHistogram(time_dist_name_);
-                time_hist->Fill(time_of_decay);
+                global_time += time_of_decay;
+                primary_vertex->SetT0(global_time);
+                //TH1F* time_hist = TH1F_plots_.GetHistogram(time_dist_name_);
+                //time_hist->Fill(time_of_decay);
                 Signal::GetInstance()->RecordDelayTime(time_of_decay);
             }
             cascade_idx++;
@@ -77,6 +88,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
     if (event_idx == events_to_generate - 1) {
         TH1F_plots_.WriteToFile(output_filename_);
+        TH1F_plots_.StackHistograms("cascade_level", "Neutrino Energy [MeV]", "Cascade Levels/MeV");
     }
 }
 

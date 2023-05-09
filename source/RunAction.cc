@@ -12,7 +12,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 	new MediumProperties("lAr");
 
 	std::cout << "-- Constructing optical sensors... " << std::endl;
-	InstrumentConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 100., 100., 100., 100.);
+	InstrumentConstruction::GetInstance()->ConstructRectangularOpticalSensors(PlaneOrientation::X_POS, 120., 120., 120., 120.);
 	
 	const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
 	for (const auto& sensor : optical_sensors) {

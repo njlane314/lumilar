@@ -24,4 +24,4 @@
 /gps/ene/mono 15 MeV
 
 # run
-/run/beamOn 100
+/run/beamOn 1000

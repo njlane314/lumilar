@@ -30,6 +30,9 @@
 *.exe
 *.out
 *.app
+*.dll
+*.so
+*.o
 
 # Miscellaneous
 *.root

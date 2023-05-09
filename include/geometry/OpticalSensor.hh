@@ -93,6 +93,14 @@ public:
         return detected_photons_;
     }
 
+    const int GetPhotonCount() const {
+        int count = 0;
+        for (const auto& photon : detected_photons_) {
+            count += 1;
+        }
+        return count;
+    }
+
     const std::vector<double> GetPhotonTimes() const {
         std::vector<double> photon_times;
         for (const auto& photon : detected_photons_) {

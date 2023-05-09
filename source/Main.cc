@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         std::string generator_filename = generator_config.substr(last_slash_pos + 1);
         std::string generator_config_filename_without_ext = std::filesystem::path(generator_filename).stem();
 
-        output_filename = now_stream.str() + "_" + generator_config_filename_without_ext + ".root";
+        output_filename = "data/" + now_stream.str() + "_" + generator_config_filename_without_ext + ".root";
     } else {
         output_filename = now_stream.str();
     }
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         std::cout << "-- Failed to open generator config file" << std::endl;
         return 1;
     }
-
+    
     delete run_manager;
 
     return 0;

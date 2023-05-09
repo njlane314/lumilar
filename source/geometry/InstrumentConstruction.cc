@@ -119,6 +119,14 @@ void InstrumentConstruction::ClearOpticalSensors() {
     }
 }
 
+int InstrumentConstruction::GetTotalArrivalPhotons() {
+    int photon_count = 0;
+    for (const auto& sensor : optical_sensors_) {
+        photon_count += sensor->GetPhotonCount();
+    }
+    return photon_count;
+}
+
 int InstrumentConstruction::GetNumOpticalSensors() const {
     int num_sensors = 0;
     for (const auto& sensor : optical_sensors_) {

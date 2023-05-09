@@ -15,6 +15,12 @@
 #include <TH2.h>
 #include <TProfile.h>
 #include <TObject.h>
+#include <THStack.h>
+#include <TCanvas.h>
+#include <TImage.h>
+#include <TLegend.h>
+#include <TColor.h>
+#include <TStyle.h>
 
 template <typename HistType,
           typename std::enable_if<std::is_same<HistType, TH1F>::value || std::is_same<HistType, TH2F>::value || std::is_same<HistType, TProfile>::value, bool>::type = true>
@@ -80,8 +86,6 @@ public:
         
         histograms_.push_back(std::move(hist));
     }
-
-    //for unstacked histograms, need to create canvas and draw each histogram with "same" parameter
 
     HistType* GetHistogram(const std::string& name) {
         for (const auto& hist : histograms_) {
@@ -155,6 +159,162 @@ public:
         histograms_.clear();
     }
 
+    /*void StackHistograms(std::string hist_identifier, std::string x_axis_label, std::string y_axis_label) {
+        std::string hist_stack_name = hist_identifier + "_hist_stack";
+        THStack* hist_stack = new THStack(hist_stack_name.c_str(), hist_stack_name.c_str());
+
+        TLegend* legend = new TLegend(0.2, 0.8, 0.5, 0.4);
+        legend->SetTextSize(0.03);
+
+        static int color_index = 0; 
+        std::vector<int> colors = {kRed, kBlue, kGreen, kYellow, kMagenta, kCyan, kOrange, kViolet, kPink, kTeal, kAzure, kSpring, kGray};
+        int n_colors = colors.size();
+
+        std::vector<std::pair<double, std::unique_ptr<HistType>>> hist_vec;
+
+        for (const auto& hist : histograms_) {
+            std::string hist_name = hist->GetName();
+            if (hist_name.find(hist_identifier) != std::string::npos) {
+                if constexpr (std::is_same_v<HistType, TH1F>) {
+                    std::string suffix = "_hist";
+                    std::string prefix = "cascade_level_";
+                    size_t suffix_pos = hist_name.rfind(suffix);
+                    size_t prefix_pos = hist_name.rfind(prefix);
+                    if (suffix_pos != std::string::npos && prefix_pos != std::string::npos) {
+                        std::string state_num_str = hist_name.substr(prefix_pos + prefix.size(), suffix_pos - prefix_pos - prefix.size());
+                        double state_num = std::stod(state_num_str);
+
+                        hist_vec.emplace_back(state_num, std::move(hist));
+                    }
+                }
+            }
+        }
+
+        std::sort(hist_vec.begin(), hist_vec.end());
+
+        for (const auto& hist_pair : hist_vec) {
+            auto& hist = hist_pair.second;
+            hist->SetLineColor(colors[color_index % n_colors]);
+            hist->SetFillColor(colors[color_index % n_colors]);
+            hist_stack->Add(hist.get());
+
+            double state_num = hist_pair.first;
+            std::string legend_label = "State " + std::to_string(state_num) + " MeV";
+            legend->AddEntry(hist.get(), legend_label.c_str());
+
+            color_index++;
+        }
+
+        TCanvas* canvas = new TCanvas(hist_stack_name.c_str(), hist_stack_name.c_str(), 1800, 1800);
+        canvas->SetLeftMargin(0.15);
+        canvas->SetBottomMargin(0.15);
+        canvas->SetGrid();
+
+        hist_stack->SetTitle("");
+        hist_stack->Draw("hist");
+        hist_stack->GetXaxis()->SetTitle(x_axis_label.c_str());
+        hist_stack->GetYaxis()->SetTitle(y_axis_label.c_str());
+        hist_stack->GetXaxis()->SetTitleSize(0.05);
+        hist_stack->GetYaxis()->SetTitleSize(0.05);
+        hist_stack->GetXaxis()->SetLabelSize(0.04);
+        hist_stack->GetYaxis()->SetLabelSize(0.04);
+        hist_stack->GetXaxis()->SetTitleOffset(1.2);
+        hist_stack->GetYaxis()->SetTitleOffset(1.2);
+        hist_stack->SetMinimum(0);
+
+        legend->SetX1NDC(0.1);
+        legend->SetY1NDC(0.4);
+        legend->SetX2NDC(0.5);
+        legend->SetY2NDC(0.95);
+        legend->Draw();
+
+        std::string output_image_filename = hist_identifier + ".png";
+        canvas->SaveAs(output_image_filename.c_str());
+
+        delete canvas;
+        delete hist_stack;
+        delete legend;
+    }*/
+
+    void StackHistograms(std::string hist_identifier, std::string x_axis_label, std::string y_axis_label) {
+        //gStyle->SetPalette(kDeepSea);
+        std::string hist_stack_name = hist_identifier + "_hist_stack";
+        THStack* hist_stack = new THStack(hist_stack_name.c_str(), hist_stack_name.c_str());
+
+        TLegend* legend = new TLegend(0.2, 0.85, 0.33, 0.2);
+        legend->SetTextSize(0.015);
+        legend->SetEntrySeparation(0.6);
+
+        std::vector<std::pair<TH1F*, double>> hist_excited_states;
+        for (const auto& hist : histograms_) {
+            std::string hist_name = hist->GetName();
+            if (hist_name.find(hist_identifier) != std::string::npos) {
+                if constexpr (std::is_same_v<HistType, TH1F>) {
+                    std::string suffix = "_hist";
+                    std::string prefix = "cascade_level_";
+                    size_t suffix_pos = hist_name.rfind(suffix);
+                    size_t prefix_pos = hist_name.rfind(prefix);
+                    if (suffix_pos != std::string::npos && prefix_pos != std::string::npos) {
+                        std::string excited_state_str = hist_name.substr(prefix_pos + prefix.size(), suffix_pos - prefix_pos - prefix.size());
+                        double excited_state = std::stod(excited_state_str);
+                        hist_excited_states.emplace_back(hist.get(), excited_state);
+                    }
+                }
+            }
+        }
+
+        std::sort(hist_excited_states.begin(), hist_excited_states.end(), [](const auto& a, const auto& b) { return a.second < b.second; });
+
+        int color_index = 0;
+        int color_cycle = 0;
+
+        std::vector<int> colors = {kBlue, kGreen, kRed, kOrange, kMagenta, kCyan, kYellow, kGray, kBlack, kPink, kAzure, kTeal, kViolet, kSpring, kOrange};
+
+        for (const auto& hist_excited_state : hist_excited_states) {
+            TH1F* hist = hist_excited_state.first;
+            hist->SetLineColor(colors[color_index % colors.size()] + color_cycle);
+            hist->SetFillColor(colors[color_index % colors.size()] + color_cycle);
+            color_index++;
+            hist_stack->Add(hist);
+            std::string legend_label = "Excited level " + std::to_string(hist_excited_state.second) + " MeV";
+            legend->AddEntry(hist, legend_label.c_str());
+
+            if (color_index == colors.size()) {
+                color_cycle -= 2;
+                color_index = 0;
+            }
+        }
+
+        TCanvas* canvas = new TCanvas(hist_stack_name.c_str(), hist_stack_name.c_str(), 1000, 600);
+        canvas->SetLeftMargin(0.15);
+        canvas->SetBottomMargin(0.15);
+        canvas->SetGrid();
+
+        hist_stack->SetTitle("");
+        hist_stack->Draw("hist");
+        hist_stack->GetXaxis()->SetTitle(x_axis_label.c_str());
+        hist_stack->GetYaxis()->SetTitle(y_axis_label.c_str());
+        hist_stack->GetXaxis()->SetTitleSize(0.04);
+        hist_stack->GetYaxis()->SetTitleSize(0.04);
+        hist_stack->GetXaxis()->SetLabelSize(0.03);
+        hist_stack->GetYaxis()->SetLabelSize(0.03);
+        hist_stack->GetXaxis()->SetTitleOffset(1.0);
+        hist_stack->GetYaxis()->SetTitleOffset(0.8);
+        hist_stack->SetMinimum(0);
+
+        /*legend->SetX1NDC(0.1);
+        legend->SetY1NDC(0.2);
+        legend->SetX2NDC(0.5);
+        legend->SetY2NDC(0.95);*/
+        legend->Draw();
+
+        std::string output_image_filename = hist_stack_name + ".png";
+        canvas->SaveAs(output_image_filename.c_str());
+
+        delete canvas;
+        delete hist_stack;
+        delete legend;
+    }
 
 private:
     std::vector<std::unique_ptr<HistType>> histograms_;

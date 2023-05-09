@@ -1,0 +1,9 @@
+Detector:
+    Name: small_tpc
+    Material: G4_lAr
+    Shape: Box
+    Width: 1 # m
+    Height: 1 # m
+    Depth: 1 # m
+    Position: 0 0 0 # m
+    Step: 0.1 # mm

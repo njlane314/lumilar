@@ -25,7 +25,7 @@ Properties* MediumProperties::GetMediumProperties() {
 }
 
 Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
-    medium = "lArXe";
+    //medium = "lArXe";
     Properties medium_properties = {};
 
     medium_properties.loss_per_ionisation = 23.6 * eV;
@@ -42,7 +42,7 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     medium_properties.singlet_abundance = 0.14;
     medium_properties.triplet_abundance = 0.86;
 
-    medium_properties.absorption_length = 20. * m; // does this change for wavelength?
+    medium_properties.absorption_length = 2000. * cm; // does this change for wavelength?
 
     medium_properties.excited_rate = 1.3e-4; // / nsec
     medium_properties.quenched_rate = 2.3e-4; // / nsec
@@ -69,7 +69,7 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
         medium_properties.quenching_enabled = true;
        
         medium_properties.transfer_rate = 8.8e-5; // / ppm nsec
-        medium_properties.doped_concentration = 10.; // ppm 
+        medium_properties.doped_concentration = 20.; // ppm 
 
         medium_properties.xe_scint_profile = ParameteriseXeScintillationProfile(medium_properties.triplet_lifetime, medium_properties.excited_rate, medium_properties.transfer_rate, medium_properties.doped_concentration);
     }

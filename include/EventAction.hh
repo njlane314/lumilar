@@ -15,6 +15,7 @@
 #include "AnalyticalOptics.hh"
 #include "Calorimetry.hh"
 #include "PulseShape.hh"
+#include "Coverage.hh"
 
 class EventAction : public G4UserEventAction {
 public:
@@ -32,6 +33,7 @@ private:
 	Signal* signal_;
 	Calorimetry* calorimetry_;
 	PulseShape* pulse_shape_;
+	Coverage* coverage_;
 
 	bool is_signal_physics_;
 };

@@ -11,6 +11,7 @@ void PulseShape::EventAnalysis(const Signal* signal){
     PlotEmissionTimes(signal, evt_id);
     //PlotAmplitudeRatio(signal, evt_id);
     PlotArrivalTimes(evt_id);
+    //PlotWavelengths(signal, evt_id);
 } 
 
 void PulseShape::RunAnalysis() {
@@ -71,6 +72,25 @@ void PulseShape::PlotArrivalTimes(int evt_id) {
         }
     }
 
+    TH1F_evt_plots_.SaveHistograms();
+}
+
+void PulseShape::PlotWavelengths(const Signal* signal, int evt_id) {
+    std::vector<double> wavelengths = signal->GetScintillation()->GetWavelengths();
+    std::stringstream wavelength_hist_name;
+    wavelength_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_wavelengths";
+
+    double x_min = 100.;
+    double x_max = 200.;
+    double wavelength_res = 1.;
+    int n_bins = round((x_max - x_min)/wavelength_res);
+
+    TH1F_evt_plots_.CreateHistogram(wavelength_hist_name.str(), "Wavelength [nm]", "Optical photons/nm", n_bins, x_min, x_max);
+    TH1F* evt_hist = TH1F_evt_plots_.GetHistogram(wavelength_hist_name.str());
+    for (const auto& wavelength : wavelengths) {
+        evt_hist->Fill(wavelength);
+    }
+    
     TH1F_evt_plots_.SaveHistograms();
 }
 

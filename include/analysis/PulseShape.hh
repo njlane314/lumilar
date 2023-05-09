@@ -23,6 +23,7 @@ public:
     static void PlotEmissionTimes(const Signal* signal, int evt_id);
     static void PlotAmplitudeRatio(const Signal* signal, int evt_id);
     static void PlotArrivalTimes(int evt_id);
+    static void PlotWavelengths(const Signal* signal, int evt_id);
 };
 
 #endif // PULSESHAPE_HH

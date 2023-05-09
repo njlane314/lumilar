@@ -10,7 +10,7 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 void EventAction::EndOfEventAction(const G4Event* event) {
     if (is_signal_physics_ == true) {
         auto signal = Signal::GetInstance();
-        //AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+        AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
         
         this->RunAnalysis(event, signal);
         signal->DeleteSignal();
@@ -24,17 +24,23 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
     pulse_shape_->EventAnalysis(signal);
     calorimetry_->EventAnalysis(signal);
+    coverage_->EventAnalysis(signal);
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
         pulse_shape_->RunAnalysis();
         calorimetry_->RunAnalysis();
+        coverage_->RunAnalysis();
     }
 }
 
 void EventAction::UpdateProgressBar(const G4Event* event) {
     int event_idx = event->GetEventID();
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+
+    if (events_to_generate < 100) {
+        return;
+    }
     
     int progress_interval = events_to_generate / 100.;
 
