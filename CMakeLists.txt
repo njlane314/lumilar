@@ -49,6 +49,7 @@ file(GLOB HEADERS   ${MAIN_INCLUDE_DIR}/*.hh
                     ${MAIN_INCLUDE_DIR}/analysis/*.hh
                     ${MAIN_INCLUDE_DIR}/generators/*.hh
                     ${MAIN_INCLUDE_DIR}/geometry/*.hh
+                    ${MAIN_INCLUDE_DIR}/utilities/*.hh
                     )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
@@ -60,6 +61,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
                             ${MAIN_INCLUDE_DIR}/analysis
                             ${MAIN_INCLUDE_DIR}/generators
                             ${MAIN_INCLUDE_DIR}/geometry
+                            ${MAIN_INCLUDE_DIR}/utilities
                             )
 
 target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES})

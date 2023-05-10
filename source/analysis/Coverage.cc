@@ -63,7 +63,7 @@ void Coverage::PlotHistFraction(const Signal* signal) {
 
     TH2F* geometric_frac_hist = TH2F_run_plots_.GetHistogram(geometric_frac_hist_name.str());
     if (geometric_frac_hist == nullptr) {
-        TH2F_run_plots_.CreateHistogram(geometric_frac_hist_name.str(), "Threshold", "Geometric Fraction", 100, 0, 1000);
+        TH2F_run_plots_.CreateHistogram(geometric_frac_hist_name.str(), "Intensity Threshold [/(30 cm x 30 cm)]", "Geometric Acceptance", 800, 0, 800);
         geometric_frac_hist = TH2F_run_plots_.GetHistogram(geometric_frac_hist_name.str());
     }
 
@@ -71,7 +71,7 @@ void Coverage::PlotHistFraction(const Signal* signal) {
     int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
 
     std::vector<int> threshold_vector;
-    for (int i = 0; i < 1000; i += 10) {
+    for (int i = 0; i < 800; i += 1) {
         threshold_vector.push_back(i);
         int total_count = 0;
         for (const auto& optical_sensor : optical_sensors) {

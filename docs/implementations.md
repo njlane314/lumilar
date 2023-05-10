@@ -10,3 +10,4 @@
 - [] Add supernova neutrino events
 - [] Guard against deposits outside world volume
 - [] Implement raw variable branches output
+- [] Reimplement medium properties instantiation
