@@ -5,6 +5,7 @@
 #include <Eigen/Core> 
 #include <memory>
 #include <vector>
+#include <mutex>
 
 #include "OpticalPhoton.hh"
 
@@ -86,6 +87,7 @@ public:
     }
 
     void AddPhoton(const OpticalPhoton& photon) {
+        std::lock_guard<std::mutex> lock(mutex_);
         detected_photons_.push_back(photon);
     }
 
@@ -118,6 +120,7 @@ private:
     Eigen::Vector3d position_;
     PlaneOrientation orientation_;
     std::vector<OpticalPhoton> detected_photons_;
+    std::mutex mutex_;
 };
 
 using OpticalSensorVector = std::vector<std::unique_ptr<OpticalSensor>>;

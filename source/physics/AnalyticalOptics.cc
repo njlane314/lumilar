@@ -5,57 +5,86 @@ AnalyticalOptics::AnalyticalOptics() {}
 AnalyticalOptics::~AnalyticalOptics() {}
 
 void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     std::vector<int> radiant_count_vector = signal->GetScintillation()->GetRadiantSizes();
     std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
+
+    assert(radiant_count_vector.size() == photon_radiants.size());
+
+    std::vector<std::pair<PhotonRadiant, int>> radiant_count_pairs;
+    for (int radiant_idx = 0; radiant_idx < radiant_count_vector.size(); radiant_idx++) {
+        radiant_count_pairs.emplace_back(std::make_pair(photon_radiants[radiant_idx], radiant_count_vector[radiant_idx]));
+    }
 
     int photons_detected = 0;
     int photons_arrived = 0;
 
     int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
 
+    ThreadPool pool(std::thread::hardware_concurrency());
+
+    std::vector<std::future<void>> results;
+
     double expected_geometric_acceptance = 0;
 
     //multithread this
-    int radiant_idx = 0;
-    for (const int& a_radiant_count : radiant_count_vector) {
-        PhotonRadiant radiant_copy = photon_radiants[radiant_idx];
-        double total_geometric_quenching_factor = 0;
-        for (const auto& a_optical_sensor : optical_sensors) {
-            
-            double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&radiant_copy, a_optical_sensor.get());
-            if (geometric_quenching_factor > 1) {
-                throw std::invalid_argument("-- Geometric Quenching Factor Greater Than 1");
-            } 
-            
-            total_geometric_quenching_factor += geometric_quenching_factor;
+    
+    for (const auto& radiant_count_pair : radiant_count_pairs) {
+        results.emplace_back(
+            pool.enqueue([&](){
+                PhotonRadiant radiant_copy = radiant_count_pair.first;
+                int a_radiant_count = radiant_count_pair.second;
+                double total_geometric_quenching_factor = 0;
+                for (const auto& a_optical_sensor : optical_sensors) {
+                    
+                    double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&radiant_copy, a_optical_sensor.get());
+                    if (geometric_quenching_factor > 1) {
+                        throw std::invalid_argument("-- Geometric Quenching Factor Greater Than 1");
+                    } 
+                    
+                    total_geometric_quenching_factor += geometric_quenching_factor;
 
-            int num_photons_detected = floor(geometric_quenching_factor * a_radiant_count);
-            photons_detected += num_photons_detected;
-            if (num_photons_detected > 1) {
-                std::vector<OpticalPhoton> photons_copy = radiant_copy.photons;
-                for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
-                    if (!photons_copy.empty()) {
-                        auto selected_photon = photons_copy[0];
-                        a_optical_sensor->AddPhoton(CreateArrivalPhoton(&radiant_copy, selected_photon, a_optical_sensor.get()));
-                        photons_arrived++;
-                        
-                        photons_copy.erase(photons_copy.begin());
-                    } else {
-                        throw std::invalid_argument("-- No Photons Left");
-                    }
+                    //std::cout << "Geometric Quenching Factor: " << geometric_quenching_factor << std::endl;
+                    //std::cout << "Actual queching factor " << (double)num_photons_detected / (double)a_radiant_count << std::endl;
+
+                    int num_photons_detected = CLHEP::RandBinomial::shoot(a_radiant_count, geometric_quenching_factor);
+
+                    photons_detected += num_photons_detected;
+                    if (num_photons_detected >= 1) {
+                        std::vector<OpticalPhoton> photons_copy = radiant_copy.photons;
+                        for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
+                            if (!photons_copy.empty()) {
+                                auto selected_photon = photons_copy[0];
+                                a_optical_sensor->AddPhoton(CreateArrivalPhoton(&radiant_copy, selected_photon, a_optical_sensor.get()));
+                                photons_arrived++;
+                                
+                                photons_copy.erase(photons_copy.begin());
+                            } else {
+                                std::cout << "-- No Photons Left" << std::endl;
+                            }
+                        }
+                        radiant_copy.photons = photons_copy;
+                    } 
+                    expected_geometric_acceptance += geometric_quenching_factor * ((double)a_radiant_count / (double)total_photons);
                 }
-                radiant_copy.photons = photons_copy;
-            }  
-            expected_geometric_acceptance += geometric_quenching_factor * ((double)a_radiant_count / (double)total_photons);
-        }
-        
-        radiant_idx++;
+            })
+        );
+    }
+
+    for (auto& result : results) {
+        result.get(); // block until result is ready and return value or exception
     }
 
     std::cout << "Expected Geometric Acceptance: " << expected_geometric_acceptance << std::endl;
     std::cout << "Photons Detected: " << photons_detected << std::endl;
     std::cout << "Photons Arrived: " << photons_arrived << std::endl;
     std::cout << "Photons Total: " << signal->GetScintillation()->GetTotalPhotonCount() << std::endl;
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    std::cout << "Elapsed time: " << elapsed_time.count() << " ms" << std::endl;
 }
 
 OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {

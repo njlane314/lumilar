@@ -8,12 +8,15 @@
 
 #include "G4SystemOfUnits.hh"
 
+#include "ThreadPool.hh"
+
 #include <Eigen/Core>
 #include <thread>
 #include <vector>
 #include <algorithm>
 #include <cmath>
 #include <omp.h>
+#include <chrono>
 
 class AnalyticalOptics {
 public:

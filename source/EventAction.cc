@@ -22,13 +22,13 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 }
 
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
-    pulse_shape_->EventAnalysis(signal);
+    //pulse_shape_->EventAnalysis(signal);
     //calorimetry_->EventAnalysis(signal);
     coverage_->EventAnalysis(signal);
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
-        pulse_shape_->RunAnalysis();
+        //pulse_shape_->RunAnalysis();
         //calorimetry_->RunAnalysis();
         coverage_->RunAnalysis();
     }

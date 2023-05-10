@@ -6,4 +6,4 @@ Detector:
     Height: 10 # m
     Depth: 10 # m
     Position: 0 0 0 # m
-    Step: 0.1 # mm
+    Step: 1000.0 # mm
