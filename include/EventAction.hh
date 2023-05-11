@@ -16,6 +16,7 @@
 #include "Calorimetry.hh"
 #include "PulseShape.hh"
 #include "Coverage.hh"
+#include "ScintillationCollection.hh"
 
 class EventAction : public G4UserEventAction {
 public:
@@ -34,6 +35,7 @@ private:
 	Calorimetry* calorimetry_;
 	PulseShape* pulse_shape_;
 	Coverage* coverage_;
+	ScintillationCollection* scintillation_collection_;
 };
 
 #endif // EVENT_ACTION_HH

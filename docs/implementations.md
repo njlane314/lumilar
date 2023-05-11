@@ -8,6 +8,6 @@
 - [] Add bxdecay0 background generator
 - [] Implement random vertex module for marley events
 - [] Add supernova neutrino events
-- [] Guard against deposits outside world volume
+- [x] Guard against deposits outside world volume
 - [] Implement raw variable branches output
 - [] Reimplement medium properties instantiation

@@ -13,10 +13,10 @@ MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_f
         //{ 2.010368*MeV, 0.32*ps },
     };
 
-    energy_dist_name_ = "neutrino_energy_dist";
+    //energy_dist_name_ = "neutrino_energy_dist";
     //time_dist_name_ = "cascade_time_dist";
 
-    TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
+    //TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
     //TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 }
 
@@ -27,11 +27,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::Generator marley_generator = marley_config.create_generator();
     marley::Event marley_event = marley_generator.create_event();
 
-    auto primary_energy = marley_event.projectile().kinetic_energy();
+    auto primary_energy = marley_event.projectile().total_energy();
     Signal::GetInstance()->RecordPrimaryEnergy(primary_energy);
     
-    TH1F* energy_hist = TH1F_plots_.GetHistogram(energy_dist_name_);
-    energy_hist->Fill(primary_energy);
+    //TH1F* energy_hist = TH1F_plots_.GetHistogram(energy_dist_name_);
+    //energy_hist->Fill(primary_energy);
 
     double global_time = 0.;
 
@@ -52,7 +52,8 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
-            std::string cascade_level_hist_name = "cascade_level_" + std::to_string(excited_state) + "_hist";
+            
+            /*std::string cascade_level_hist_name = "cascade_level_" + std::to_string(excited_state) + "_hist";
 
             TH1F* cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
 
@@ -61,7 +62,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
                 cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
             }
 
-            cascade_level_hist->Fill(primary_energy);
+            cascade_level_hist->Fill(primary_energy);*/
 
             auto iter = half_lifes_.find(excited_state);
             if (iter != half_lifes_.end()) {
@@ -86,10 +87,10 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     int event_idx = event->GetEventID();
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
 
-    if (event_idx == events_to_generate - 1) {
+    /*(if (event_idx == events_to_generate - 1) {
         TH1F_plots_.WriteToFile(output_filename_);
         TH1F_plots_.StackHistograms("cascade_level", "Neutrino Energy [MeV]", "Cascade Levels/MeV");
-    }
+    }*/
 }
 
 double MarleyGenerator::SampleFiniteParticleTime(double half_life) {
