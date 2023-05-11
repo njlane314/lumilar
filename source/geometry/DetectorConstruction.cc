@@ -45,15 +45,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     ss << config_file.rdbuf();
     detector_ = ReadDetector(ss);
 
-    G4Box* detector_shape = new G4Box(detector_config_.c_str(), detector_.width/2. * m, detector_.height/2. * m, detector_.depth/2. * m);
+    G4Box* detector_shape = new G4Box(detector_config_.c_str(), detector_.width/2., detector_.height/2., detector_.depth/2.);
     G4LogicalVolume* detector_logical = new G4LogicalVolume(detector_shape, G4NistManager::Instance()->FindOrBuildMaterial(detector_.material), "detector.logical");
 
     G4UserLimits* user_limits = new G4UserLimits();
-    user_limits->SetMaxAllowedStep(detector_.step * mm);
+    user_limits->SetMaxAllowedStep(detector_.step);
 
     detector_logical->SetUserLimits(user_limits);
 
-    G4ThreeVector detector_position(detector_.position[0] * m, detector_.position[1] * m, detector_.position[2] * m);
+    G4ThreeVector detector_position(detector_.position[0], detector_.position[1], detector_.position[2]);
     G4Transform3D detector_transform(G4Translate3D(detector_position) * G4Rotate3D());
 
     G4VPhysicalVolume* detector_physical = new G4PVPlacement(detector_transform, detector_logical, "detector.physical", 0, false, 0);

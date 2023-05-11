@@ -27,8 +27,6 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     std::vector<std::future<void>> results;
 
     double expected_geometric_acceptance = 0;
-
-    //multithread this
     
     for (const auto& radiant_count_pair : radiant_count_pairs) {
         results.emplace_back(
@@ -36,23 +34,14 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
                 PhotonRadiant radiant_copy = radiant_count_pair.first;
                 int a_radiant_count = radiant_count_pair.second;
                 double total_geometric_quenching_factor = 0;
+                 std::vector<OpticalPhoton> photons_copy;
                 for (const auto& a_optical_sensor : optical_sensors) {
-                    
-                    double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&radiant_copy, a_optical_sensor.get());
-                    if (geometric_quenching_factor > 1) {
-                        throw std::invalid_argument("-- Geometric Quenching Factor Greater Than 1");
-                    } 
-                    
-                    total_geometric_quenching_factor += geometric_quenching_factor;
-
-                    //std::cout << "Geometric Quenching Factor: " << geometric_quenching_factor << std::endl;
-                    //std::cout << "Actual queching factor " << (double)num_photons_detected / (double)a_radiant_count << std::endl;
-
+                    double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&radiant_copy, a_optical_sensor.get());                
                     int num_photons_detected = CLHEP::RandBinomial::shoot(a_radiant_count, geometric_quenching_factor);
-
                     photons_detected += num_photons_detected;
                     if (num_photons_detected >= 1) {
-                        std::vector<OpticalPhoton> photons_copy = radiant_copy.photons;
+                        photons_copy.clear();
+                        photons_copy = radiant_copy.photons;
                         for (int photon_idx = 0; photon_idx < num_photons_detected; photon_idx++) {
                             if (!photons_copy.empty()) {
                                 auto selected_photon = photons_copy[0];
@@ -73,7 +62,7 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     }
 
     for (auto& result : results) {
-        result.get(); // block until result is ready and return value or exception
+        result.get();
     }
 
     std::cout << "Expected Geometric Acceptance: " << expected_geometric_acceptance << std::endl;

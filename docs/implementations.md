@@ -1,6 +1,6 @@
 
 - [] Add lArXe to detector config file to avoid recompiling each time
-- [] Multithread AnalyticalOptics::CalculateOpticalSignal
+- [x] Multithread AnalyticalOptics::CalculateOpticalSignal
 - [] Simplify recombination model
 - [] Add nuclear quenching of alpha particles
 - [] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install

@@ -14,7 +14,7 @@ EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
         const double stopping_power = step->GetTotalEnergyDeposit() / step->GetStepLength();
         
         const std::string particle_species = step->GetTrack()->GetDefinition()->GetParticleName();
-        const double discrete_length = step->GetStepLength() * mm / cm;
+        const double discrete_length = step->GetStepLength();
         const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
         const double time = step->GetPreStepPoint()->GetGlobalTime();
 

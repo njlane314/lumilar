@@ -2,17 +2,18 @@
 #define STEPPING_ACTION_HH
 
 #include "G4UserSteppingAction.hh"
+#include "G4RunManager.hh"
 
+#include "DetectorConstruction.hh"
 #include "MediumResponse.hh"
 
 class SteppingAction : public G4UserSteppingAction {
 public:
-    SteppingAction(bool is_signal_physics);
+    SteppingAction();
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
-private:
-    bool is_signal_physics_;
+    bool IsParticleWithinDetector(const G4Step* step);
 };
 
 #endif // STEPPING_ACTION_HH

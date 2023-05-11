@@ -1,20 +1,17 @@
 #include "EventAction.hh"
 
-EventAction::EventAction(bool is_signal_physics)
-: is_signal_physics_(is_signal_physics) {}
+EventAction::EventAction() {}
 
 EventAction::~EventAction() {}
 
 void EventAction::BeginOfEventAction(const G4Event* event) {}
 
 void EventAction::EndOfEventAction(const G4Event* event) {
-    if (is_signal_physics_ == true) {
-        auto signal = Signal::GetInstance();
-        AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
-        
-        this->RunAnalysis(event, signal);
-        signal->DeleteSignal();
-    }
+    auto signal = Signal::GetInstance();
+    AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+    
+    this->RunAnalysis(event, signal);
+    signal->DeleteSignal();
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
 

@@ -6,10 +6,6 @@ InstrumentConstruction::InstrumentConstruction() {
     std::cout << "-- Constructing instruments" << std::endl;
     DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     detector_construction->GetDetectorDimensions(detector_width_, detector_height_, detector_depth_);
-    
-    detector_width_ = detector_width_ * m / cm;
-    detector_height_ = detector_height_ * m / cm;
-    detector_depth_ = detector_depth_ * m / cm;
 
     std::cout << "-- Detector dimensions: (" << detector_width_ << ", " << detector_height_ << ", " << detector_depth_ << ")\n";
 }

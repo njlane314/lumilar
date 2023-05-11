@@ -2,8 +2,8 @@ Detector:
     Name: tpc
     Material: G4_lAr
     Shape: Box
-    Width: 10 # m
-    Height: 10 # m
-    Depth: 10 # m
-    Position: 0 0 0 # m
-    Step: 0.1 # mm
+    Width: 10000 # mm
+    Height: 10000 # mm
+    Depth: 10000 # mm
+    Position: 0 0 0 # mm
+    Step: 1 # mm

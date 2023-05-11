@@ -42,7 +42,7 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     medium_properties.singlet_abundance = 0.14;
     medium_properties.triplet_abundance = 0.86;
 
-    medium_properties.absorption_length = 2000. * cm; // does this change for wavelength?
+    medium_properties.absorption_length = 20000; //mm -- 20 m
 
     medium_properties.excited_rate = 1.3e-4; // / nsec
     medium_properties.quenched_rate = 2.3e-4; // / nsec

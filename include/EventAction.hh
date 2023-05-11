@@ -19,7 +19,7 @@
 
 class EventAction : public G4UserEventAction {
 public:
-	EventAction(bool is_signal_physics);
+	EventAction();
   	virtual ~EventAction();
 
   	void BeginOfEventAction(const G4Event* event);
@@ -34,8 +34,6 @@ private:
 	Calorimetry* calorimetry_;
 	PulseShape* pulse_shape_;
 	Coverage* coverage_;
-
-	bool is_signal_physics_;
 };
 
 #endif // EVENT_ACTION_HH
