@@ -1,9 +1,9 @@
 #include "RunAction.hh"
-
+//_________________________________________________________________________________________
 RunAction::RunAction() {}
-
+//_________________________________________________________________________________________
 RunAction::~RunAction() {}
-
+//_________________________________________________________________________________________
 void RunAction::BeginOfRunAction(const G4Run* run) {
 	start_time_ = std::chrono::high_resolution_clock::now();
 
@@ -22,7 +22,7 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
 		std::cout << "Sensor dimensions: (" << width << ", " << height << ")\n";
 	}
 }
-
+//_________________________________________________________________________________________
 void RunAction::EndOfRunAction(const G4Run* run) {
 	auto end_time = std::chrono::high_resolution_clock::now();
 	auto duration_s = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time_);

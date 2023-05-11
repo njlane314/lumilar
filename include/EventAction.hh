@@ -1,10 +1,7 @@
 #ifndef EVENT_ACTION_HH
 #define EVENT_ACTION_HH
 
-#include "Signal.hh"
-
 #include "G4UserEventAction.hh"
-
 #include "G4Run.hh"
 #include "G4Event.hh"
 #include "G4ios.hh"
@@ -13,6 +10,8 @@
 
 #include "InstrumentConstruction.hh"
 #include "AnalyticalOptics.hh"
+#include "Signal.hh"
+
 #include "Calorimetry.hh"
 #include "PulseShape.hh"
 #include "Coverage.hh"

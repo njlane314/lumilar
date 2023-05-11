@@ -1,3 +1,18 @@
+//____________________________________________________________________________
+/*!
+
+\class   geometry::InstrumentConstruction
+
+\brief   This class constructs the detector instrumentation.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef INSTRUMENT_CONSTRUCTION_HH
 #define INSTRUMENT_CONSTRUCTION_HH
 
@@ -6,10 +21,10 @@
 #include <Eigen/Core>
 #include <variant>
 
-#include "OpticalSensor.hh"
-#include "DetectorConstruction.hh"
-
 #include "G4RunManager.hh"
+
+#include "DetectorConstruction.hh"
+#include "OpticalSensor.hh"
 
 class InstrumentConstruction {
 public:

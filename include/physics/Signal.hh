@@ -1,15 +1,30 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::Signal
+
+\brief   This class manages the signal response.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef SIGNAL_HH
 #define SIGNAL_HH
 
-#include "MediumProperties.hh"
-#include "MediumResponse.hh"
+#include <memory>
+#include <Eigen/Dense>
+
+#include "G4Step.hh"
 
 #include "Scintillation.hh"
 #include "Ionisation.hh"
-
-#include "G4Step.hh"
-#include <memory>
-#include <Eigen/Dense>
+#include "MediumResponse.hh"
+#include "MediumProperties.hh"
 
 class Signal {
 public:

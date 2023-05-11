@@ -1,9 +1,9 @@
 #include "Relaxation.hh"
-
+//_________________________________________________________________________________________
 Relaxation::Relaxation() {}
-
+//_________________________________________________________________________________________
 Relaxation::~Relaxation() {}
-
+//_________________________________________________________________________________________
 std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, bool is_doped) {
     //https://arxiv.org/pdf/2012.06527.pdf
     double singlet_abundance = MediumProperties::GetInstance()->GetMediumProperties()->singlet_abundance;
@@ -66,7 +66,7 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
 
     return std::make_pair(emission_time, wavelength);
 }
-
+//_________________________________________________________________________________________
 double Relaxation::SampleXeScintillationProfile() {
     double unif_prob = CLHEP::RandFlat::shoot();
     std::vector<double> cdf_vector = MediumProperties::GetInstance()->GetMediumProperties()->xe_scint_profile;
@@ -83,12 +83,12 @@ double Relaxation::SampleXeScintillationProfile() {
 
     return index;
 }
-
+//_________________________________________________________________________________________
 double Relaxation::SampleWavelength(double wavelength_mean, double wavelength_sigma) {
     //https://pubs.aip.org/aip/jcp/article/91/3/1469/220871/Argon-krypton-and-xenon-excimer-luminescence-From
     return CLHEP::RandGauss::shoot(wavelength_mean, wavelength_sigma);
 }
-
+//_________________________________________________________________________________________
 OpticalPhoton Relaxation::CreateOpticalPhoton(const EnergyDeposit* energy_deposit) {
     auto medium_properties = MediumProperties::GetInstance()->GetMediumProperties();
     

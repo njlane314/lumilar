@@ -1,21 +1,21 @@
 #include "Coverage.hh"
-
+//_________________________________________________________________________________________
 AnalysisResults<TH1F> Coverage::TH1F_evt_plots_;
 AnalysisResults<TH2F> Coverage::TH2F_run_plots_;
 AnalysisResults<TH1F> Coverage::TH1F_run_plots_;
-
+//_________________________________________________________________________________________
 void Coverage::EventAnalysis(const Signal* signal) {
     int evt_id = CLHEP::RandFlat::shootInt(1000);
     PlotDetectorPhotons(evt_id);
     PlotGeometricFraction(signal);
     PlotHistFraction(signal);
 }
-
+//_________________________________________________________________________________________
 void Coverage::RunAnalysis() {
     TH1F_run_plots_.SaveHistograms();
     TH2F_run_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void Coverage::PlotDetectorPhotons(int evt_id) {
     std::stringstream detector_photons_hist_name;
     detector_photons_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id  << "_detector_photons";
@@ -34,7 +34,7 @@ void Coverage::PlotDetectorPhotons(int evt_id) {
     
     TH1F_evt_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void Coverage::PlotGeometricFraction(const Signal* signal) {
     std::stringstream geometric_fraction_hist_name;
     geometric_fraction_hist_name << "geometric_fraction";
@@ -56,7 +56,7 @@ void Coverage::PlotGeometricFraction(const Signal* signal) {
 
     geometric_fraction_hist->Fill(geometric_frac);
 }
-
+//_________________________________________________________________________________________
 void Coverage::PlotHistFraction(const Signal* signal) {
     std::stringstream geometric_frac_hist_name;
     geometric_frac_hist_name << "geometric_frac_hist";

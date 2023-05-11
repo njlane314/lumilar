@@ -1,11 +1,9 @@
 #include "PulseShape.hh"
-
-//SPARKS (Scintillation Profile Analysis while Recognising Kinetics)
-
+//_________________________________________________________________________________________
 AnalysisResults<TH1F> PulseShape::TH1F_evt_plots_;
 AnalysisResults<TProfile> PulseShape::TProfile_evt_plots_;
 AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
-
+//_________________________________________________________________________________________
 void PulseShape::EventAnalysis(const Signal* signal){
     int evt_id = CLHEP::RandFlat::shootInt(1000);
     PlotEmissionTimes(signal, evt_id);
@@ -13,11 +11,11 @@ void PulseShape::EventAnalysis(const Signal* signal){
     PlotArrivalTimes(evt_id);
     //PlotWavelengths(signal, evt_id);
 } 
-
+//_________________________________________________________________________________________
 void PulseShape::RunAnalysis() {
     TH2F_run_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void PulseShape::PlotEmissionTimes(const Signal* signal, int evt_id) {
     std::vector<double> emission_times = signal->GetScintillation()->GetEmissionTimes();
     std::stringstream emission_hist_name;
@@ -34,7 +32,6 @@ void PulseShape::PlotEmissionTimes(const Signal* signal, int evt_id) {
         evt_hist->Fill(time);
     }
 
-    // plot auto-correlation
     std::stringstream auto_corr_hist_name;
     auto_corr_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_auto_correlation";
 
@@ -53,7 +50,7 @@ void PulseShape::PlotEmissionTimes(const Signal* signal, int evt_id) {
     TProfile_evt_plots_.SaveHistograms();
     TH1F_evt_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void PulseShape::PlotArrivalTimes(int evt_id) {
     const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
     std::stringstream arrival_hist_name;
@@ -74,7 +71,7 @@ void PulseShape::PlotArrivalTimes(int evt_id) {
 
     TH1F_evt_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void PulseShape::PlotWavelengths(const Signal* signal, int evt_id) {
     std::vector<double> wavelengths = signal->GetScintillation()->GetWavelengths();
     std::stringstream wavelength_hist_name;
@@ -93,7 +90,7 @@ void PulseShape::PlotWavelengths(const Signal* signal, int evt_id) {
     
     TH1F_evt_plots_.SaveHistograms();
 }
-
+//_________________________________________________________________________________________
 void PulseShape::PlotAmplitudeRatio(const Signal* signal, int evt_id) {
     std::vector<double> emission_times = signal->GetScintillation()->GetEmissionTimes();
     std::vector<double> decay_times = signal->GetDelayTimes();

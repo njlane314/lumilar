@@ -1,12 +1,12 @@
 #include "Ionisation.hh"
-
+//_________________________________________________________________________________________
 Ionisation* Ionisation::instance_ = nullptr;
-
+//_________________________________________________________________________________________
 Ionisation::Ionisation() 
 : ionisation_(), ejection_generator_(Ejection()) {}
-
+//_________________________________________________________________________________________
 Ionisation::~Ionisation() {}
-
+//_________________________________________________________________________________________
 void Ionisation::AddCloud(const EnergyDeposit* energy_deposit, int cloud_size) {
     ElectronCloud current_cloud = {};
 
@@ -16,7 +16,7 @@ void Ionisation::AddCloud(const EnergyDeposit* energy_deposit, int cloud_size) {
     }
     ionisation_.push_back(current_cloud);
 }
-
+//_________________________________________________________________________________________
 std::vector<int> Ionisation::GetCloudSizes() const {
     std::vector<int> cloud_sizes;
     for (const auto& a_cloud : ionisation_) {
@@ -28,7 +28,7 @@ std::vector<int> Ionisation::GetCloudSizes() const {
     }
     return cloud_sizes;
 }
-
+//_________________________________________________________________________________________
 int Ionisation::GetTotalElectronCount() const {
     int electron_count = 0;
     for (const auto& a_cloud : ionisation_) {
@@ -38,7 +38,7 @@ int Ionisation::GetTotalElectronCount() const {
     }
     return electron_count;
 }
-
+//_________________________________________________________________________________________
 std::vector<Eigen::Vector3d> Ionisation::GetCloudPositions() const {
     std::vector<Eigen::Vector3d> cloud_positions;
     for (const auto& a_cloud : ionisation_) {
@@ -46,7 +46,7 @@ std::vector<Eigen::Vector3d> Ionisation::GetCloudPositions() const {
     }
     return cloud_positions;
 }
-
+//_________________________________________________________________________________________
 void Ionisation::PrintIonisation() const {
     std::cout << "ionisation clouds:" << std::endl;
     for (const auto& a_cloud : ionisation_) {

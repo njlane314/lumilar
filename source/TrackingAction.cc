@@ -1,9 +1,9 @@
 #include "TrackingAction.hh"
-
+//_________________________________________________________________________________________
 TrackingAction::TrackingAction() {}
-
+//_________________________________________________________________________________________
 TrackingAction::~TrackingAction() {}
-
+//_________________________________________________________________________________________
 void TrackingAction::PreUserTrackingAction(const G4Track* track) {
     auto process = track->GetCreatorProcess();
     if (process != nullptr) {
@@ -14,5 +14,5 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track) {
         }
     } 
 }
-
+//_________________________________________________________________________________________
 void TrackingAction::PostUserTrackingAction(const G4Track* track) {}

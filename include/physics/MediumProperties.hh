@@ -1,12 +1,27 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::MediumProperties
+
+\brief   This class contains the properties of the detector medium.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef MEDIUM_PROPERTIES_HH
 #define MEDIUM_PROPERTIES_HH
-
-#include "G4SystemOfUnits.hh"
 
 #include <string> 
 #include <vector>
 #include <iostream>
 #include <map>
+
+#include "G4SystemOfUnits.hh"
 
 struct Properties {
     std::string medium;
@@ -29,7 +44,7 @@ struct Properties {
     double excited_rate;
     double quenched_rate;
 
-    double transfer_rate; // need a better name -- this is Xe-doping shifting
+    double transfer_rate; 
 
     double argon_spectra_wavelength_mean;
     double argon_spectra_wavelength_sigma;

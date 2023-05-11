@@ -1,3 +1,18 @@
+//____________________________________________________________________________
+/*!
+
+\class   generators::RandomVertex
+
+\brief   This class generates random vertices within the detector volume.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 class RandomVertex : public G4PrimaryVertex {
 public:
     RandomVertex() : G4PrimaryVertex() {};

@@ -1,11 +1,26 @@
+//____________________________________________________________________________
+/*!
+
+\class   analysis::Coverage
+
+\brief   This class performs the coverage analysis.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef COVERAGE_HH
 #define COVERAGE_HH
 
 #include <string>
 
+#include "AnalysisResults.hh"
 #include "Signal.hh"
 #include "InstrumentConstruction.hh"
-#include "AnalysisResults.hh"
 
 class Coverage {
 public:

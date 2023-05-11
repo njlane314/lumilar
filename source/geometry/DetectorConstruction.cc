@@ -1,10 +1,10 @@
 #include "DetectorConstruction.hh"
-
+//_________________________________________________________________________________________
 DetectorConstruction::DetectorConstruction(std::string detector_config)
 : detector_config_(detector_config) {}
-
+//_________________________________________________________________________________________
 DetectorConstruction::~DetectorConstruction() {}
-
+//_________________________________________________________________________________________
 DetectorConstruction::Detector DetectorConstruction::ReadDetector(std::stringstream& ss) {
     Detector detector;
     std::string key;
@@ -37,8 +37,7 @@ DetectorConstruction::Detector DetectorConstruction::ReadDetector(std::stringstr
     
     return detector;
 }
-
-
+//_________________________________________________________________________________________
 G4VPhysicalVolume* DetectorConstruction::Construct() { 
     std::ifstream config_file(detector_config_);
     std::stringstream ss;
@@ -60,7 +59,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
     return detector_physical;
 }
-
+//_________________________________________________________________________________________
 void DetectorConstruction::GetDetectorDimensions(double& width, double& height, double& depth) {
     width = detector_.width;
     height = detector_.height;

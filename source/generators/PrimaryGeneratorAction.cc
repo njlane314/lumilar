@@ -1,5 +1,5 @@
 #include "PrimaryGeneratorAction.hh"
-
+//_________________________________________________________________________________________
 PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
 : output_filename_(output_filename) {
 	generator_directory_ = new G4UIdirectory("/generator/");
@@ -17,9 +17,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
 	set_marley_source_cmd_->SetGuidance("Sets the energy distribution");
 	set_marley_source_cmd_->SetParameterName("Config", false, false);
 }
-
+//_________________________________________________________________________________________
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {}
-
+//_________________________________________________________________________________________
 void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 	if (generator_type_.empty()) {
 		if (cmd == set_generator_cmd_) { 
@@ -57,7 +57,7 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 		std::cout << "Detector dimensions: " << detector_width_ << " " << detector_height_ << " " << detector_depth_ << std::endl;
 	} 
 }
-
+//_________________________________________________________________________________________
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event) {
 	if (generator_type_ == "marley") {
 		marley_generator_->GeneratePrimaryVertex(event);

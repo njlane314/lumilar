@@ -2,7 +2,6 @@
 #define PHYSICS_LIST_HH
 
 #include "G4VModularPhysicsList.hh"
-
 #include "G4StepLimiterPhysics.hh"
 #include "G4DecayPhysics.hh"
 #include "G4EmStandardPhysics.hh"

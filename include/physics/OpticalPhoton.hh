@@ -1,3 +1,18 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::OpticalPhoton
+
+\brief   This class represents an optical photon.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef OPTICAL_PHOTON_HH
 #define OPTICAL_PHOTON_HH
 

@@ -1,7 +1,7 @@
 #include "InstrumentConstruction.hh"
-
+//_________________________________________________________________________________________
 InstrumentConstruction* InstrumentConstruction::instance_ = nullptr;
-
+//_________________________________________________________________________________________
 InstrumentConstruction::InstrumentConstruction() {
     std::cout << "-- Constructing instruments" << std::endl;
     DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
@@ -9,9 +9,9 @@ InstrumentConstruction::InstrumentConstruction() {
 
     std::cout << "-- Detector dimensions: (" << detector_width_ << ", " << detector_height_ << ", " << detector_depth_ << ")\n";
 }
-
+//_________________________________________________________________________________________
 InstrumentConstruction::~InstrumentConstruction() {}
-
+//_________________________________________________________________________________________
 InstrumentConstruction* InstrumentConstruction::GetInstance() {
     if (!instance_) {
         instance_ = new InstrumentConstruction();
@@ -19,7 +19,7 @@ InstrumentConstruction* InstrumentConstruction::GetInstance() {
     
     return instance_;
 }
-
+//_________________________________________________________________________________________
 void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height) {
     std::cout << "-- Constructing rectangular optical sensors" << std::endl;
     if (sensor_width > sensor_width_separation || sensor_height > sensor_height_separation) {
@@ -62,7 +62,7 @@ void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation
         }
     }
 }
-
+//_________________________________________________________________________________________
 void InstrumentConstruction::ConstructPlane(const PlaneOrientation& orientation, double& plane_width, double& plane_height, Eigen::Vector3d& plane_center) {
     const double half_width = detector_width_ / 2;
     const double half_height = detector_height_ / 2;
@@ -104,17 +104,17 @@ void InstrumentConstruction::ConstructPlane(const PlaneOrientation& orientation,
             break;
     }
 }
-
+//_________________________________________________________________________________________
 const OpticalSensorVector& InstrumentConstruction::GetOpticalSensors() {
     return optical_sensors_;
 }
-
+//_________________________________________________________________________________________
 void InstrumentConstruction::ClearOpticalSensors() {
     for (const auto& sensor : optical_sensors_) {
         sensor->ClearPhotons();
     }
 }
-
+//_________________________________________________________________________________________
 int InstrumentConstruction::GetTotalArrivalPhotons() {
     int photon_count = 0;
     for (const auto& sensor : optical_sensors_) {
@@ -122,7 +122,7 @@ int InstrumentConstruction::GetTotalArrivalPhotons() {
     }
     return photon_count;
 }
-
+//_________________________________________________________________________________________
 int InstrumentConstruction::GetNumOpticalSensors() const {
     int num_sensors = 0;
     for (const auto& sensor : optical_sensors_) {

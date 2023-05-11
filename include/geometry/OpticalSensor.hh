@@ -1,3 +1,18 @@
+//____________________________________________________________________________
+/*!
+
+\class   geometry::OpticalSensor
+
+\brief   This class represnts an optical sensor.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef OPTICAL_SENSOR_HH
 #define OPTICAL_SENSOR_HH
 

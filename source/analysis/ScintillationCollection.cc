@@ -84,8 +84,7 @@ void ScintillationCollection::PlotCollectionFraction(const Signal* signal) {
 
     for (int effic = 0; effic < 1000; effic++) {
         double collection_efficiency = effic / 1000.;
-        //int emission_fraction = CLHEP::RandPoisson::shoot(floor((double)emitted_photons * collection_efficiency));
-        int emission_fraction = CLHEP::RandBinomial::shoot(emitted_photons, collection_efficiency);
+        int emission_fraction = CLHEP::RandPoisson::shoot(floor((double)emitted_photons * collection_efficiency));
 
         collected_fraction_hist->Fill(collection_efficiency, emission_fraction);
     } 

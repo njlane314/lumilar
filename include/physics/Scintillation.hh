@@ -1,15 +1,30 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::Scintillation
+
+\brief   This class manages the scintillation signal.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef SCINTILLATION_HH
 #define SCINTILLATION_HH
 
 #include <iostream>
 #include <vector>
 
-#include "OpticalPhoton.hh"
-#include "Relaxation.hh"
-#include "Excitation.hh"
-#include "EnergyDeposit.hh"
-
 #include <Eigen/Dense>
+
+#include "Excitation.hh"
+#include "Relaxation.hh"
+#include "EnergyDeposit.hh"
+#include "OpticalPhoton.hh"
 
 struct PhotonRadiant {
     Eigen::Vector3d position;

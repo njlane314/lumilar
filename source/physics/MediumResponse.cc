@@ -1,9 +1,9 @@
 #include "MediumResponse.hh"
-
+//_________________________________________________________________________________________
 MediumResponse::MediumResponse() {}
-
+//_________________________________________________________________________________________
 MediumResponse::~MediumResponse() {}
-
+//_________________________________________________________________________________________
 EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
     const int particle_charge = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPDGCharge();
     const int entering_material = static_cast<int>(step->GetPreStepPoint()->GetMaterial()->GetZ());
@@ -25,7 +25,7 @@ EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
 
     return new EnergyDeposit();
 }
-
+//_________________________________________________________________________________________
 void MediumResponse::ProcessResponse(const G4Step* step) {
     const auto energy_deposit = CreateEnergyDeposit(step);
     if (!energy_deposit->IsEmpty()) {

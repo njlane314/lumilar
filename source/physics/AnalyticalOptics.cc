@@ -1,9 +1,9 @@
 #include "AnalyticalOptics.hh"
-
+//_________________________________________________________________________________________
 AnalyticalOptics::AnalyticalOptics() {}
-
+//_________________________________________________________________________________________
 AnalyticalOptics::~AnalyticalOptics() {}
-
+//_________________________________________________________________________________________
 void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
     auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -75,7 +75,7 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
 
     std::cout << "Elapsed time: " << elapsed_time.count() << " ms" << std::endl;
 }
-
+//_________________________________________________________________________________________
 OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
     Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position));
     double distance = separation.norm();
@@ -89,7 +89,7 @@ OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_
 
     return arrival_photon;
 }
-
+//_________________________________________________________________________________________
 double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor) {
     // https://arxiv.org/pdf/2010.00324.pdf
     Eigen::Vector3d separation = (sensor->GetPosition() - (a_photon_radiant->position));
@@ -101,7 +101,7 @@ double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radian
 
     return visibility * absoprtion_quenching;
 }
-
+//_________________________________________________________________________________________
 double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     double solid_angle = 0.;
 
@@ -116,7 +116,7 @@ double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const 
 
     return solid_angle;
 }
-
+//_________________________________________________________________________________________
 Eigen::Vector3d AnalyticalOptics::CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     Eigen::Vector3d projection;
     if (sensor->GetOrientation() == PlaneOrientation::X_POS || sensor->GetOrientation() == PlaneOrientation::X_NEG) {
@@ -134,7 +134,7 @@ Eigen::Vector3d AnalyticalOptics::CreateProjectionGeometry(const OpticalSensor* 
 
     return projection;
 }
-
+//_________________________________________________________________________________________
 double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection, const double& height, const double& width) {
     // https://vixra.org/pdf/2001.0603v2.pdf
     
@@ -196,7 +196,7 @@ double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection
     
     throw std::invalid_argument("-- Solid angle calculation failed.");   
 }
-
+//_________________________________________________________________________________________
 double AnalyticalOptics::AbsorptionQuenching(double distance) {
     return std::exp(- distance / MediumProperties::GetInstance()->GetMediumProperties()->absorption_length);
 }

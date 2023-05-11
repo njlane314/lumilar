@@ -1,28 +1,41 @@
+//____________________________________________________________________________
+/*!
+
+\class   generators::PrimaryGeneratorAction
+
+\brief   This class sets the event generator for the simulation.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef PRIMARY_GENERATOR_ACTION_HH
 #define PRIMARY_GENERATOR_ACTION_HH
-
-#include "DetectorConstruction.hh"
-#include "MarleyGenerator.hh"
 
 #include <random>
 #include <cmath>
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4UImessenger.hh"
-
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
 #include "G4GeneralParticleSource.hh"
 #include "MarleyGenerator.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4LogicalVolumeStore.hh"
-
 #include "G4Event.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4SystemOfUnits.hh"
+
+#include "DetectorConstruction.hh"
+#include "MarleyGenerator.hh"
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction, public G4UImessenger {
 public:

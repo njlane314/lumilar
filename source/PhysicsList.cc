@@ -1,5 +1,5 @@
 #include "PhysicsList.hh"
-
+//_________________________________________________________________________________________
 PhysicsList::PhysicsList() 
 : physics_list_("default") {
 
@@ -19,5 +19,5 @@ PhysicsList::PhysicsList()
 		RegisterPhysics( new G4NeutronTrackingCut() );
 	}
 }
-
+//_________________________________________________________________________________________
 PhysicsList::~PhysicsList() {}

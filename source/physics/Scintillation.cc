@@ -1,12 +1,12 @@
 #include "Scintillation.hh"
-
+//_________________________________________________________________________________________
 Scintillation* Scintillation::instance_ = nullptr;
-
+//_________________________________________________________________________________________
 Scintillation::Scintillation()
 : photon_radiants_(), relaxation_generator_(Relaxation()) {}
-
+//_________________________________________________________________________________________
 Scintillation::~Scintillation() {}
-
+//_________________________________________________________________________________________
 void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_size) {
     PhotonRadiant current_radiant = {};
 
@@ -19,11 +19,11 @@ void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int radiant_
     }
     photon_radiants_.push_back(current_radiant);
 }
-
+//_________________________________________________________________________________________
 std::vector<PhotonRadiant> Scintillation::GetPhotonRadiants() const {
     return photon_radiants_;
 }
-
+//_________________________________________________________________________________________
 std::vector<Eigen::Vector3d> Scintillation::GetRadiantPositions() const {
     std::vector<Eigen::Vector3d> radiant_positions;
     for (const auto& a_radiant : photon_radiants_) {
@@ -31,7 +31,7 @@ std::vector<Eigen::Vector3d> Scintillation::GetRadiantPositions() const {
     }
     return radiant_positions;
 }
-
+//_________________________________________________________________________________________
 std::vector<int> Scintillation::GetRadiantSizes() const {
     std::vector<int> radiant_sizes;
     for (const auto& a_radiant : photon_radiants_) {
@@ -43,7 +43,7 @@ std::vector<int> Scintillation::GetRadiantSizes() const {
     }
     return radiant_sizes;
 }
-
+//_________________________________________________________________________________________
 int Scintillation::GetTotalPhotonCount() const {
     int photon_count = 0;
     for (const auto& a_radiant : photon_radiants_) {
@@ -53,7 +53,7 @@ int Scintillation::GetTotalPhotonCount() const {
     }
     return photon_count;
 }
-
+//_________________________________________________________________________________________
 std::vector<double> Scintillation::GetEmissionTimes() const {
     std::vector<double> emission_times;
     for (const auto& a_radiant : photon_radiants_) {
@@ -63,7 +63,7 @@ std::vector<double> Scintillation::GetEmissionTimes() const {
     }
     return emission_times;
 }
-
+//_________________________________________________________________________________________
 std::vector<double> Scintillation::GetWavelengths() const {
     std::vector<double> wavelengths;
     for (const auto& a_radiant : photon_radiants_) {
@@ -73,7 +73,7 @@ std::vector<double> Scintillation::GetWavelengths() const {
     }
     return wavelengths;
 }
-
+//_________________________________________________________________________________________
 void Scintillation::PrintScintillation() const {
     std::cout << "Scintillation radiants:" << std::endl;
     for (const auto& a_radiant : photon_radiants_) {

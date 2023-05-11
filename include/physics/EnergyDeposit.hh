@@ -1,8 +1,24 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::EnergyDeposit
+
+\brief   This class stores the energy deposited information of a particle, from 
+        a discrete step.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef ENERGY_DEPOSIT_HH
 #define ENERGY_DEPOSIT_HH
 
-#include <Eigen/Dense>
 #include <string>
+#include <Eigen/Dense>
 
 class EnergyDeposit {
 public:

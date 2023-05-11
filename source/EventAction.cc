@@ -1,11 +1,11 @@
 #include "EventAction.hh"
-
+//_________________________________________________________________________________________
 EventAction::EventAction() {}
-
+//_________________________________________________________________________________________
 EventAction::~EventAction() {}
-
+//_________________________________________________________________________________________
 void EventAction::BeginOfEventAction(const G4Event* event) {}
-
+//_________________________________________________________________________________________
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::GetInstance();
     //AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
@@ -17,7 +17,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     this->UpdateProgressBar(event);
 }
-
+//_________________________________________________________________________________________
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
     //pulse_shape_->EventAnalysis(signal);
     //calorimetry_->EventAnalysis(signal);
@@ -32,7 +32,7 @@ void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
         scintillation_collection_->RunAnalysis();
     }
 }
-
+//_________________________________________________________________________________________
 void EventAction::UpdateProgressBar(const G4Event* event) {
     int event_idx = event->GetEventID();
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();

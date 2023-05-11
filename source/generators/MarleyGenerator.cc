@@ -1,7 +1,7 @@
 #include "MarleyGenerator.hh"
-
+//_________________________________________________________________________________________
 AnalysisResults<TH1F> MarleyGenerator::TH1F_plots_;
-
+//_________________________________________________________________________________________
 MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_filename)
 : source_(marley_source), output_filename_(output_filename) {
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
@@ -19,9 +19,9 @@ MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_f
     //TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
     //TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 }
-
+//_________________________________________________________________________________________
 MarleyGenerator::~MarleyGenerator() {}
-
+//_________________________________________________________________________________________
 void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     marley::JSONConfig marley_config(source_);
     marley::Generator marley_generator = marley_config.create_generator();
@@ -92,11 +92,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
         TH1F_plots_.StackHistograms("cascade_level", "Neutrino Energy [MeV]", "Cascade Levels/MeV");
     }*/
 }
-
+//_________________________________________________________________________________________
 double MarleyGenerator::SampleFiniteParticleTime(double half_life) {
     return CLHEP::RandExponential::shoot(half_life / log(2.));
 }
-
+//_________________________________________________________________________________________
 void MarleyGenerator::PrintEvent(const marley::Event& event) {
     std::cout << "\nGenerated event data:" << std::endl;
     std::cout << "Projectile energy: " << event.projectile().total_energy() << std::endl;

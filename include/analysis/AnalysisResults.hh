@@ -1,3 +1,18 @@
+//____________________________________________________________________________
+/*!
+
+\class   analysis::AnalysisResults
+
+\brief   This class stores and saves histograms on the stack.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef ANALYSIS_RESULTS_HH
 #define ANALYSIS_RESULTS_HH
 
@@ -7,8 +22,6 @@
 #include <memory>
 #include <iostream>
 #include <ostream>
-
-#include "AnalysisManager.hh"
 
 #include <TFile.h>
 #include <TH1.h>
@@ -21,6 +34,8 @@
 #include <TLegend.h>
 #include <TColor.h>
 #include <TStyle.h>
+
+#include "AnalysisManager.hh"
 
 template <typename HistType,
           typename std::enable_if<std::is_same<HistType, TH1F>::value || std::is_same<HistType, TH2F>::value || std::is_same<HistType, TProfile>::value, bool>::type = true>

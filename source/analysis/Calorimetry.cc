@@ -1,11 +1,11 @@
 #include "Calorimetry.hh"
-
+//_________________________________________________________________________________________
 AnalysisResults<TH2F> Calorimetry::TH2F_run_plots_;
-
+//_________________________________________________________________________________________
 void Calorimetry::EventAnalysis(const Signal* signal) {
     PlotEnergyYields(signal);
 }
-
+//_________________________________________________________________________________________
 void Calorimetry::PlotEnergyYields(const Signal* signal) {
     std::stringstream scint_yield_hist_name;
     std::stringstream ionis_yield_hist_name;
@@ -35,7 +35,7 @@ void Calorimetry::PlotEnergyYields(const Signal* signal) {
     scint_yield_hist->Fill(total_energy_dep, (double)total_photons / (double)total_energy_dep);
     ionis_yield_hist->Fill(total_energy_dep, (double)total_electrons / (double)total_energy_dep);
 }
-
+//_________________________________________________________________________________________
 void Calorimetry::RunAnalysis() {
     TH2F_run_plots_.SaveHistograms();
 }

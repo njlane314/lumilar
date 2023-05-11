@@ -1,13 +1,29 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::Excitation
+
+\brief   This class contains methods for calculating the electronic excitation
+         of the detector medium.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef EXCITATION_HH
 #define EXCITATION_HH
 
-#include "MediumProperties.hh"
-#include "EnergyDeposit.hh"
+#include <random>
 
 #include <CLHEP/Random/RandGauss.h>
 #include <CLHEP/Random/RandPoisson.h>
 
-#include <random>
+#include "EnergyDeposit.hh"
+#include "MediumProperties.hh"
 
 class Excitation {
 public: 

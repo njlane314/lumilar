@@ -1,3 +1,19 @@
+//____________________________________________________________________________
+/*!
+
+\class   generators::MarleyGenerator
+
+\brief   This class generates events using the Marley neutrino generator, and
+        accounts for finite particle lifetimes.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef MARLEY_GENERATOR_HH
 #define MARLEY_GENERATOR_HH
 

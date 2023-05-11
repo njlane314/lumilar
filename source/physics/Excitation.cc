@@ -1,5 +1,5 @@
 #include "Excitation.hh"
-
+//_________________________________________________________________________________________
 std::pair<double, double> Excitation::CreateExctiation(const EnergyDeposit* energy_deposit, const Properties* material_properties) {    
     double expected_ionisations = energy_deposit->GetVisibleEnergy() / material_properties->loss_per_ionisation;
 

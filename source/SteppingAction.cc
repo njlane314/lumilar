@@ -1,15 +1,15 @@
 #include "SteppingAction.hh"
-
+//_________________________________________________________________________________________
 SteppingAction::SteppingAction() {}
-
+//_________________________________________________________________________________________
 SteppingAction::~SteppingAction() {}
-
+//_________________________________________________________________________________________
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 	if (IsParticleWithinDetector(step) == true) {
 		MediumResponse::ProcessResponse(step);
 	}
 }
-
+//_________________________________________________________________________________________
 bool SteppingAction::IsParticleWithinDetector(const G4Step* step) {
 	double detector_width, detector_height, detector_depth;
 	DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();

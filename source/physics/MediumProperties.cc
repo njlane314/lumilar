@@ -1,8 +1,8 @@
 #include "Signal.hh"
 #include "MediumProperties.hh"
-
+//_________________________________________________________________________________________
 MediumProperties* MediumProperties::instance_ = nullptr;
-
+//_________________________________________________________________________________________
 MediumProperties::MediumProperties(std::string medium = "lAr") 
 : medium_(medium) {
     if (!instance_) {
@@ -10,20 +10,20 @@ MediumProperties::MediumProperties(std::string medium = "lAr")
         medium_properties_ = InitialiseProperties(medium_); 
     } 
 }
-
+//_________________________________________________________________________________________
 MediumProperties::~MediumProperties() {}
-
+//_________________________________________________________________________________________
 MediumProperties* MediumProperties::GetInstance() {
     if (!instance_) {
         instance_ = new MediumProperties();
     }
     return instance_;
 }
-
+//_________________________________________________________________________________________
 Properties* MediumProperties::GetMediumProperties() {
     return &medium_properties_;
 }
-
+//_________________________________________________________________________________________
 Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     //medium = "lArXe";
     Properties medium_properties = {};
@@ -78,7 +78,7 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     
     return medium_properties;
 }
-
+//_________________________________________________________________________________________
 std::vector<double> MediumProperties::ParameteriseXeScintillationProfile(double triplet_lifetime, double excited_rate, double transfer_rate, double doped_concentration) {
     std::cout << "-- Parameterising xenon scintillation profile." << std::endl;
     double quenched_lifetime = 1. / ((1. / triplet_lifetime) + excited_rate);
@@ -110,7 +110,7 @@ std::vector<double> MediumProperties::ParameteriseXeScintillationProfile(double 
 
     return cdf_vector;
 }
-
+//_________________________________________________________________________________________
 double MediumProperties::GetGroupVelocity(double wavelength) const {
     //https://arxiv.org/pdf/2002.09346.pdf
     const double c = 299792458;

@@ -1,12 +1,28 @@
+//____________________________________________________________________________
+/*!
+
+\class   physics::Recombination
+
+\brief   This class contains methods for calculating charge recombination.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef RECOMBINATION_HH
 #define RECOMBINATION_HH
 
-#include "MediumProperties.hh"
-#include "Excitation.hh"
-#include "EnergyDeposit.hh"
+#include <random> 
 
 #include <CLHEP/Random/RandBinomial.h>
-#include <random> 
+
+#include "Excitation.hh"
+#include "EnergyDeposit.hh"
+#include "MediumProperties.hh"
 
 class Recombination {
  public: 

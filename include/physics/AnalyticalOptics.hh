@@ -1,14 +1,21 @@
+//____________________________________________________________________________
+/*!
+
+\class   geometry::AnalyticalOptics
+
+\brief   This class contains analytical methods for calculating the transportation effects
+        of optical photons in the detector.
+
+\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
+
+\created May 11, 2023
+
+\cpright GNU Public License
+*/
+//____________________________________________________________________________
+
 #ifndef ANALYTICALOPTICS_HH
 #define ANALYTICALOPTICS_HH
-
-#include "Scintillation.hh"
-#include "OpticalSensor.hh"
-#include "MediumProperties.hh"
-#include "Signal.hh"
-
-#include "G4SystemOfUnits.hh"
-
-#include "ThreadPool.hh"
 
 #include <Eigen/Core>
 #include <thread>
@@ -17,6 +24,14 @@
 #include <cmath>
 #include <omp.h>
 #include <chrono>
+
+#include "G4SystemOfUnits.hh"
+
+#include "OpticalSensor.hh"
+#include "Scintillation.hh"
+#include "Signal.hh"
+#include "MediumProperties.hh"
+#include "ThreadPool.hh"
 
 class AnalyticalOptics {
 public:
