@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "CLHEP/Random/RandPoisson.h"
+#include "CLHEP/Random/RandBinomial.h"
 
 #include "AnalysisResults.hh"
 #include "Signal.hh"

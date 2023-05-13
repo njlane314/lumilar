@@ -6,8 +6,10 @@
 - [] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
 - [] Optimise lArXe scintillation profile sampling through parameterisation
 - [] Add bxdecay0 background generator
-- [] Implement random vertex module for marley events
+- [x] Implement random vertex module for marley events
 - [] Add supernova neutrino events
 - [x] Guard against deposits outside world volume
 - [] Implement raw variable branches output
 - [] Reimplement medium properties instantiation
+- [] Add Rayleigh scattering approximation
+- [] Add reflective foils at the cathode plane

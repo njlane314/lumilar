@@ -16,6 +16,7 @@
 #include "PulseShape.hh"
 #include "Coverage.hh"
 #include "ScintillationCollection.hh"
+#include "IonisationCollection.hh"
 
 class EventAction : public G4UserEventAction {
 public:
@@ -35,6 +36,7 @@ private:
 	PulseShape* pulse_shape_;
 	Coverage* coverage_;
 	ScintillationCollection* scintillation_collection_;
+	IonisationCollection* ionisation_collection_;
 };
 
 #endif // EVENT_ACTION_HH

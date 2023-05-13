@@ -36,6 +36,7 @@
 
 #include "DetectorConstruction.hh"
 #include "MarleyGenerator.hh"
+#include "BxDecay0Generator.hh"
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction, public G4UImessenger {
 public:
@@ -60,11 +61,16 @@ private:
     G4UIdirectory* marley_directory_;
     G4UIcmdWithAString* set_marley_source_cmd_;
 
+    G4UIdirectory* bxdecay0_directory_;
+    G4UIcmdWithAString* set_bxdecay0_source_cmd_;
+
     G4String generator_type_;
     G4GeneralParticleSource* general_generator_;
     
     MarleyGenerator* marley_generator_;
     G4String marley_source_;
+
+    BxDecay0Generator::PrimaryGeneratorAction* bxdecay0_generator_;
 
     std::string output_filename_;
 };

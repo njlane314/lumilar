@@ -6,9 +6,10 @@ AnalysisResults<TH1F> Coverage::TH1F_run_plots_;
 //_________________________________________________________________________________________
 void Coverage::EventAnalysis(const Signal* signal) {
     int evt_id = CLHEP::RandFlat::shootInt(1000);
-    PlotDetectorPhotons(evt_id);
-    PlotGeometricFraction(signal);
+    //PlotDetectorPhotons(evt_id);
+    //PlotGeometricFraction(signal);
     PlotHistFraction(signal);
+    PlotAnodeFraction(signal);
 }
 //_________________________________________________________________________________________
 void Coverage::RunAnalysis() {
@@ -87,3 +88,50 @@ void Coverage::PlotHistFraction(const Signal* signal) {
         }
     }
 }
+//_________________________________________________________________________________________
+void Coverage::PlotAnodeFraction(const Signal* signal) {
+    std::stringstream anode_frac_hist_name;
+    anode_frac_hist_name << "anode_frac_hist";
+
+    TH2F* anode_frac_hist = TH2F_run_plots_.GetHistogram(anode_frac_hist_name.str());
+    if (anode_frac_hist == nullptr) {
+        TH2F_run_plots_.CreateHistogram(anode_frac_hist_name.str(), "Anode-plane optical-sensitive coverage", "Geometric acceptance", 100, 0, 1, 100, 0, 1);
+        anode_frac_hist = TH2F_run_plots_.GetHistogram(anode_frac_hist_name.str());
+    }
+
+    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
+
+    for (int coverage = 0; coverage < 1000; coverage++) {
+        double coverage_frac = (double)coverage / (double)1000.;
+
+        int photon_count = 0;
+        for (const auto& optical_sensor : optical_sensors) {
+            photon_count += optical_sensor->GetPhotonCount();
+        }
+
+        int collection_frac = CLHEP::RandBinomial::shoot(photon_count, coverage_frac);
+
+        anode_frac_hist->Fill(coverage_frac, collection_frac);
+    } 
+}
+//_________________________________________________________________________________________
+/*void Coverage::PlotSNR(const Signal* signal) {
+    std::stringstream snr_hist_name;
+    snr_hist_name << "snr_hist";
+
+    TH2F* snr_hist = TH2F_run_plots_.GetHistogram(snr_hist_name.str());
+    if (snr_hist == nullptr) {
+        TH2F_run_plots_.CreateHistogram(snr_hist_name.str(), "Uniform noise level [/ 30 cm x 30 cm]", "Sum of ", 800, 0, 800);
+        snr_hist = TH2F_run_plots_.GetHistogram(snr_hist_name.str());
+    }
+
+    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    for (int noise_level = 0; noise_level < 1000; noise_level++) {
+        double snr_sum = 0.
+        for (const auto optical_sensor : optical_sensors) {
+            snr_sum += optical_sensor->GetPhotonCount() / noise_level;
+        }
+        snr_hist->Fill(noise_level, snr_sum);
+    }
+}*/
