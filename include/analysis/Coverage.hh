@@ -30,6 +30,7 @@ public:
     static void PlotDetectorPhotons(int evt_id);
     static void PlotGeometricFraction(const Signal* signal);
     static void PlotHistFraction(const Signal* signal);
+    static void PlotAnodeFraction(const Signal* signal);
 
 private:
     static AnalysisResults<TH1F> TH1F_evt_plots_;

@@ -8,8 +8,9 @@ SOURCE_DIR="$PWD"
 BUILD=0
 RUN_TEST=0
 RUN_GEN=0
+RUN_RAD=0
 
-while getopts ":btg" opt; do
+while getopts ":btgr" opt; do
   case ${opt} in
     b )
       BUILD=1
@@ -19,6 +20,9 @@ while getopts ":btg" opt; do
       ;;
     g )
       RUN_GEN=1
+      ;;
+    r )
+      RUN_RAD=1
       ;;
     \? )
       echo "-- Failed to parse arguments" 1>&2
@@ -89,9 +93,14 @@ fi
 
 if [ $RUN_GEN -eq 1 ]; then 
     cd "$SOURCE_DIR/system"
-    ./energyloss -g generator/marley_solar.mac -d detector/small.txt
+    ./energyloss -g generator/marley_solar.mac -d detector/DUNE.txt
+fi
+
+if [ $RUN_RAD -eq 1 ]; then
+    cd "$SOURCE_DIR/system"
+    ./energyloss -g generator/bxdecay0_debug.mac -d detector/DUNE.txt
 fi
 
 cd "$SOURCE_DIR"
 
-# ./run_build.sh -b -t -g
+# ./run_build.sh -b -t -g -r

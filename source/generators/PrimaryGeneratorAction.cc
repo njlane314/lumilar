@@ -8,7 +8,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
   	set_generator_cmd_ = new G4UIcmdWithAString("/generator/set", this);
   	set_generator_cmd_->SetGuidance("Sets the primary generator");
 	set_generator_cmd_->SetParameterName("Generator", false, false);
-	set_generator_cmd_->SetCandidates("marley general");
+	set_generator_cmd_->SetCandidates("marley general bxdecay0");
 
 	marley_directory_ = new G4UIdirectory("/generator/marley/");
 	marley_directory_->SetGuidance("Marley generator control commands");
@@ -16,6 +16,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
 	set_marley_source_cmd_ = new G4UIcmdWithAString("/generator/marley/source", this);
 	set_marley_source_cmd_->SetGuidance("Sets the energy distribution");
 	set_marley_source_cmd_->SetParameterName("Config", false, false);
+
+	bxdecay0_directory_ = new G4UIdirectory("/generator/bxdecay0/");
+	bxdecay0_directory_->SetGuidance("BXdecay0 generator control commands");
 }
 //_________________________________________________________________________________________
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {}
@@ -35,6 +38,9 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 			marley_source_ = new_value;
 			marley_generator_ = new MarleyGenerator(marley_source_, output_filename_);
 		}
+	}
+	else if (generator_type_ == "bxdecay0") {
+		bxdecay0_generator_ = new BxDecay0Generator::PrimaryGeneratorAction();
 	}
 	else if (generator_type_ == "general") {
 		general_generator_ = new G4GeneralParticleSource();
@@ -61,6 +67,9 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event) {
 	if (generator_type_ == "marley") {
 		marley_generator_->GeneratePrimaryVertex(event);
+	}
+	else if (generator_type_ == "bxdecay0") {
+		bxdecay0_generator_->GeneratePrimaries(event);
 	}
 	else if (generator_type_ == "general") {
 		general_generator_->GeneratePrimaryVertex(event);

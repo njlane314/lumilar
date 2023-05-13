@@ -5,17 +5,17 @@
 #include <iomanip>
 #include <chrono>
 #include <filesystem>
-
+//_________________________________________________________________________________________
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "G4UIterminal.hh"
 #include "G4UItcsh.hh"
-
+//_________________________________________________________________________________________
 #include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
 #include "ActionInitialisation.hh"
 #include "AnalysisManager.hh"
-
+//_________________________________________________________________________________________
 int main(int argc, char* argv[]) {
     std::string generator_config;
     std::string detector_config;

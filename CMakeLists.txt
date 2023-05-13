@@ -24,6 +24,11 @@ set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/source")
 set(MARLEY_DIR "/home/lane/Software/src/marley")
 message(STATUS "MARLEY_DIR is set to ${MARLEY_DIR}")
 
+set(BxDecay0_DIR "/home/lane/Software/src/bxdecay0/_install.d" CACHE PATH "Path to BxDecay0 libraries")
+
+find_library(BxDecay0 NAMES BxDecay0 PATHS "${BxDecay0_DIR}/lib")
+find_library(BxDecay0_Geant4 NAMES BxDecay0_Geant4 PATHS "${BxDecay0_DIR}/lib")
+
 find_library(MARLEY
   NAMES MARLEY
   PATHS "${MARLEY_DIR}/build/"
@@ -70,3 +75,4 @@ target_link_libraries(${PROJECT_NAME} ${MARLEY} ${MARLEY_ROOT})
 target_link_libraries(${PROJECT_NAME} ${CLHEP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} Threads::Threads)
 target_link_libraries(${PROJECT_NAME} ${OpenMP_CXX_LIBRARIES}) # Link with OpenMP library
+target_link_libraries(${PROJECT_NAME} ${BxDecay0} ${BxDecay0_Geant4})
