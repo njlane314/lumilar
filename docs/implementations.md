@@ -5,7 +5,7 @@
 - [] Add nuclear quenching of alpha particles
 - [] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
 - [] Optimise lArXe scintillation profile sampling through parameterisation
-- [] Add bxdecay0 background generator
+- [x] Add bxdecay0 background generator
 - [x] Implement random vertex module for marley events
 - [] Add supernova neutrino events
 - [x] Guard against deposits outside world volume
@@ -13,3 +13,12 @@
 - [] Reimplement medium properties instantiation
 - [] Add Rayleigh scattering approximation
 - [] Add reflective foils at the cathode plane
+- [] Add FD opdet placement files to be read
+- [] Bulk vertex generator 
+- [] Unique vertex generator
+- [] Ficl file input
+- [] Radiological background ficl
+- [] Create bash script to merge background files
+- [] Set electric field in geant4
+- [] Genie generator interface
+- [] Nucleon decays

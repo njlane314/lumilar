@@ -32,8 +32,6 @@
 #include "G4Material.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
-#include "G4UniformElectricField.hh"
-#include "G4FieldManager.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
  public:
@@ -46,6 +44,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
         double depth;
         double position[3];
         double step;
+        double electric_field[3];
     };
 
     Detector detector_;
@@ -59,7 +58,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
  private:
     std::string detector_config_;
 
-    void ConstructAnodePlane();
     Detector ReadDetector(std::stringstream& ss);
 };
 

@@ -2,8 +2,9 @@ Detector:
     Name: small_tpc
     Material: G4_lAr
     Shape: Box
-    Width: 10000 # mm
-    Height: 10000 # mm
-    Depth: 10000 # mm
+    Width: 1000 # mm
+    Height: 1000 # mm
+    Depth: 1000 # mm
     Position: 0 0 0 # mm
     Step: 1 # mm
+    ElectricField: 0.5 0 0 # kiloVolt / cm

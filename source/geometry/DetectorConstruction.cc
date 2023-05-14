@@ -31,6 +31,8 @@ DetectorConstruction::Detector DetectorConstruction::ReadDetector(std::stringstr
                 ss >> detector.position[0] >> detector.position[1] >> detector.position[2];
             } else if (sub_key == "Step:") {
                 ss >> detector.step;
+            } else if (sub_key == "ElectricField:") {
+                ss >> detector.electric_field[0] >> detector.electric_field[1] >> detector.electric_field[2];
             }
         }
     }
@@ -56,7 +58,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Transform3D detector_transform(G4Translate3D(detector_position) * G4Rotate3D());
 
     G4VPhysicalVolume* detector_physical = new G4PVPlacement(detector_transform, detector_logical, "detector.physical", 0, false, 0);
-
+    
     return detector_physical;
 }
 //_________________________________________________________________________________________

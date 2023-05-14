@@ -40,6 +40,7 @@ struct Properties {
     double triplet_abundance;
 
     double absorption_length;
+    double nitrogen_concentration;
 
     double excited_rate;
     double quenched_rate;
@@ -71,7 +72,10 @@ public:
     Properties InitialiseProperties(std::string medium);
     std::vector<double> ParameteriseXeScintillationProfile(double triplet_lifetime, double excited_rate, double transfer_rate, double doped_concentration);
     Properties* GetMediumProperties();
-    double GetGroupVelocity(double wavelength) const;
+    double GetGroupVelocity(double wl) const;
+    double GetRefractiveIndex(double wl) const;
+    double GetRayleighScatteringLength(double wl) const;
+    double GetAbsorptionLength() const;
 
     static MediumProperties* instance_;
     std::string medium_;
