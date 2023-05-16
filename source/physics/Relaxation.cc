@@ -42,7 +42,7 @@ std::pair<double, double> Relaxation::SampleEmissionTime(bool enable_quenching, 
                 double xenon_spectra_wavelength_sigma = MediumProperties::GetInstance()->GetMediumProperties()->xenon_spectra_wavelength_sigma;
 
                 double transfer_rate = MediumProperties::GetInstance()->GetMediumProperties()->transfer_rate;
-                double doped_concentration = MediumProperties::GetInstance()->GetMediumProperties()->doped_concentration;
+                double doped_concentration = MediumProperties::GetInstance()->GetMediumProperties()->xenon_concentration;
                 double doped_lifetime = 1./(transfer_rate * doped_concentration);
                 
                 double remaining_lifetime = 1./(1./doped_lifetime + 1./quenched_lifetime);
@@ -92,8 +92,11 @@ double Relaxation::SampleWavelength(double wavelength_mean, double wavelength_si
 OpticalPhoton Relaxation::CreateOpticalPhoton(const EnergyDeposit* energy_deposit) {
     auto medium_properties = MediumProperties::GetInstance()->GetMediumProperties();
     
-    bool is_doped = medium_properties->is_doped;
-    bool quenching_enabled = medium_properties->quenching_enabled;
+    bool is_doped = false;
+    if (medium_properties->xenon_concentration > 0) {
+        is_doped = true;
+    } 
+    bool quenching_enabled = true;
 
     double emission_time, wavelength;
     std::tie(emission_time, wavelength) = SampleEmissionTime(quenching_enabled, is_doped);

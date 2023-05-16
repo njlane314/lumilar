@@ -11,7 +11,7 @@
 - [x] Guard against deposits outside world volume
 - [] Implement raw variable branches output
 - [] Reimplement medium properties instantiation
-- [] Add Rayleigh scattering approximation
+- [x] Add Rayleigh scattering approximation
 - [] Add reflective foils at the cathode plane
 - [] Add FD opdet placement files to be read
 - [] Bulk vertex generator 
@@ -22,3 +22,5 @@
 - [] Set electric field in geant4
 - [] Genie generator interface
 - [] Nucleon decays
+- [] Add nitrogen quenching effects on pulse shape : https://arxiv.org/pdf/2009.06238.pdf
+- [] Add fast component quenching : https://iopscience.iop.org/article/10.1088/1748-0221/14/09/P09022/pdf

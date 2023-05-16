@@ -66,8 +66,6 @@ void ScintillationCollection::PlotAmplitudeRatio(const Signal* signal) {
         TH2F_run_plots_.CreateHistogram(amplitude_ratio_hist_name, "Neutrino energy [MeV]", "Amplitude ratio", 100, 1, 0, 100, 1, 0);
         amplitude_ratio_hist = TH2F_run_plots_.GetHistogram(amplitude_ratio_hist_name);
     }
-
-    amplitude_ratio_hist->Fill(primary_energy, amplitude_ratio);
 }
 //_________________________________________________________________________________________
 void ScintillationCollection::PlotCollectionFraction(const Signal* signal) {
@@ -78,15 +76,23 @@ void ScintillationCollection::PlotCollectionFraction(const Signal* signal) {
     TH2F* collected_fraction_hist = TH2F_run_plots_.GetHistogram(collected_fraction_name);
 
     if (collected_fraction_hist == nullptr) {
-        TH2F_run_plots_.CreateHistogram(collected_fraction_name, "Collection fraction", "Collcted photons", 100, 0, 1, 450, 0, 450000);
+        TH2F_run_plots_.CreateHistogram(collected_fraction_name, "Collection fraction", "Collcted photons", 100, 1, 0, 100, 0, 0.03);
         collected_fraction_hist = TH2F_run_plots_.GetHistogram(collected_fraction_name);
     }
 
     for (int effic = 0; effic < 1000; effic++) {
         double collection_efficiency = effic / 1000.;
         //int emission_fraction = CLHEP::RandPoisson::shoot(floor((double)emitted_photons * collection_efficiency));
-        int emission_fraction = CLHEP::RandBinomial::shoot(emitted_photons, collection_efficiency);
 
-        collected_fraction_hist->Fill(collection_efficiency, emission_fraction);
+        const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+        int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
+
+        int total_count = 0;
+        for (const auto& optical_sensor : optical_sensors) {
+            total_count += optical_sensor->GetPhotonCount();
+        }
+        
+        double frac = (double)total_count/(double)total_photons;
+        collected_fraction_hist->Fill(collection_efficiency, frac);
     } 
 }

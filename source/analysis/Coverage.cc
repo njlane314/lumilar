@@ -64,7 +64,7 @@ void Coverage::PlotHistFraction(const Signal* signal) {
 
     TH2F* geometric_frac_hist = TH2F_run_plots_.GetHistogram(geometric_frac_hist_name.str());
     if (geometric_frac_hist == nullptr) {
-        TH2F_run_plots_.CreateHistogram(geometric_frac_hist_name.str(), "Intensity Threshold [/(30 cm x 30 cm)]", "Geometric Acceptance", 800, 0, 800);
+        TH2F_run_plots_.CreateHistogram(geometric_frac_hist_name.str(), "Intensity Threshold [/(30 cm x 30 cm)]", "Geometric Acceptance", 120, 0, 120, 100, 1, 0);
         geometric_frac_hist = TH2F_run_plots_.GetHistogram(geometric_frac_hist_name.str());
     }
 
@@ -72,7 +72,7 @@ void Coverage::PlotHistFraction(const Signal* signal) {
     int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
 
     std::vector<int> threshold_vector;
-    for (int i = 0; i < 800; i += 1) {
+    for (int i = 0; i < 100; i += 1) {
         threshold_vector.push_back(i);
         int total_count = 0;
         for (const auto& optical_sensor : optical_sensors) {
@@ -95,23 +95,21 @@ void Coverage::PlotAnodeFraction(const Signal* signal) {
 
     TH2F* anode_frac_hist = TH2F_run_plots_.GetHistogram(anode_frac_hist_name.str());
     if (anode_frac_hist == nullptr) {
-        TH2F_run_plots_.CreateHistogram(anode_frac_hist_name.str(), "Anode-plane optical-sensitive coverage", "Geometric acceptance", 100, 0, 1, 100, 0, 1);
+        TH2F_run_plots_.CreateHistogram(anode_frac_hist_name.str(), "Anode-plane optical-sensitive coverage", "Geometric acceptance", 100, 1, 0, 100, 1, 0);
         anode_frac_hist = TH2F_run_plots_.GetHistogram(anode_frac_hist_name.str());
     }
 
     const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
     int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
-
     for (int coverage = 0; coverage < 1000; coverage++) {
-        double coverage_frac = (double)coverage / (double)1000.;
+        double coverage_frac = (double)coverage / 1000.;
 
         int photon_count = 0;
         for (const auto& optical_sensor : optical_sensors) {
             photon_count += optical_sensor->GetPhotonCount();
         }
 
-        int collection_frac = CLHEP::RandBinomial::shoot(photon_count, coverage_frac);
-
+        double collection_frac = coverage_frac * (double)photon_count / (double)total_photons;
         anode_frac_hist->Fill(coverage_frac, collection_frac);
     } 
 }

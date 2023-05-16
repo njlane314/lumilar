@@ -39,7 +39,7 @@ struct Properties {
     double singlet_abundance;
     double triplet_abundance;
 
-    double absorption_length;
+    double xenon_concentration;
     double nitrogen_concentration;
 
     double excited_rate;
@@ -56,20 +56,15 @@ struct Properties {
     std::vector<double> xe_scint_profile;
 
     double electric_field;
-
-    double doped_concentration;
-
-    bool is_doped;
-    bool quenching_enabled;
 };
 
 class MediumProperties {
 public:
-    MediumProperties(std::string medium);
+    MediumProperties(double xenon_concentration, double nitrogen_concentration);
     ~MediumProperties();
 
     static MediumProperties* GetInstance();
-    Properties InitialiseProperties(std::string medium);
+    Properties InitialiseProperties();
     std::vector<double> ParameteriseXeScintillationProfile(double triplet_lifetime, double excited_rate, double transfer_rate, double doped_concentration);
     Properties* GetMediumProperties();
     double GetGroupVelocity(double wl) const;
@@ -80,6 +75,9 @@ public:
     static MediumProperties* instance_;
     std::string medium_;
     Properties medium_properties_;
+
+    double nitrogen_concentration_;
+    double xenon_concentration_;
 };
 
 #endif // MEDIUM_PROPERTIES_HH
