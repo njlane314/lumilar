@@ -4,6 +4,8 @@ AnalysisResults<TH1F> MarleyGenerator::TH1F_plots_;
 //_________________________________________________________________________________________
 MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_filename)
 : source_(marley_source), output_filename_(output_filename) {
+    bulk_vertex_generator_ = new BulkVertexGenerator();
+
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
     half_lifes_ = {
         //{ 0.0298299*MeV, 4.25*ns },
@@ -42,9 +44,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     int cascade_idx = 0;
 
     std::vector<G4PrimaryVertex*> primary_vertices;
+    G4ThreeVector vertex(0.0, 0.0, 0.0);
+    bulk_vertex_generator_->ShootVertex(vertex);  
 
     for (const auto& marley_particle : marley_event.get_final_particles()) {
-        G4PrimaryVertex* primary_vertex = new G4PrimaryVertex(0, 0, 0, global_time);
+        G4PrimaryVertex* primary_vertex = new G4PrimaryVertex(vertex, global_time);
         G4PrimaryParticle* a_particle = new G4PrimaryParticle(marley_particle->pdg_code(), marley_particle->px(), marley_particle->py(), marley_particle->pz(), marley_particle->total_energy());
         a_particle->SetCharge(marley_particle->charge());
 

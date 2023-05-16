@@ -64,6 +64,8 @@ Properties MediumProperties::InitialiseProperties() {
     }
 
     medium_properties.electric_field = 0.5; // kilovolt / cm
+
+    std::cout << "Xenon concentration: " << medium_properties.xenon_concentration << " ppm." << std::endl;
     
     return medium_properties;
 }

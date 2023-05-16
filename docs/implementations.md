@@ -1,5 +1,5 @@
 
-- [] Add lArXe to detector config file to avoid recompiling each time
+- [x] Add lArXe to detector config file to avoid recompiling each time
 - [x] Multithread AnalyticalOptics::CalculateOpticalSignal
 - [] Simplify recombination model
 - [] Add nuclear quenching of alpha particles
@@ -10,17 +10,17 @@
 - [] Add supernova neutrino events
 - [x] Guard against deposits outside world volume
 - [] Implement raw variable branches output
-- [] Reimplement medium properties instantiation
+- [x] Reimplement medium properties instantiation
 - [x] Add Rayleigh scattering approximation
 - [] Add reflective foils at the cathode plane
 - [] Add FD opdet placement files to be read
-- [] Bulk vertex generator 
+- [x] Bulk vertex generator 
 - [] Unique vertex generator
-- [] Ficl file input
-- [] Radiological background ficl
+- [] Radiological background macro file
 - [] Create bash script to merge background files
-- [] Set electric field in geant4
+- [] Set electric field 
 - [] Genie generator interface
 - [] Nucleon decays
 - [] Add nitrogen quenching effects on pulse shape : https://arxiv.org/pdf/2009.06238.pdf
 - [] Add fast component quenching : https://iopscience.iop.org/article/10.1088/1748-0221/14/09/P09022/pdf
+- [] Add momentum rotation to bulk vertex generator

@@ -88,17 +88,17 @@ source ./setup_marley.sh
 
 if [ $RUN_TEST -eq 1 ]; then
     cd "$SOURCE_DIR/system"
-    ./energyloss -g generator/gun_electron_mono.mac -d detector/small.txt  
+    ./energyloss -g generator/gun_electron_mono.mac -d detector/debug_tpc.mac  
 fi
 
 if [ $RUN_GEN -eq 1 ]; then 
     cd "$SOURCE_DIR/system"
-    ./energyloss -g generator/marley_solar.mac -d detector/DUNE.txt
+    ./energyloss -g generator/marley_solar.mac -d detector/debug_tpc.mac  
 fi
 
 if [ $RUN_RAD -eq 1 ]; then
     cd "$SOURCE_DIR/system"
-    ./energyloss -g generator/bxdecay0_debug.mac -d detector/DUNE.txt
+    ./energyloss -g generator/bxdecay0_debug.mac -d detector/debug_tpc.mac  
 fi
 
 cd "$SOURCE_DIR"

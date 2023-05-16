@@ -46,6 +46,10 @@ void Signal::AddEnergyDeposit(const EnergyDeposit* energy_deposit) {
     track_structure_->push_back(*energy_deposit);
 }
 //_________________________________________________________________________________________
+std::vector<EnergyDeposit>* Signal::GetHits() const {
+    return track_structure_.get();
+}
+//_________________________________________________________________________________________
 std::vector<double> Signal::GetVisibleDeposits() const {
     std::vector<double> visible_deposits;
     for (const auto& a_deposit : *track_structure_) {

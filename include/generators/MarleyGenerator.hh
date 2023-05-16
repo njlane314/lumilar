@@ -31,9 +31,6 @@
 #include "marley/Generator.hh"
 #include "marley/JSONConfig.hh"
 
-#include "Signal.hh"
-#include "AnalysisResults.hh"
-
 #include <CLHEP/Random/RandExponential.h>
 
 #include "TFile.h"
@@ -43,6 +40,10 @@
 #include "TAxis.h"
 #include "TMultiGraph.h"
 #include "TH2F.h"
+
+#include "Signal.hh"
+#include "AnalysisResults.hh"
+#include "BulkVertexGenerator.hh"
 
 class MarleyGenerator {
 public:
@@ -57,6 +58,8 @@ public:
     void PrintEvent(const marley::Event& event);
 
 private:
+    BulkVertexGenerator* bulk_vertex_generator_;
+
     std::string source_;
     std::string output_filename_;
     TH1F* energy_hist_;

@@ -17,6 +17,7 @@
 #include "Coverage.hh"
 #include "ScintillationCollection.hh"
 #include "IonisationCollection.hh"
+#include "GeometricAcceptance.hh"
 
 class EventAction : public G4UserEventAction {
 public:
@@ -37,6 +38,7 @@ private:
 	Coverage* coverage_;
 	ScintillationCollection* scintillation_collection_;
 	IonisationCollection* ionisation_collection_;
+	GeometricAcceptance* geometric_acceptance_;
 };
 
 #endif // EVENT_ACTION_HH

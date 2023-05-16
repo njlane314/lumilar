@@ -35,6 +35,7 @@ public:
   void ProcessResponse(const G4Step* step);
   Scintillation* GetScintillation() const;
   Ionisation* GetIonisation() const;
+  std::vector<EnergyDeposit>* GetHits() const;
   std::vector<double> GetVisibleDeposits() const;
   std::vector<double> GetLinearTransfers() const;
   std::vector<double> GetLengths() const;
