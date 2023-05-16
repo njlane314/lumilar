@@ -1,69 +1,32 @@
 #include "DetectorConstruction.hh"
 //_________________________________________________________________________________________
-DetectorConstruction::DetectorConstruction(std::string detector_config)
-: detector_config_(detector_config) {}
+#include "G4UIparameter.hh"
+//_________________________________________________________________________________________`
+DetectorConstruction::DetectorConstruction(DetectorMessenger* detector_messenger) : detector_messenger_(detector_messenger) {}
 //_________________________________________________________________________________________
 DetectorConstruction::~DetectorConstruction() {}
 //_________________________________________________________________________________________
-DetectorConstruction::Detector DetectorConstruction::ReadDetector(std::stringstream& ss) {
-    Detector detector;
-    std::string key;
-    std::getline(ss, key, ':');
-
-    if (key == "Detector") {
-        while (ss.good()) {
-            std::string sub_key;
-            ss >> sub_key;
-
-            if (sub_key == "Name:") {
-                ss >> detector.name;
-            } else if (sub_key == "Material:") {
-                ss >> detector.material;
-            } else if (sub_key == "Shape:") {
-                ss >> detector.shape;
-            } else if (sub_key == "Width:") {
-                ss >> detector.width;
-            } else if (sub_key == "Height:") {
-                ss >> detector.height;
-            } else if (sub_key == "Depth:") {
-                ss >> detector.depth;
-            } else if (sub_key == "Position:") {
-                ss >> detector.position[0] >> detector.position[1] >> detector.position[2];
-            } else if (sub_key == "Step:") {
-                ss >> detector.step;
-            } else if (sub_key == "ElectricField:") {
-                ss >> detector.electric_field[0] >> detector.electric_field[1] >> detector.electric_field[2];
-            }
-        }
-    }
-    
-    return detector;
-}
-//_________________________________________________________________________________________
 G4VPhysicalVolume* DetectorConstruction::Construct() { 
-    std::ifstream config_file(detector_config_);
-    std::stringstream ss;
-    ss << config_file.rdbuf();
-    detector_ = ReadDetector(ss);
+    detector_messenger_->SetDetectorParameters(detector_name_, detector_shape_, detector_width_, detector_height_, detector_depth_, detector_step_, detector_xenon_, detector_nitrogen_);
+    std::string detector_material = "G4_lAr";
+    MediumProperties* medium_properties = new MediumProperties(detector_xenon_, detector_nitrogen_);
 
-    G4Box* detector_shape = new G4Box(detector_config_.c_str(), detector_.width/2., detector_.height/2., detector_.depth/2.);
-    G4LogicalVolume* detector_logical = new G4LogicalVolume(detector_shape, G4NistManager::Instance()->FindOrBuildMaterial(detector_.material), "detector.logical");
+    G4Box* detector_box = new G4Box(detector_name_.c_str(), detector_width_/2., detector_height_/2., detector_depth_/2.);
+    G4LogicalVolume* detector_logical = new G4LogicalVolume(detector_box, G4NistManager::Instance()->FindOrBuildMaterial(detector_material), "detector.logical");
 
     G4UserLimits* user_limits = new G4UserLimits();
-    user_limits->SetMaxAllowedStep(detector_.step);
-
+    user_limits->SetMaxAllowedStep(detector_step_);
     detector_logical->SetUserLimits(user_limits);
 
-    G4ThreeVector detector_position(detector_.position[0], detector_.position[1], detector_.position[2]);
+    G4ThreeVector detector_position(0.0, 0.0, 0.0);
     G4Transform3D detector_transform(G4Translate3D(detector_position) * G4Rotate3D());
-
     G4VPhysicalVolume* detector_physical = new G4PVPlacement(detector_transform, detector_logical, "detector.physical", 0, false, 0);
     
     return detector_physical;
 }
 //_________________________________________________________________________________________
 void DetectorConstruction::GetDetectorDimensions(double& width, double& height, double& depth) {
-    width = detector_.width;
-    height = detector_.height;
-    depth = detector_.depth;
+    width = detector_width_;
+    height = detector_height_;
+    depth = detector_depth_;
 }

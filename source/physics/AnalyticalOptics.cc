@@ -69,7 +69,7 @@ void AnalyticalOptics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radia
                     ProcessVolumeQuenching(radiant_copy, selected_photon, *a_optical_sensor, distance, photons_arrived);
                     photons_copy.erase(photons_copy.begin());
                 } else {
-                    throw std::invalid_argument("-- AnalyticalOptics::ProcessRadiant: photons_copy is empty");
+                    std::cout << "-- AnalyticalOptics::ProcessRadiant: photons_copy is empty" << std::endl;
                 }
             }
             radiant_copy.photons = photons_copy;

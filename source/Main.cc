@@ -12,6 +12,7 @@
 #include "G4UItcsh.hh"
 //_________________________________________________________________________________________
 #include "DetectorConstruction.hh"
+#include "DetectorMessenger.hh"
 #include "PhysicsList.hh"
 #include "ActionInitialisation.hh"
 #include "AnalysisManager.hh"
@@ -55,8 +56,20 @@ int main(int argc, char* argv[]) {
     std::cout << "-- Set output filename to " << output_filename << std::endl;
 
     auto run_manager = new G4RunManager();
+    run_manager->SetUserInitialization(new DetectorConstruction(new DetectorMessenger()));
 
-    run_manager->SetUserInitialization(new DetectorConstruction(detector_config));
+    std::ifstream detector_config_stream(detector_config);
+    if (detector_config_stream.good()) {
+        G4UImanager* ui_manager = G4UImanager::GetUIpointer();
+        ui_manager->ApplyCommand("/control/execute " + detector_config);
+        std::cout << "-- Detector macro complete!" << std::endl;
+    }
+    else {
+        std::cout << "-- Failed to open detetcor macro..." << std::endl;
+        return 1;
+    }
+
+    
     run_manager->SetUserInitialization(new PhysicsList());
     run_manager->SetUserInitialization(new ActionInitialisation(output_filename));
     run_manager->Initialize();
@@ -72,7 +85,7 @@ int main(int argc, char* argv[]) {
         std::cout << "-- Macro complete!" << std::endl;
     }
     else {
-        std::cout << "-- Failed to open generator config file" << std::endl;
+        std::cout << "-- Failed to open generator macro..." << std::endl;
         return 1;
     }
     

@@ -1,0 +1,11 @@
+/detector/name debug_tpc
+
+/detector/shape box
+/detector/width 1600 # mm
+/detector/height 2000 # mm
+/detector/depth 2600 # mm
+
+/detector/nitrogen 2 # ppm
+/detector/xenon 0 # ppm
+
+/detector/step 1 # mm

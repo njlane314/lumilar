@@ -1,0 +1,11 @@
+/detector/name dune_tpc
+
+/detector/shape box
+/detector/width 3500 # mm
+/detector/height 12000 # mm
+/detector/depth 60000 # mm
+
+/detector/nitrogen 2 # ppm
+/detector/xenon 0 # ppm
+
+/detector/step 1 # mm

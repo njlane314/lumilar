@@ -24,6 +24,7 @@
 
 #include "AnalysisResults.hh"
 #include "Signal.hh"
+#include "InstrumentConstruction.hh"
 
 class ScintillationCollection {
 public:

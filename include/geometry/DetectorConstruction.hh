@@ -24,6 +24,7 @@
 #include "G4UserLimits.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
@@ -32,33 +33,30 @@
 #include "G4Material.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
+#include "G4Tokenizer.hh"
+
+#include "DetectorMessenger.hh"
+#include "MediumProperties.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
- public:
-    struct Detector {
-        std::string name;
-        std::string material;
-        std::string shape;
-        double width;
-        double height;
-        double depth;
-        double position[3];
-        double step;
-        double electric_field[3];
-    };
-
-    Detector detector_;
-
-    DetectorConstruction(std::string detector_config);
+public:
+    DetectorConstruction(DetectorMessenger* detector_messenger);
     ~DetectorConstruction();
 
     G4VPhysicalVolume* Construct();
     void GetDetectorDimensions(double& width, double& height, double& depth);
 
- private:
-    std::string detector_config_;
+private:
+    DetectorMessenger* detector_messenger_;
 
-    Detector ReadDetector(std::stringstream& ss);
+    std::string detector_name_;
+    std::string detector_shape_;
+    double detector_width_;
+    double detector_height_;
+    double detector_depth_;
+    double detector_step_;
+    double detector_xenon_;
+    double detector_nitrogen_;
 };
 
 
