@@ -97,6 +97,35 @@ if (NOT MARLEY_INSTALLED)
 endif()
 
 #----------------------------------------------------------------------------
+# Check if Eigen is already installed
+
+set(EIGEN_DIR "${MAIN_EXTERNAL_DIR}/eigen")
+set(EIGEN_INSTALLED FALSE)
+
+file(GLOB EIGEN_FILES "${EIGEN_DIR}/*")
+
+if (EIGEN_FILES)
+  message(STATUS "Eigen is already installed at ${EIGEN_DIR}")
+  set(EIGEN_INSTALLED TRUE)
+endif()
+
+#----------------------------------------------------------------------------
+# Clone and build Eigen if not already installed
+
+if (NOT EIGEN_INSTALLED)
+  message(STATUS "Cloning and building Eigen...")
+
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E env git clone https://github.com/libigl/eigen.git ${EIGEN_DIR}
+    WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
+  )
+endif()
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 # Find libraries and include directories
 
 find_library(MARLEY
