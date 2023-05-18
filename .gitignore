@@ -42,10 +42,6 @@
 .vscode/
 
 # Build
-build/.cmake/
-build/CMakeFiles/
-build/.directory_cache.txt
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/compile_commands.json
-build/energyloss
+build/
+extern/bxdecay0
+extern/marley
