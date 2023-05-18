@@ -72,8 +72,6 @@ endif()
 set(MARLEY_DIR "${MAIN_EXTERNAL_DIR}/marley")
 set(MARLEY_INSTALLED FALSE)
 
-file(GLOB MARLEY_FILES "${MARLEY_DIR}/*")
-
 if (MARLEY_FILES)
   message(STATUS "Marley is already installed at ${MARLEY_DIR}")
   set(MARLEY_INSTALLED TRUE)
@@ -120,6 +118,9 @@ if (NOT EIGEN_INSTALLED)
     WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
   )
 endif()
+
+set(EIGEN_INCLUDE_DIR "${EIGEN_DIR}")
+include_directories(${EIGEN_INCLUDE_DIR})
 
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
