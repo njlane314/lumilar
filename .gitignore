@@ -43,5 +43,5 @@
 
 # Build
 build/
-extern/bxdecay0
-extern/marley
+extern/bxdecay0/
+extern/marley/
