@@ -24,3 +24,4 @@
 - [] Add nitrogen quenching effects on pulse shape : https://arxiv.org/pdf/2009.06238.pdf
 - [] Add fast component quenching : https://iopscience.iop.org/article/10.1088/1748-0221/14/09/P09022/pdf
 - [] Add momentum rotation to bulk vertex generator
+- [] Improve way of counting total photons

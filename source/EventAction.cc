@@ -8,14 +8,18 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 //_________________________________________________________________________________________
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::GetInstance();
+    std::cout << "Beginning optical signal calculation..." << std::endl;
     AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
-    
+    std::cout << "Optical signal calculation complete." << std::endl;
+
     this->RunAnalysis(event, signal);
     signal->DeleteSignal(); 
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
 
+    std::cout << "Updating progress bar..." << std::endl;
     this->UpdateProgressBar(event);
+    std::cout << "Progress bar updated." << std::endl;
 }
 //_________________________________________________________________________________________
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
