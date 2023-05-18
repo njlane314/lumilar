@@ -85,9 +85,6 @@ endif()
 if (NOT MARLEY_INSTALLED)
   message(STATUS "Cloning and building Marley...")
 
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/marley_build")
-  set(MARLEY_BUILD_DIR "${CMAKE_BINARY_DIR}/marley_build")
-
   execute_process(
     COMMAND ${CMAKE_COMMAND} -E env git clone https://github.com/njlane314/marley.git ${MARLEY_DIR}
     WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
