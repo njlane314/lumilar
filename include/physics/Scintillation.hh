@@ -43,7 +43,6 @@ class Scintillation {
     std::vector<double> GetWavelengths() const;
     std::vector<Eigen::Vector3d> GetRadiantPositions() const;
     std::vector<int> GetRadiantSizes() const;
-    void PrintScintillation() const;
 
  private:
     static Scintillation* instance_;

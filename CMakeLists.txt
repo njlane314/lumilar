@@ -127,7 +127,7 @@ endif()
 
 message(${CMAKE_MODULE_PATH})
 message(${EIGEN_DIR})
-include_directories(${EIGEN_DIR}/Eigen)
+include_directories(${EIGEN_DIR})
 
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------

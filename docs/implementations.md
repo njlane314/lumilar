@@ -1,4 +1,5 @@
 
+- [] Change name to lumiLAr
 - [x] Add lArXe to detector config file to avoid recompiling each time
 - [x] Multithread AnalyticalOptics::CalculateOpticalSignal
 - [] Simplify recombination model

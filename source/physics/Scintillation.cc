@@ -73,24 +73,3 @@ std::vector<double> Scintillation::GetWavelengths() const {
     }
     return wavelengths;
 }
-//_________________________________________________________________________________________
-void Scintillation::PrintScintillation() const {
-    std::cout << "Scintillation radiants:" << std::endl;
-    for (const auto& a_radiant : photon_radiants_) {
-        std::cout << "  Position: (";
-        for (const auto& p : a_radiant.position) {
-            std::cout << p << ", ";
-        }
-        int photon_count = 0;
-        for (const auto& photon : a_radiant.photons) {
-            photon_count += 1;
-        }
-        std::cout << "), photons: " << photon_count << std::endl;
-
-        std::cout << "  Emission times: ";
-        for (const auto& photon : a_radiant.photons) {
-            std::cout << photon.GetEmissionTime() << " ";
-        }
-        std::cout << std::endl;
-    }
-}
