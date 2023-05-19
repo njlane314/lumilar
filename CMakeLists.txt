@@ -12,11 +12,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/system)
 
 find_package(Geant4 REQUIRED)
 find_package(ROOT REQUIRED COMPONENTS RIO Core)
+find_package(CLHEP REQUIRED)
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 include(${Geant4_USE_FILE})
 include(${ROOT_USE_FILE})
+#include(${CLHEP_USE_FILE})
 
 message(STATUS "Geant4 GDML SUPPORT: ${Geant4_gdml_FOUND}")
 
@@ -123,7 +125,7 @@ endif()
 
 message(${CMAKE_MODULE_PATH})
 message(${EIGEN_DIR})
-include_directories(${EIGEN_DIR})
+include_directories(${EIGEN_DIR}/Eigen)
 
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
