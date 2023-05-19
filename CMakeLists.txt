@@ -121,8 +121,8 @@ if (NOT EIGEN_INSTALLED)
   )
 endif()
 
-set(EIGEN_INCLUDE_DIR ${EIGEN_DIR})
-include_directories(${EIGEN_INCLUDE_DIR})
+message(${CMAKE_MODULE_PATH})
+include_directories(${EIGEN_DIR})
 
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
