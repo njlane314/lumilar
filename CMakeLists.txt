@@ -121,7 +121,7 @@ if (NOT EIGEN_INSTALLED)
   )
 endif()
 
-set(EIGEN_INCLUDE_DIR "${EIGEN_DIR}")
+set(EIGEN_INCLUDE_DIR ${EIGEN_DIR})
 include_directories(${EIGEN_INCLUDE_DIR})
 
 #----------------------------------------------------------------------------
@@ -158,7 +158,6 @@ file(GLOB HEADERS   ${MAIN_INCLUDE_DIR}/*.hh
                     ${MAIN_INCLUDE_DIR}/generators/*.hh
                     ${MAIN_INCLUDE_DIR}/geometry/*.hh
                     ${MAIN_INCLUDE_DIR}/utilities/*.hh
-                    ${MAIN_EXTERNAL_DIR}/eigen/Eigen/*h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
@@ -166,7 +165,6 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PRIVATE
                             ${MAIN_INCLUDE_DIR}
                             ${MARLEY_DIR}/include
-                            ${EIGEN_DIR}/Eigen
                             ${MAIN_INCLUDE_DIR}/physics
                             ${MAIN_INCLUDE_DIR}/analysis
                             ${MAIN_INCLUDE_DIR}/generators
