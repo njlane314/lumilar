@@ -16,9 +16,9 @@
 #ifndef IONISATION_HH
 #define IONISATION_HH
 
+#include <Eigen/Dense>
 #include <vector>
 #include <iostream>
-#include <Eigen/Dense>
 
 #include "ThermalElectron.hh"
 #include "Ejection.hh"
@@ -38,7 +38,6 @@ public:
     std::vector<int> GetCloudSizes() const;
     int GetTotalElectronCount() const;
     std::vector<Eigen::Vector3d> GetCloudPositions() const;
-    void PrintIonisation() const;
 
 private:
     static Ionisation* instance_;

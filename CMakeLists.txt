@@ -68,6 +68,8 @@ if (NOT BXDECAY0_INSTALLED)
   )
 endif()
 
+include_directories(${BXDECAY0_DIR}/include)
+
 #----------------------------------------------------------------------------
 # Check if Marley is already installed
 

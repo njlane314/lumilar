@@ -46,18 +46,3 @@ std::vector<Eigen::Vector3d> Ionisation::GetCloudPositions() const {
     }
     return cloud_positions;
 }
-//_________________________________________________________________________________________
-void Ionisation::PrintIonisation() const {
-    std::cout << "ionisation clouds:" << std::endl;
-    for (const auto& a_cloud : ionisation_) {
-        std::cout << "  Position: (";
-        for (const auto& p : a_cloud.position) {
-            std::cout << p << ", ";
-        }
-        int electron_count = 0;
-        for (const auto& electron : a_cloud.electrons) {
-            electron_count += 1;
-        }
-        std::cout << "), electrons: " << electron_count << std::endl;
-    }
-}
