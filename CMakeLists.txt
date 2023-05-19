@@ -158,6 +158,7 @@ file(GLOB HEADERS   ${MAIN_INCLUDE_DIR}/*.hh
                     ${MAIN_INCLUDE_DIR}/generators/*.hh
                     ${MAIN_INCLUDE_DIR}/geometry/*.hh
                     ${MAIN_INCLUDE_DIR}/utilities/*.hh
+                    ${MAIN_EXTERNAL_DIR}/eigen/Eigen/*h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
