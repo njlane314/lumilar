@@ -12,7 +12,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
     AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
     std::cout << "Optical signal calculation complete." << std::endl;
 
-    this->RunAnalysis(event, signal);
+    //this->RunAnalysis(event, signal);
     signal->DeleteSignal(); 
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
