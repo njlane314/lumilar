@@ -4,7 +4,7 @@
 #include <random>
 #include <limits>
 //_________________________________________________________________________________________
-#include "bxdecay0/decay0_generator.h"
+#include <bxdecay0/decay0_generator.h>
 #include "bxdecay0/std_random.h"
 #include "bxdecay0/event.h"  
 #include "bxdecay0/bb_utils.h"
