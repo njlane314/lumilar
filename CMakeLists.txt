@@ -99,7 +99,7 @@ endif()
 #----------------------------------------------------------------------------
 # Check if Eigen is already installed
 
-set(EIGEN_DIR "${MAIN_EXTERNAL_DIR}/eigen")
+set(EIGEN_DIR "${MAIN_EXTERNAL_DIR}/eigen/Eigen")
 set(EIGEN_INSTALLED FALSE)
 
 file(GLOB EIGEN_FILES "${EIGEN_DIR}/*")
@@ -121,7 +121,7 @@ if (NOT EIGEN_INSTALLED)
   )
 endif()
 
-set(EIGEN_INCLUDE_DIR "${EIGEN_DIR}/Eigen")
+set(EIGEN_INCLUDE_DIR "${EIGEN_DIR}")
 include_directories(${EIGEN_INCLUDE_DIR})
 
 #----------------------------------------------------------------------------
