@@ -122,6 +122,7 @@ if (NOT EIGEN_INSTALLED)
 endif()
 
 message(${CMAKE_MODULE_PATH})
+message(${EIGEN_DIR})
 include_directories(${EIGEN_DIR})
 
 #----------------------------------------------------------------------------
