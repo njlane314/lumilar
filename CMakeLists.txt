@@ -99,7 +99,7 @@ endif()
 #----------------------------------------------------------------------------
 # Check if Eigen is already installed
 
-set(EIGEN_DIR "${MAIN_EXTERNAL_DIR}/eigen/Eigen")
+set(EIGEN_DIR "${MAIN_EXTERNAL_DIR}/eigen/Eigen/")
 set(EIGEN_INSTALLED FALSE)
 
 file(GLOB EIGEN_FILES "${EIGEN_DIR}/*")
