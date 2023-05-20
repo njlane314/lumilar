@@ -26,6 +26,7 @@ message(STATUS "Geant4 GDML SUPPORT: ${Geant4_gdml_FOUND}")
 # Setup Projects PATHS
 set(MAIN_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/source")
+set(MAIN_BUILD_DIR "${PROJECT_SOURCE_DIR}/build")
 
 if (NOT MAIN_EXTERNAL_DIR)
   set(MAIN_EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/extern" )
@@ -50,25 +51,31 @@ endif()
 if (NOT BXDECAY0_INSTALLED)
   message(STATUS "Cloning and building BxDecay0...")
 
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bxdecay0_build")
-  set(BXDECAY0_BUILD_DIR "${CMAKE_BINARY_DIR}/bxdecay0_build")
-
   execute_process(
     COMMAND ${CMAKE_COMMAND} -E env git clone https://github.com/BxCppDev/bxdecay0.git ${BXDECAY0_DIR}
     WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
   )
 
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E env ${CMAKE_COMMAND} -B${BXDECAY0_BUILD_DIR} -H${BXDECAY0_DIR} -DCMAKE_INSTALL_PREFIX=${BXDECAY0_DIR} -DBXDECAY0_WITH_GEANT4_EXTENSION=ON -DGeant4_DIR=${Geant4_DIR}
-    WORKING_DIRECTORY ${BXDECAY0_BUILD_DIR}
+    COMMAND ${CMAKE_COMMAND} -E env ${CMAKE_COMMAND} -B${BXDECAY0_DIR} -H${BXDECAY0_DIR} -DCMAKE_INSTALL_PREFIX=${BXDECAY0_DIR} -DBXDECAY0_WITH_GEANT4_EXTENSION=ON -DGeant4_DIR=${Geant4_DIR}
+    WORKING_DIRECTORY ${BXDECAY0_DIR}
   )
 
   execute_process(
-    COMMAND ${CMAKE_COMMAND} --build ${BXDECAY0_BUILD_DIR} --target install
+    COMMAND cmake --build .
+    WORKING_DIRECTORY ${BXDECAY0_DIR}
+  )
+
+  execute_process(
+    COMMAND make
+    WORKING_DIRECTORY ${BXDECAY0_DIR}
   )
 endif()
 
-include_directories(${BXDECAY0_DIR}/include)
+find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS ${BXDECA0_DIR} NO_DEFAULT_PATH)
+if(BxDecay0_FOUND) 
+  message(STATUS "BxDecay0 found: include at ${BxDecay0_INCLUDE_DIR}")
+endif()
 
 #----------------------------------------------------------------------------
 # Check if Marley is already installed
