@@ -67,7 +67,7 @@ if(NOT BXDECAY0_DIR)
 endif()
 message(${BXDECAY0_DIR})
 find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS "${BXDECAY0_DIR}/_build.d" NO_DEFAULT_PATH)
-include_directories(${BXDECAY0_DIR}/include})
+include_directories(${BXDECAY0_DIR}/_install.d/include)
 
 #----------------------------------------------------------------------------
 # Check if Marley is already installed
@@ -174,6 +174,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
                             ${MAIN_INCLUDE_DIR}/generators
                             ${MAIN_INCLUDE_DIR}/geometry
                             ${MAIN_INCLUDE_DIR}/utilities
+		            ${BXDECAY0_DIR}/_install.d/include
 )
 
 target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES})
@@ -181,4 +182,4 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${CLHEP_LIBRARIES})
 
 target_link_libraries(${PROJECT_NAME} ${MARLEY} ${MARLEY_ROOT})
-target_link_libraries(${PROJECT_NAME} ${BxDecay0} ${BxDecay0_Geant4})
+target_link_libraries(${PROJECT_NAME} BxDecay0::BxDecay0 BxDecay0::BxDecay0_Geant4)
