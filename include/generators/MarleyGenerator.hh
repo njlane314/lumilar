@@ -59,6 +59,7 @@ public:
 
 private:
     BulkVertexGenerator* bulk_vertex_generator_;
+    marley::Generator marley_generator_;
 
     std::string source_;
     std::string output_filename_;

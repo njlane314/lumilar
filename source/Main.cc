@@ -85,7 +85,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    
     run_manager->SetUserInitialization(new PhysicsList());
     run_manager->SetUserInitialization(new ActionInitialisation(output_filename));
     run_manager->Initialize();

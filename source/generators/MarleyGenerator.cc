@@ -2,8 +2,8 @@
 //_________________________________________________________________________________________
 AnalysisResults<TH1F> MarleyGenerator::TH1F_plots_;
 //_________________________________________________________________________________________
-MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_filename)
-: source_(marley_source), output_filename_(output_filename) {
+MarleyGenerator::MarleyGenerator(std::string marley_json, std::string output_filename)
+: output_filename_(output_filename) {
     bulk_vertex_generator_ = new BulkVertexGenerator();
 
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
@@ -20,14 +20,21 @@ MarleyGenerator::MarleyGenerator(std::string marley_source, std::string output_f
 
     //TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
     //TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
+
+    if (!marley_json.empty()) {
+        std::cout << "Configuring MARLEY..." << std::endl;
+        marley::JSONConfig marley_config(marley_json);
+        marley_generator_ = marley_config.create_generator();
+    } else {
+        std::cout << "MARLEY configuration file not found!  Continuing..."
+                  << std::endl;
+    }
 }
 //_________________________________________________________________________________________
 MarleyGenerator::~MarleyGenerator() {}
 //_________________________________________________________________________________________
 void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
-    marley::JSONConfig marley_config(source_);
-    marley::Generator marley_generator = marley_config.create_generator();
-    marley::Event marley_event = marley_generator.create_event();
+    marley::Event marley_event = marley_generator_.create_event();
 
     auto primary_energy = marley_event.projectile().total_energy();
     Signal::GetInstance()->RecordPrimaryEnergy(primary_energy);
