@@ -22,8 +22,6 @@ A simulation, using the Geant4 toolkit, that models the energy loss of neutrino-
 
 ## About
 
-Simulations serve different roles throughout the lifecycle of an experiment. Here, the chosen simulation design reflects that of the development stage of an experiment, and so lacks full-detail; instead, it exchanges accuracy for computation speed. Therefore, the results of this simulation are constrained to only to describe the main characteristics of different experiment designs, and explore untraversed lines of inquiry. 
-
 The general outline of the simulation is as follows. An external event generator simulates the initial particle interaction, generating the "primary" tracks of an event. These are the tracks of the particles that are produced in the interaction. The event generators used in this simulation include GENIE, MARLEY, and BxDecay0. The particles are tracked through the detector geometry, where their interactions are sampled and can produce "secondary" tracks, or particles. Here, the "hit" information is stored at discrete steps along each particle's track. The simulation toolkit GEANT4 is used here for particle interactions and energy loss, with a simplified "box" geometrical description. The "hit" information is then processed, taking localised energy deposits and converting them into optical photon, and thermal electron radiation. A fast radiation transport simulation, based on analytical equations, is then used to propagate the photons to the photon detectors, and the electrons to the charge readout. 
 
 ## Getting Started
@@ -58,7 +56,7 @@ source setup_config.sh
 
 ### Usage
 
-To run the software: 
+Example usage: 
 ```shell
 cd system
 ./lumilar -d detector/dune_tpc.mac -g generator/marley_solar.mac
