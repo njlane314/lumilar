@@ -57,25 +57,17 @@ if (NOT BXDECAY0_INSTALLED)
   )
 
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -E env ${CMAKE_COMMAND} -B${BXDECAY0_DIR} -H${BXDECAY0_DIR} -DCMAKE_INSTALL_PREFIX=${BXDECAY0_DIR} -DBXDECAY0_WITH_GEANT4_EXTENSION=ON -DGeant4_DIR=${Geant4_DIR}
-    WORKING_DIRECTORY ${BXDECAY0_DIR}
-  )
-
-  execute_process(
-    COMMAND cmake --build .
-    WORKING_DIRECTORY ${BXDECAY0_DIR}
-  )
-
-  execute_process(
-    COMMAND make
+    COMMAND ./tools/build.sh --without-dbd-gA-data --with-geant4-extension --geant4-prefix "${Geant4_DIR}"
     WORKING_DIRECTORY ${BXDECAY0_DIR}
   )
 endif()
 
-find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS ${BXDECA0_DIR} NO_DEFAULT_PATH)
-if(BxDecay0_FOUND) 
-  message(STATUS "BxDecay0 found: include at ${BxDecay0_INCLUDE_DIR}")
+if(NOT BXDECAY0_DIR)
+  set(BXDECAY0_DIR "${MAIN_EXTERNAL_DIR}/bxdecay0")
 endif()
+message(${BXDECAY0_DIR})
+find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS "${BXDECAY0_DIR}/_build.d" NO_DEFAULT_PATH)
+include_directories(${BXDECAY0_DIR}/include})
 
 #----------------------------------------------------------------------------
 # Check if Marley is already installed
