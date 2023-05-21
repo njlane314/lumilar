@@ -26,7 +26,7 @@ public:
     static void EventAnalysis(const Signal* signal);
     static void RunAnalysis();
 
-    static void PlotEnergyYields(const Signal* signal);
+    static void PlotSignalYields(const Signal* signal);
 
 private:
     static AnalysisResults<TH2F> TH2F_run_plots_;
