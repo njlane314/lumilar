@@ -12,7 +12,7 @@ void Calorimetry::PlotSignalYields(const Signal* signal) {
 
     TH2F* yields_hist = TH2F_run_plots_.GetHistogram(yields_hist_name.str());
     if (yields_hist == nullptr) {
-        TH2F_run_plots_.CreateHistogram(yields_hist_name.str(), r'$N_e / E_{dep}$ [/ MeV]', r'N_\gamma / E_{dep} [/ MeV]', 100, 1, 0, 100, 1, 0);
+        TH2F_run_plots_.CreateHistogram(yields_hist_name.str(), "r$N_e / E_{dep}$ [/ MeV]", "r$N_\gamma / E_{dep}$ [/ MeV]", 100, 1, 0, 100, 1, 0);
         yields_hist = TH2F_run_plots_.GetHistogram(yields_hist_name.str());
     }
 

@@ -8,7 +8,7 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 //_________________________________________________________________________________________
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::GetInstance();
-    //AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+    AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
 
     //this->RunAnalysis(event, signal);
     signal->DeleteSignal(); 
@@ -20,20 +20,20 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 //_________________________________________________________________________________________
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
     //pulse_shape_->EventAnalysis(signal);
-    //calorimetry_->EventAnalysis(signal);
+    calorimetry_->EventAnalysis(signal);
     //coverage_->EventAnalysis(signal);
     //scintillation_collection_->EventAnalysis(signal);
     //ionisation_collection_->EventAnalysis(signal);
-    geometric_acceptance_->EventAnalysis(signal);
+    //geometric_acceptance_->EventAnalysis(signal);
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
         //pulse_shape_->RunAnalysis();
-        //calorimetry_->RunAnalysis();
+        calorimetry_->RunAnalysis();
         //coverage_->RunAnalysis();
         //scintillation_collection_->RunAnalysis();
         //ionisation_collection_->RunAnalysis();
-        geometric_acceptance_->RunAnalysis();
+        //geometric_acceptance_->RunAnalysis();
     }
 }
 //_________________________________________________________________________________________
