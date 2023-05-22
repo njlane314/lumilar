@@ -44,9 +44,12 @@
 #include "Signal.hh"
 #include "AnalysisResults.hh"
 #include "BulkVertexGenerator.hh"
+#include "GeneratorParticle.hh"
+#include "TruthManager.hh"
 
 class MarleyGenerator {
 public:
+
     MarleyGenerator(std::string marley_source, std::string output_filename);
     ~MarleyGenerator();
 
@@ -58,7 +61,9 @@ public:
     void PrintEvent(const marley::Event& event);
 
 private:
+
     BulkVertexGenerator* bulk_vertex_generator_;
+    marley::Generator marley_generator_;
 
     std::string source_;
     std::string output_filename_;

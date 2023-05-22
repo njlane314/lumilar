@@ -392,7 +392,7 @@
   },
 
   // Incident neutrino direction 3-vector
-  direction: { x: 0.0, y: 0.0, z: 1.0 },
+  direction: "isotropic",
 
   log: [ { file: "stdout", level: "disabled" } ],
 }

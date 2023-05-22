@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
-project(energyloss)
+project(lumilar)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -65,7 +65,7 @@ endif()
 if(NOT BXDECAY0_DIR)
   set(BXDECAY0_DIR "${MAIN_EXTERNAL_DIR}/bxdecay0")
 endif()
-message(${BXDECAY0_DIR})
+
 find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS "${BXDECAY0_DIR}/_build.d" NO_DEFAULT_PATH)
 include_directories(${BXDECAY0_DIR}/_install.d/include)
 
@@ -124,8 +124,6 @@ if (NOT EIGEN_INSTALLED)
   )
 endif()
 
-message(${CMAKE_MODULE_PATH})
-message(${EIGEN_DIR})
 include_directories(${EIGEN_DIR})
 
 #----------------------------------------------------------------------------
