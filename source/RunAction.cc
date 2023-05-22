@@ -39,8 +39,8 @@ void RunAction::HandleHits(const G4Run* run) {
 	hit_data_handler->SetRun(run->GetRunID());
 	hit_data_handler->EventReset();
 
-	MCTruthManager* mc_truth_manager = MCTruthManager::Instance();
-	mc_truth_manager->EventReset();
+	TruthManager* truth_manager = TruthManager::GetInstance();
+	truth_manager->EventReset();
 }
 //_________________________________________________________________________________________
 void RunAction::FillMetaData() {

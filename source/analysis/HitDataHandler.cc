@@ -218,7 +218,7 @@ void HitDataHandler::AddFinalGeneratorParticle(const GeneratorParticle* particle
     generator_final_particle_energy_.push_back(particle->Energy());
 }
 //______________________________________________________________________________
-void HitDataHandler::AddMCParticle(const MCParticle* particle) {
+void HitDataHandler::AddParticle(const Particle* particle) {
     particle_track_id_.push_back(particle->TrackID());
     particle_parent_track_id_.push_back(particle->ParentTrackID());
     particle_pdg_code_.push_back(particle->PDGCode());
@@ -293,6 +293,8 @@ int HitDataHandler::ProcessToKey(const std::string& process) {
     else if (process.compare("dInelastic")           == 0) key = 19;
     else if (process.compare("Decay")                == 0) key = 20;
     else if (process.compare("RadioactiveDecay")     == 0) key = 21;
+    else if (process.compare("")                     == 0) key = 22;
+    else if (process.compare("StepLimiter")          == 0) key = 23;
     else { std::cout << "Uncategorized process: " << process << std::endl; }
 
     return key;

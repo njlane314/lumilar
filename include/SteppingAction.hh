@@ -6,6 +6,9 @@
 
 #include "DetectorConstruction.hh"
 #include "MediumResponse.hh"
+#include "HitDataHandler.hh"
+#include "TruthManager.hh"
+#include "Particle.hh"
 
 class SteppingAction : public G4UserSteppingAction {
 public:

@@ -2,7 +2,7 @@
 #define HIT_DATA_HANDLER_HH
 
 #include "GeneratorParticle.hh"
-#include "MCParticle.hh"
+#include "Particle.hh"
 #include "AnalysisManager.hh"
 
 #include "globals.hh"
@@ -33,7 +33,7 @@ public:
     void AddInitialGeneratorParticle(const GeneratorParticle*);
     void AddFinalGeneratorParticle(const GeneratorParticle*);
 
-    void AddMCParticle(const MCParticle*);
+    void AddParticle(const Particle*);
 
     int ProcessToKey(const std::string&);
 

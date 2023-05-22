@@ -18,6 +18,8 @@
 #include "ScintillationCollection.hh"
 #include "IonisationCollection.hh"
 #include "GeometricAcceptance.hh"
+#include "HitDataHandler.hh"
+#include "TruthManager.hh"
 
 class EventAction : public G4UserEventAction {
 public:
@@ -28,9 +30,9 @@ public:
   	void EndOfEventAction(const G4Event* event);
 
 private:
-	void PrintEvent(const G4Event* event);
 	void UpdateProgressBar(const G4Event* event);
 	void RunAnalysis(const G4Event* event, const Signal* signal);
+	void RecordHit(const G4Event* event);
 
 	Signal* signal_;
 	Calorimetry* calorimetry_;

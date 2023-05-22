@@ -10,7 +10,7 @@
 #include "InstrumentConstruction.hh"
 #include "MediumProperties.hh"
 #include "HitDataHandler.hh"
-#include "MCTruthManager.hh"
+#include "TruthManager.hh"
 
 class RunAction : public G4UserRunAction {
 public:
