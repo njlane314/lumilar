@@ -45,6 +45,8 @@ public:
 
     G4VPhysicalVolume* Construct();
     void GetDetectorDimensions(double& width, double& height, double& depth);
+    void ReadOpticalSensorPlacements();
+    void GetOpticalSensorPlacements(std::vector<std::vector<std::string>>& sensor_types, std::vector<std::vector<double>>& sensor_positions, std::vector<std::vector<double>>& sensor_dimensions);
 
 private:
     DetectorMessenger* detector_messenger_;
@@ -57,6 +59,11 @@ private:
     double detector_step_;
     double detector_xenon_;
     double detector_nitrogen_;
+    std::string detector_optical_placements_;
+
+    std::vector<std::vector<std::string>> sensor_types_;
+    std::vector<std::vector<double>> sensor_positions_;
+    std::vector<std::vector<double>> sensor_dimensions_;
 };
 
 

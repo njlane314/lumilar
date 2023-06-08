@@ -6,6 +6,7 @@ InstrumentConstruction::InstrumentConstruction() {
     std::cout << "-- Constructing instruments" << std::endl;
     DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
     detector_construction->GetDetectorDimensions(detector_width_, detector_height_, detector_depth_);
+    detector_construction->GetOpticalSensorPlacements(sensor_types_, sensor_positions_, sensor_dimensions_);
 }
 //_________________________________________________________________________________________
 InstrumentConstruction::~InstrumentConstruction() {}
@@ -18,7 +19,59 @@ InstrumentConstruction* InstrumentConstruction::GetInstance() {
     return instance_;
 }
 //_________________________________________________________________________________________
-void InstrumentConstruction::ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height) {
+void InstrumentConstruction::CreateOpticalSensors() {
+    if (sensor_types_.size() == 0 || sensor_positions_.size() == 0 || sensor_dimensions_.size() == 0) {
+        std::cout << "-- No input optical sensors to construct, constructing a unfirom placemnt on andoe plane" << std::endl;
+        double rectangular_dimension = 100; // mm
+        CreateUniformRectangularOpticalSensors(PlaneOrientation::X_POS, rectangular_dimension, rectangular_dimension, rectangular_dimension/2., rectangular_dimension/2.);
+    } 
+
+    if (sensor_types_.size() != sensor_positions_.size() || sensor_types_.size() != sensor_dimensions_.size()) {
+        throw std::invalid_argument("-- Invalid sensor placements");
+    } else {
+        for (int i = 0; i < sensor_types_.size(); ++i) {
+            std::vector<std::string> type_vec = sensor_types_[i];
+            std::vector<double> placement = sensor_positions_[i];
+            std::vector<double> dimensions = sensor_dimensions_[i];
+
+            if (type_vec.size() != 2 || placement.size() != 3 || dimensions.size() != 2) {
+                throw std::invalid_argument("-- Invalid sensor placements");
+            }
+
+            std::string type = type_vec[0];
+            std::string orientation = type_vec[1];
+            double width = dimensions[0];
+            double height = dimensions[1];
+            Eigen::Vector3d position(placement[0], placement[1], placement[2]);
+
+            std::unique_ptr<OpticalSensor> optical_sensor;
+
+            if (type == "rectangle") {
+                if (orientation == "+x") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::X_POS);
+                } else if (orientation == "-x") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::X_NEG);
+                } else if (orientation == "+y") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::Y_POS);
+                } else if (orientation == "-y") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::Y_NEG);
+                } else if (orientation == "+z") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::Z_POS);
+                } else if (orientation == "-z") {
+                    optical_sensor = OpticalSensor::CreateRectangle(width, height, position, PlaneOrientation::Z_NEG);
+                } else {
+                    throw std::invalid_argument("-- Invalid sensor placement orientation");
+                }
+            } else {
+                throw std::invalid_argument("-- Invalid sensor placement type");
+            }
+
+            optical_sensors_.push_back(std::move(optical_sensor));
+        }
+    }
+}
+//_________________________________________________________________________________________
+void InstrumentConstruction::CreateUniformRectangularOpticalSensors(PlaneOrientation plane_orientation, double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height) {
     std::cout << "-- Constructing rectangular optical sensors" << std::endl;
     if (sensor_width > sensor_width_separation || sensor_height > sensor_height_separation) {
         throw std::invalid_argument("-- Invalid sensor dimensions");

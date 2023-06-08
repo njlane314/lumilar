@@ -40,7 +40,7 @@ public:
     DetectorMessenger();
     ~DetectorMessenger();
 
-    void SetDetectorParameters(std::string& detector_name, std::string& detector_shape, double& detector_width, double& detector_height, double& detector_depth, double& detector_step, double& detector_xenon, double& detector_nitrogen);
+    void SetDetectorParameters(std::string& detector_name, std::string& detector_shape, double& detector_width, double& detector_height, double& detector_depth, double& detector_step, double& detector_xenon, double& detector_nitrogen, std::string& detector_optical_placements);
 
 private:
     G4UIdirectory* detector_directory_;
@@ -52,6 +52,7 @@ private:
     G4UIcommand* detector_step_cmd_;
     G4UIcommand* detector_xenon_cmd_;
     G4UIcommand* detector_nitrogen_cmd_;
+    G4UIcommand* detector_instruments_cmd_;
 
     void SetNewValue(G4UIcommand* cmd, G4String new_value);
 
@@ -63,6 +64,7 @@ private:
     double detector_step_;
     double detector_xenon_;
     double detector_nitrogen_;
+    std::string detector_instruments_;
 };
 
 

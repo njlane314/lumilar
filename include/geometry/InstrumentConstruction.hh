@@ -36,11 +36,16 @@ public:
     double detector_height_;
     double detector_depth_;
 
-    void ConstructRectangularOpticalSensors(PlaneOrientation plane_orientation,  double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height);
+    std::vector<std::vector<std::string>> sensor_types_;
+    std::vector<std::vector<double>> sensor_positions_;
+    std::vector<std::vector<double>> sensor_dimensions_;
+
+    void CreateUniformRectangularOpticalSensors(PlaneOrientation plane_orientation,  double sensor_width_separation, double sensor_height_separation, double sensor_width, double sensor_height);
     const OpticalSensorVector& GetOpticalSensors();
     int GetNumOpticalSensors() const;
     int GetTotalArrivalPhotons();
     void ClearOpticalSensors();
+    void CreateOpticalSensors();
 
 private:
     static InstrumentConstruction* instance_;
