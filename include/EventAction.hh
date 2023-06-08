@@ -9,7 +9,7 @@
 #include "G4RunManager.hh"
 
 #include "InstrumentConstruction.hh"
-#include "AnalyticalOptics.hh"
+#include "Optics.hh"
 #include "Signal.hh"
 
 #include "Calorimetry.hh"

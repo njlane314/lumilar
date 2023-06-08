@@ -1,7 +1,7 @@
 //____________________________________________________________________________
 /*!
 
-\class   geometry::AnalyticalOptics
+\class   geometry::Optics
 
 \brief   This class contains analytical methods for calculating the transportation effects
         of optical photons in the detector.
@@ -14,8 +14,8 @@
 */
 //____________________________________________________________________________
 
-#ifndef ANALYTICALOPTICS_HH
-#define ANALYTICALOPTICS_HH
+#ifndef OPTICS_HH
+#define OPTICS_HH
 
 #include <Eigen/Core>
 #include <thread>
@@ -33,10 +33,10 @@
 #include "MediumProperties.hh"
 #include "ThreadPool.hh"
 
-class AnalyticalOptics {
+class Optics {
 public:
-    AnalyticalOptics();
-    ~AnalyticalOptics();
+    Optics();
+    ~Optics();
 
     static double GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor, const Eigen::Vector3d* separation);
     static double CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation);
@@ -54,4 +54,4 @@ private:
     static ThreadPool optics_thread_pool_;
 };
 
-#endif // ANALYTICALOPTICS_HH
+#endif // OPTICS_HH

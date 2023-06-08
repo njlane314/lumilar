@@ -8,7 +8,7 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 //_________________________________________________________________________________________
 void EventAction::EndOfEventAction(const G4Event* event) {
     auto signal = Signal::GetInstance();
-    AnalyticalOptics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+    Optics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
 
     //this->RunAnalysis(event, signal);
     signal->DeleteSignal(); 

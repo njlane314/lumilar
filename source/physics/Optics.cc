@@ -1,12 +1,12 @@
-#include "AnalyticalOptics.hh"
+#include "Optics.hh"
 //_________________________________________________________________________________________
-AnalyticalOptics::AnalyticalOptics() {}
+Optics::Optics() {}
 //_________________________________________________________________________________________
-AnalyticalOptics::~AnalyticalOptics() {}
+Optics::~Optics() {}
 //_________________________________________________________________________________________
-ThreadPool AnalyticalOptics::optics_thread_pool_(std::thread::hardware_concurrency());
+ThreadPool Optics::optics_thread_pool_(std::thread::hardware_concurrency());
 //_________________________________________________________________________________________
-void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
+void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
     auto start_time = std::chrono::high_resolution_clock::now();
     bool debug_true = true;
 
@@ -34,7 +34,7 @@ void AnalyticalOptics::CalculateOpticalSignal(const Signal* signal, const Optica
     }
 }
 //_________________________________________________________________________________________
-std::vector<std::pair<PhotonRadiant, int>> AnalyticalOptics::CreateRadiantCountPairs(const Signal* signal) {
+std::vector<std::pair<PhotonRadiant, int>> Optics::CreateRadiantCountPairs(const Signal* signal) {
     std::vector<int> radiant_count_vector = signal->GetScintillation()->GetRadiantSizes();
     std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
     assert(radiant_count_vector.size() == photon_radiants.size());
@@ -47,7 +47,7 @@ std::vector<std::pair<PhotonRadiant, int>> AnalyticalOptics::CreateRadiantCountP
     return radiant_count_pairs;
 }
 //_________________________________________________________________________________________
-void AnalyticalOptics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radiant_count_pair, const OpticalSensorVector& optical_sensors, int& total_photons, int& photons_geometrically_expected, int& photons_collected, double& expected_geometric_acceptance) {
+void Optics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radiant_count_pair, const OpticalSensorVector& optical_sensors, int& total_photons, int& photons_geometrically_expected, int& photons_collected, double& expected_geometric_acceptance) {
     PhotonRadiant radiant_copy = radiant_count_pair.first;
     int a_radiant_count = radiant_count_pair.second;
 
@@ -57,7 +57,7 @@ void AnalyticalOptics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radia
         Eigen::Vector3d separation = (a_optical_sensor->GetPosition() - (radiant_copy.position));
         double distance = separation.norm();
         
-        double geometric_quenching_factor = AnalyticalOptics::GeometricQuenching(&radiant_copy, a_optical_sensor.get(), &separation);                
+        double geometric_quenching_factor = Optics::GeometricQuenching(&radiant_copy, a_optical_sensor.get(), &separation);                
         int num_photons_geometrically_expected = CLHEP::RandBinomial::shoot(a_radiant_count, geometric_quenching_factor);
         photons_geometrically_expected += num_photons_geometrically_expected;
         if (num_photons_geometrically_expected >= 1) {
@@ -69,7 +69,7 @@ void AnalyticalOptics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radia
                     ProcessAttenuation(radiant_copy, selected_photon, *a_optical_sensor, distance, photons_collected);
                     photons_copy.erase(photons_copy.begin());
                 } else {
-                    std::cout << "-- AnalyticalOptics::ProcessRadiant: photons_copy is empty" << std::endl;
+                    std::cout << "-- Optics::ProcessRadiant: photons_copy is empty" << std::endl;
                 }
             }
             radiant_copy.photons = photons_copy;
@@ -78,7 +78,7 @@ void AnalyticalOptics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radia
     }
 }
 //_________________________________________________________________________________________
-void AnalyticalOptics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_collected) {
+void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_collected) {
     double attenuation_factor = AttenuationFactor(distance, optical_photon.GetWavelength());
     
     if (std::isnan(attenuation_factor)) {
@@ -97,7 +97,7 @@ void AnalyticalOptics::ProcessAttenuation(const PhotonRadiant& photon_radiant, c
     }
 }
 //_________________________________________________________________________________________
-double AnalyticalOptics::AttenuationFactor(const double distance, const double wavelength) {
+double Optics::AttenuationFactor(const double distance, const double wavelength) {
     double absorption_length = MediumProperties::GetInstance()->GetAbsorptionLength();
     double scattering_length = MediumProperties::GetInstance()->GetRayleighScatteringLength(wavelength);
 
@@ -106,7 +106,7 @@ double AnalyticalOptics::AttenuationFactor(const double distance, const double w
     return std::exp(- distance / attenuation_length);
 }
 //_________________________________________________________________________________________
-OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
+OpticalPhoton Optics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
     Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position));
     double distance = separation.norm();
     double convert_m_per_s_to_cm_per_ns = 1e2 * 1e-9;
@@ -120,7 +120,7 @@ OpticalPhoton AnalyticalOptics::CreateArrivalPhoton(const PhotonRadiant* photon_
     return arrival_photon;
 }
 //_________________________________________________________________________________________
-double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
+double Optics::GeometricQuenching(const PhotonRadiant* a_photon_radiant, const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     // https://arxiv.org/pdf/2010.00324.pdf
     double solid_angle = CalculateSolidAngle(sensor, separation);
     double visibility = solid_angle / (4 * M_PI);
@@ -128,7 +128,7 @@ double AnalyticalOptics::GeometricQuenching(const PhotonRadiant* a_photon_radian
     return visibility;
 }
 //_________________________________________________________________________________________
-double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
+double Optics::CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     double solid_angle = 0.;
 
     Eigen::Vector3d projection = CreateProjectionGeometry(sensor, separation);
@@ -143,7 +143,7 @@ double AnalyticalOptics::CalculateSolidAngle(const OpticalSensor* sensor, const 
     return solid_angle;
 }
 //_________________________________________________________________________________________
-Eigen::Vector3d AnalyticalOptics::CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
+Eigen::Vector3d Optics::CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation) {
     Eigen::Vector3d projection;
     if (sensor->GetOrientation() == PlaneOrientation::X_POS || sensor->GetOrientation() == PlaneOrientation::X_NEG) {
         projection = *separation;
@@ -161,7 +161,7 @@ Eigen::Vector3d AnalyticalOptics::CreateProjectionGeometry(const OpticalSensor* 
     return projection;
 }
 //_________________________________________________________________________________________
-double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection, const double& height, const double& width) {
+double Optics::RectangularSolidAngle(const Eigen::Vector3d* projection, const double& height, const double& width) {
     // https://vixra.org/pdf/2001.0603v2.pdf
     auto omega = [&](double a, double b, double d) -> double {
         double aa = a / (2. * d);
@@ -222,7 +222,7 @@ double AnalyticalOptics::RectangularSolidAngle(const Eigen::Vector3d* projection
     throw std::invalid_argument("-- Invalid optical detector geometry.");   
 }
 //_________________________________________________________________________________________
-void AnalyticalOptics::PrintDebug(double expected_geometric_acceptance, int photons_geometrically_expected, int photons_collected, const Signal* signal, std::chrono::time_point<std::chrono::high_resolution_clock> start_time) {
+void Optics::PrintDebug(double expected_geometric_acceptance, int photons_geometrically_expected, int photons_collected, const Signal* signal, std::chrono::time_point<std::chrono::high_resolution_clock> start_time) {
     auto end_time = std::chrono::high_resolution_clock::now();
     auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     
