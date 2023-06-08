@@ -49,9 +49,8 @@ public:
     static void PrintDebug(double expected_geometric_acceptance, int photons_detected, int photons_arrived, const Signal* signal, std::chrono::time_point<std::chrono::high_resolution_clock> start_time);
 
 private:
-    static double AbsorptionQuenching(double distance);
-    static double RayleighQuenching(double wavelength, double distance);
-    static void ProcessVolumeQuenching(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_arrived);
+    static double AttenuationFactor(const double distance, const double wavelength);
+    static void ProcessAttenuation(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_arrived);
     static ThreadPool optics_thread_pool_;
 };
 

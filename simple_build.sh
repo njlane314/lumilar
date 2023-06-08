@@ -47,7 +47,7 @@ fi
 
 if [ $RUN_GEN -eq 1 ]; then 
     cd "$SOURCE_DIR/system"
-    ./lumilar -g generator/marley_solar.mac -d detector/debug_tpc.mac  
+    ./lumilar -g generator/marley_solar.mac -d detector/dune_tpc.mac  
 fi
 
 if [ $RUN_RAD -eq 1 ]; then
