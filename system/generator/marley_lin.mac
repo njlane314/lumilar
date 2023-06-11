@@ -13,4 +13,4 @@
 /generator/marley/source generator/config/marley_unif.js
 
 # run
-/run/beamOn 10
+/run/beamOn 1000

@@ -5,6 +5,9 @@ Optics::Optics() {}
 Optics::~Optics() {}
 //_________________________________________________________________________________________
 ThreadPool Optics::optics_thread_pool_(std::thread::hardware_concurrency());
+double Optics::detector_width = 0.0;
+double Optics::detector_height = 0.0;
+double Optics::detector_depth = 0.0;
 //_________________________________________________________________________________________
 void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -14,6 +17,9 @@ void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVec
     int photons_collected = 0;
     double expected_geometric_acceptance = 0;
     int total_photons = signal->GetScintillation()->GetTotalPhotonCount();
+
+    DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+    detector_construction->GetDetectorDimensions(detector_width, detector_height, detector_depth);
 
     std::vector<std::future<void>> results;
     std::vector<std::pair<PhotonRadiant, int>> radiant_count_pairs = CreateRadiantCountPairs(signal);
@@ -82,11 +88,11 @@ void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const Optic
     double attenuation_factor = AttenuationFactor(distance, optical_photon.GetWavelength());
     
     if (std::isnan(attenuation_factor)) {
-        std::cout << "-- Attenuation factor is null." << std::endl;
+        std::cout << "\n-- Attenuation factor is null." << std::endl;
     }
     
     if (attenuation_factor <= 0) {
-        std::cout << "-- Attenuation factor is zero or negative." << std::endl;
+        std::cout << "\n-- Attenuation factor is zero or negative." << std::endl;
     }
 
     int is_accepted = CLHEP::RandBinomial::shoot(1, attenuation_factor);
@@ -99,9 +105,7 @@ void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const Optic
 //_________________________________________________________________________________________
 double Optics::AttenuationFactor(const double distance, const double wavelength) {
     double absorption_length = MediumProperties::GetInstance()->GetAbsorptionLength();
-    double scattering_length = MediumProperties::GetInstance()->GetRayleighScatteringLength(wavelength);
-
-    double attenuation_length = 1. / (1. / absorption_length + 1. / scattering_length);
+    double attenuation_length = 1. / (1. / absorption_length);
 
     return std::exp(- distance / attenuation_length);
 }
@@ -112,8 +116,8 @@ OpticalPhoton Optics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, c
     double convert_m_per_s_to_cm_per_ns = 1e2 * 1e-9;
 
     double group_velocity = MediumProperties::GetInstance()->GetGroupVelocity(optical_photon.GetWavelength()) * convert_m_per_s_to_cm_per_ns;
-    double arrival_time = optical_photon.GetEmissionTime() + distance / group_velocity;
-    
+    double arrival_time = optical_photon.GetEmissionTime() + Propagation::SampleArrivalTime(photon_radiant, optical_photon, optical_sensor, detector_width, detector_height, detector_depth);
+
     OpticalPhoton arrival_photon = optical_photon;
     arrival_photon.SetArrivalTime(arrival_time);
 

@@ -32,6 +32,7 @@
 #include "Signal.hh"
 #include "MediumProperties.hh"
 #include "ThreadPool.hh"
+#include "Propagation.hh"
 
 class Optics {
 public:
@@ -52,6 +53,9 @@ private:
     static double AttenuationFactor(const double distance, const double wavelength);
     static void ProcessAttenuation(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_arrived);
     static ThreadPool optics_thread_pool_;
+    static double detector_width;
+    static double detector_height;
+    static double detector_depth;
 };
 
 #endif // OPTICS_HH
