@@ -121,6 +121,7 @@ public:
     }
 
     void WriteToFile(const std::string& filename) {
+        std::cout << "-- Writing histograms to file \"" << filename << "\"" << std::endl;
         TFile file(filename.c_str(), "UPDATE");
         if (!file.IsOpen()) {
             std::cerr << "-- Error opening file \"" << filename << "\"" << std::endl;
@@ -135,7 +136,8 @@ public:
     }
 
     void SaveHistograms() {
-        std::string output_filename = AnalysisManager::GetInstance()->GetOutputFilename();
+        std::string output_filename = AnalysisManager::GetInstance()->GetAnalysisResultsFilename();
+        std::cout << "-- Writing histograms to file \"" << output_filename << "\"" << std::endl;
 
         TFile file(output_filename.c_str(), "UPDATE");
         if (!file.IsOpen()) {
@@ -144,6 +146,7 @@ public:
         }
 
         for (const auto& hist : histograms_) {
+            std::cout << "-- Writing histogram \"" << hist->GetName() << "\"" << std::endl;
             hist->Write(hist->GetName(), TObject::kOverwrite);
         }
 
@@ -174,85 +177,7 @@ public:
         histograms_.clear();
     }
 
-    /*void StackHistograms(std::string hist_identifier, std::string x_axis_label, std::string y_axis_label) {
-        std::string hist_stack_name = hist_identifier + "_hist_stack";
-        THStack* hist_stack = new THStack(hist_stack_name.c_str(), hist_stack_name.c_str());
-
-        TLegend* legend = new TLegend(0.2, 0.8, 0.5, 0.4);
-        legend->SetTextSize(0.03);
-
-        static int color_index = 0; 
-        std::vector<int> colors = {kRed, kBlue, kGreen, kYellow, kMagenta, kCyan, kOrange, kViolet, kPink, kTeal, kAzure, kSpring, kGray};
-        int n_colors = colors.size();
-
-        std::vector<std::pair<double, std::unique_ptr<HistType>>> hist_vec;
-
-        for (const auto& hist : histograms_) {
-            std::string hist_name = hist->GetName();
-            if (hist_name.find(hist_identifier) != std::string::npos) {
-                if constexpr (std::is_same_v<HistType, TH1F>) {
-                    std::string suffix = "_hist";
-                    std::string prefix = "cascade_level_";
-                    size_t suffix_pos = hist_name.rfind(suffix);
-                    size_t prefix_pos = hist_name.rfind(prefix);
-                    if (suffix_pos != std::string::npos && prefix_pos != std::string::npos) {
-                        std::string state_num_str = hist_name.substr(prefix_pos + prefix.size(), suffix_pos - prefix_pos - prefix.size());
-                        double state_num = std::stod(state_num_str);
-
-                        hist_vec.emplace_back(state_num, std::move(hist));
-                    }
-                }
-            }
-        }
-
-        std::sort(hist_vec.begin(), hist_vec.end());
-
-        for (const auto& hist_pair : hist_vec) {
-            auto& hist = hist_pair.second;
-            hist->SetLineColor(colors[color_index % n_colors]);
-            hist->SetFillColor(colors[color_index % n_colors]);
-            hist_stack->Add(hist.get());
-
-            double state_num = hist_pair.first;
-            std::string legend_label = "State " + std::to_string(state_num) + " MeV";
-            legend->AddEntry(hist.get(), legend_label.c_str());
-
-            color_index++;
-        }
-
-        TCanvas* canvas = new TCanvas(hist_stack_name.c_str(), hist_stack_name.c_str(), 1800, 1800);
-        canvas->SetLeftMargin(0.15);
-        canvas->SetBottomMargin(0.15);
-        canvas->SetGrid();
-
-        hist_stack->SetTitle("");
-        hist_stack->Draw("hist");
-        hist_stack->GetXaxis()->SetTitle(x_axis_label.c_str());
-        hist_stack->GetYaxis()->SetTitle(y_axis_label.c_str());
-        hist_stack->GetXaxis()->SetTitleSize(0.05);
-        hist_stack->GetYaxis()->SetTitleSize(0.05);
-        hist_stack->GetXaxis()->SetLabelSize(0.04);
-        hist_stack->GetYaxis()->SetLabelSize(0.04);
-        hist_stack->GetXaxis()->SetTitleOffset(1.2);
-        hist_stack->GetYaxis()->SetTitleOffset(1.2);
-        hist_stack->SetMinimum(0);
-
-        legend->SetX1NDC(0.1);
-        legend->SetY1NDC(0.4);
-        legend->SetX2NDC(0.5);
-        legend->SetY2NDC(0.95);
-        legend->Draw();
-
-        std::string output_image_filename = hist_identifier + ".png";
-        canvas->SaveAs(output_image_filename.c_str());
-
-        delete canvas;
-        delete hist_stack;
-        delete legend;
-    }*/
-
     void StackHistograms(std::string hist_identifier, std::string x_axis_label, std::string y_axis_label) {
-        //gStyle->SetPalette(kDeepSea);
         std::string hist_stack_name = hist_identifier + "_hist_stack";
         THStack* hist_stack = new THStack(hist_stack_name.c_str(), hist_stack_name.c_str());
 
@@ -317,10 +242,6 @@ public:
         hist_stack->GetYaxis()->SetTitleOffset(0.8);
         hist_stack->SetMinimum(0);
 
-        /*legend->SetX1NDC(0.1);
-        legend->SetY1NDC(0.2);
-        legend->SetX2NDC(0.5);
-        legend->SetY2NDC(0.95);*/
         legend->Draw();
 
         std::string output_image_filename = hist_stack_name + ".png";

@@ -7,33 +7,42 @@ EventAction::~EventAction() {}
 void EventAction::BeginOfEventAction(const G4Event* event) {}
 //_________________________________________________________________________________________
 void EventAction::EndOfEventAction(const G4Event* event) {
-    auto signal = Signal::GetInstance();
-    Optics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+    AnalysisManager* analysis_manager = AnalysisManager::GetInstance();
 
-    //this->RunAnalysis(event, signal);
-    signal->DeleteSignal(); 
-    this->RecordHit(event);
+    if(analysis_manager->IsHitsEnabled()){
+        this->RecordHit(event);
+    }
+
+    Signal* signal = Signal::GetInstance(); Optics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
+    this->RunAnalysis(event, signal);
+    
+    this->UpdateProgressBar(event);
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
-    this->UpdateProgressBar(event);
+    signal->DeleteSignal(); 
 }
 //_________________________________________________________________________________________
 void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
-    //pulse_shape_->EventAnalysis(signal);
-    calorimetry_->EventAnalysis(signal);
-    //coverage_->EventAnalysis(signal);
-    //scintillation_collection_->EventAnalysis(signal);
-    //ionisation_collection_->EventAnalysis(signal);
-    //geometric_acceptance_->EventAnalysis(signal);
+    AnalysisManager* analysis_manager = AnalysisManager::GetInstance();
+    if(analysis_manager->IsCalorimetryEnabled()){
+        calorimetry_->EventAnalysis(signal);
+    } 
+    
+    if(analysis_manager->IsPulseShapeEnabled()){
+        pulse_shape_->EventAnalysis(signal);
+    } 
 
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     if (event->GetEventID() == events_to_generate - 1) {
-        //pulse_shape_->RunAnalysis();
-        calorimetry_->RunAnalysis();
-        //coverage_->RunAnalysis();
-        //scintillation_collection_->RunAnalysis();
-        //ionisation_collection_->RunAnalysis();
-        //geometric_acceptance_->RunAnalysis();
+        if(analysis_manager->IsCalorimetryEnabled()){
+            std::cout << "Running calorimetry analysis..." << std::endl;
+            calorimetry_->RunAnalysis();
+        } 
+        
+        if(analysis_manager->IsPulseShapeEnabled()){
+            std::cout << "Running pulse shape analysis..." << std::endl;
+            pulse_shape_->RunAnalysis();
+        } 
     }
 }
 //_________________________________________________________________________________________
@@ -73,7 +82,7 @@ void EventAction::UpdateProgressBar(const G4Event* event) {
 }
 //_________________________________________________________________________________________
 void EventAction::RecordHit(const G4Event* event) {
-    TruthManager * truth_manager = TruthManager::GetInstance();
+    TruthManager* truth_manager = TruthManager::GetInstance();
     auto const particle_map = truth_manager->GetParticleMap();
 
     double energy_deposited = 0.;
@@ -87,7 +96,7 @@ void EventAction::RecordHit(const G4Event* event) {
         G4cout << "Event " << event->GetEventID() << "..." << G4endl;
     }
 
-    HitDataHandler * hit_data_handler = HitDataHandler::GetInstance();
+    HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
     hit_data_handler->SetEvent(event->GetEventID());
 
     for (auto const& particle : truth_manager->GetInitialGeneratorParticles()) {

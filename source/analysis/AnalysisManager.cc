@@ -2,21 +2,46 @@
 //_________________________________________________________________________________________
 AnalysisManager* AnalysisManager::instance_ = nullptr;
 //_________________________________________________________________________________________
-AnalysisManager::AnalysisManager() {}
+AnalysisManager::AnalysisManager(AnalysisMessenger* analysis_messenger) : 
+analysis_messenger_(analysis_messenger) {
+    if (!instance_) {
+        instance_ = this;
+    } 
+}
 //_________________________________________________________________________________________
 AnalysisManager::~AnalysisManager() {}
 //_________________________________________________________________________________________
 AnalysisManager* AnalysisManager::GetInstance() {
     if (instance_ == nullptr) {
-        instance_ = new AnalysisManager();
+        instance_ = new AnalysisManager(new AnalysisMessenger());
     }
     return instance_;
 }
 //_________________________________________________________________________________________
-void AnalysisManager::SetOutputFilename(std::string output_filename) {
-    this->output_filename = output_filename;
+void AnalysisManager::SetOutputFilename(std::string filename) {
+    this->output_filename_ = filename;
 }
 //_________________________________________________________________________________________
 std::string AnalysisManager::GetOutputFilename() const {
-    return output_filename;
+    return output_filename_;
+}
+//_________________________________________________________________________________________
+void AnalysisManager::SetAnalysisResultsFilename(std::string filename) {
+    this->analysis_filename_ = filename;
+}
+//_________________________________________________________________________________________
+std::string AnalysisManager::GetAnalysisResultsFilename() const {
+   return analysis_filename_;
+}
+//_________________________________________________________________________________________
+bool AnalysisManager::IsHitsEnabled() const {
+    return analysis_messenger_->GetHitsEnabled();
+}
+//_________________________________________________________________________________________
+bool AnalysisManager::IsCalorimetryEnabled() const {
+    return analysis_messenger_->GetCalorimetryEnabled();
+}
+//_________________________________________________________________________________________
+bool AnalysisManager::IsPulseShapeEnabled() const {
+    return analysis_messenger_->GetPulseShapeEnabled();
 }

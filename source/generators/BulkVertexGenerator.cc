@@ -16,8 +16,6 @@ void BulkVertexGenerator::ShootVertex(G4ThreeVector& vertex) {
     double y_pos = CLHEP::RandFlat::shoot(-detector_height_/2, detector_height_/2);
     double z_pos = CLHEP::RandFlat::shoot(-detector_depth_/2, detector_depth_/2);
 
-    //x_pos = 0; y_pos = 0; z_pos = 0;
-
     vertex.setX(x_pos);
     vertex.setY(y_pos);
     vertex.setZ(z_pos);

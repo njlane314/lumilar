@@ -1,7 +1,6 @@
 #include "PhysicsList.hh"
 //_________________________________________________________________________________________
 PhysicsList::PhysicsList() {
-
 	G4StepLimiterPhysics* step_limit_phys = new G4StepLimiterPhysics();
 	step_limit_phys->SetApplyToAll(true);
 	RegisterPhysics(step_limit_phys);

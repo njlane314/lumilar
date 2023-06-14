@@ -18,19 +18,29 @@
 #define ANALYSIS_MANAGER_HH
 
 #include <string>
+#include "AnalysisMessenger.hh"
 
 class AnalysisManager {
 public:
-    AnalysisManager();
+    AnalysisManager(AnalysisMessenger* analysis_messenger);
     ~AnalysisManager();
 
     static AnalysisManager* GetInstance();
-    void SetOutputFilename(std::string output_filename);
+    void SetOutputFilename(std::string filename);
     std::string GetOutputFilename() const;
+    void SetAnalysisResultsFilename(std::string filename);
+    std::string GetAnalysisResultsFilename() const;
+
+    bool IsHitsEnabled() const;
+    bool IsCalorimetryEnabled() const;
+    bool IsPulseShapeEnabled() const;
 
 private:
     static AnalysisManager* instance_;
-    std::string output_filename;
+    std::string output_filename_;
+    std::string analysis_filename_;
+
+    AnalysisMessenger* analysis_messenger_;
 };
 
 #endif // ANALYSIS_MANAGER_HH

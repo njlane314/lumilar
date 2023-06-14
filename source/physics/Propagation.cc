@@ -6,9 +6,9 @@ Propagation::~Propagation() {}
 //_________________________________________________________________________________________
 double Propagation::SampleArrivalTime(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor, const double detector_width, const double detector_height, const double detector_depth) {
     std::vector<double> t_values;
-    double t_start = 10.0;
-    double t_end = 500.0;
-    double t_step = 10.0;
+    double t_start = 1.0;
+    double t_end = 1000.0;
+    double t_step = 1.0;
     int num_steps = std::floor((t_end - t_start) / t_step);
     
     for (int i = 0; i <= num_steps; i++) {

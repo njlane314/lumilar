@@ -9,7 +9,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track) {
     if (process != nullptr) {
         auto process_name = process->GetProcessName();
        
-        if (process_name == "eIoni" || process_name == "hIoni" || process_name == "muIoni" || process_name == "ionIoni") {
+        if (process_name == "eIoni") {
             const_cast<G4Track*>(track)->SetTrackStatus(fStopAndKill);
         }
     } 
@@ -44,7 +44,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track) {
     );
 
     if (track->GetParentID() > 0) {
-        Particle * parent_particle = truth_manager->GetParticle(track->GetParentID());
+        Particle* parent_particle = truth_manager->GetParticle(track->GetParentID());
         parent_particle->AddDaughter(track->GetTrackID());
     }
 
@@ -52,6 +52,6 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track) {
 }
 //_________________________________________________________________________________________
 void TrackingAction::PostUserTrackingAction(const G4Track* track) {
-    TruthManager * truth_manager = TruthManager::GetInstance();
-    Particle * particle = truth_manager->GetParticle(track->GetTrackID());
+    TruthManager* truth_manager = TruthManager::GetInstance();
+    Particle* particle = truth_manager->GetParticle(track->GetTrackID());
 }

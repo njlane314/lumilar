@@ -11,3 +11,7 @@
 /detector/step 1 # mm
 
 /detector/instruments detector/placements/dune_hd_placements.txt
+
+/analysis/hits true
+/analysis/calorimetry true
+/analysis/pulseshape true

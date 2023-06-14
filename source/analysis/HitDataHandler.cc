@@ -15,6 +15,7 @@ HitDataHandler* HitDataHandler::GetInstance() {
 //_________________________________________________________________________________________
 void HitDataHandler::Book() {
     std::string tfile_name = AnalysisManager::GetInstance()->GetOutputFilename();
+    std::cout << "-- Opening file: " << tfile_name << std::endl;
     tfile_ = new TFile(tfile_name.c_str(), "UPDATE");
 
     metadata_ = new TTree("metadata", "metadata");
@@ -96,6 +97,7 @@ void HitDataHandler::Save() {
     tfile_->cd();
     metadata_->Write();
     event_tree_->Write();
+    
     tfile_->Close();
 }
 //______________________________________________________________________________
