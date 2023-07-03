@@ -91,12 +91,25 @@ void HitDataHandler::Book() {
     event_tree_->Branch("hit_energy_deposit", &hit_energy_deposit_);
     event_tree_->Branch("hit_length",         &hit_length_);
     event_tree_->Branch("hit_process_key",    &hit_process_key_);
+
+    detector_tree_ = new TTree("detector_tree_", "detector tree");
+    detector_tree_->Branch("primary_energy", &primary_energy_);
+    detector_tree_->Branch("total_optical_photons", &total_optical_photons_);
+    detector_tree_->Branch("total_thermal_electrons", &total_thermal_electrons_);
+    detector_tree_->Branch("arrival_time_light", &total_photon_arrival_times_);
+    detector_tree_->Branch("total_charge_yield", &total_charge_yield_);
+    detector_tree_->Branch("total_light_yield", &total_light_yield_);
+
+    cascade_level_tree_ = new TTree("cascade_level_tree_", "cascade level tree");
+    cascade_level_tree_->Branch("cascade_levels", &cascade_levels_);
 }
 //______________________________________________________________________________
 void HitDataHandler::Save() {
     tfile_->cd();
     metadata_->Write();
     event_tree_->Write();
+    detector_tree_->Write();
+    cascade_level_tree_->Write();
     
     tfile_->Close();
 }
@@ -167,10 +180,22 @@ void HitDataHandler::EventReset() {
     hit_energy_deposit_.clear();
     hit_length_.clear();
     hit_process_key_.clear();
+
+    total_optical_photons_ = 0;
+    total_thermal_electrons_ = 0;
+    total_photon_arrival_times_.clear();
+    total_charge_yield_ = 0;
+    total_light_yield_ = 0;
+
+    cascade_levels_.clear();
+
+    primary_energy_ = 0;
 }
 //______________________________________________________________________________
 void HitDataHandler::EventFill() {
     event_tree_->Fill();
+    detector_tree_->Fill();
+    cascade_level_tree_->Fill();
 }
 //______________________________________________________________________________
 void HitDataHandler::SetRun(const int value) {
@@ -297,7 +322,35 @@ int HitDataHandler::ProcessToKey(const std::string& process) {
     else if (process.compare("RadioactiveDecay")     == 0) key = 21;
     else if (process.compare("")                     == 0) key = 22;
     else if (process.compare("StepLimiter")          == 0) key = 23;
+    else if (process.compare("nKiller")              == 0) key = 24;
     else { std::cout << "Uncategorized process: " << process << std::endl; }
 
     return key;
+}
+//______________________________________________________________________________
+void HitDataHandler::AddDetectorResponse(const Signal* signal) {
+    primary_energy_ = signal->GetPrimaryEnergy();
+
+    total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
+    total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
+
+    auto visible_deposits_vec = signal->GetVisibleDeposits();
+    double total_energy_dep = 0.;
+    for (auto visible_deposit : visible_deposits_vec) {
+        total_energy_dep += visible_deposit;
+    }
+
+    total_charge_yield_ = (double)total_thermal_electrons_ / primary_energy_;
+    total_light_yield_ = (double)total_optical_photons_ / primary_energy_;
+
+    /*const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    for (const auto& sensor : optical_sensors) {
+        total_photon_arrival_times_.push_back(sensor->GetPhotonTimes());
+    }*/
+}
+//______________________________________________________________________________
+void HitDataHandler::AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels) {
+    for (const auto& level : cascade_levels) {
+        cascade_levels_.push_back(level->energy());
+    }
 }

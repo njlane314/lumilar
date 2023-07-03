@@ -12,6 +12,6 @@
 
 /detector/instruments detector/placements/dune_hd_placements.txt
 
-/analysis/hits true
-/analysis/calorimetry true
+/analysis/hits false
+/analysis/calorimetry false
 /analysis/pulseshape true

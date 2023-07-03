@@ -4,6 +4,11 @@
 #include "GeneratorParticle.hh"
 #include "Particle.hh"
 #include "AnalysisManager.hh"
+#include "Signal.hh"
+#include "OpticalSensor.hh"
+#include "InstrumentConstruction.hh"
+
+#include "marley/Event.hh"
 
 #include "globals.hh"
 
@@ -40,6 +45,10 @@ public:
     inline void AddProcess(const std::string& process) { process_names_.insert(process); }
     inline std::set<std::string> GetProcessNames() const { return process_names_; }
 
+    void AddDetectorResponse(const Signal* signal);
+
+    void AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels);
+
     static HitDataHandler* GetInstance();
 
 private:
@@ -50,6 +59,8 @@ private:
     TFile* tfile_;
     TTree* metadata_;
     TTree* event_tree_;
+    TTree* detector_tree_;
+    TTree* cascade_level_tree_;
 
     double detector_length_x_;
     double detector_length_y_;
@@ -123,6 +134,15 @@ private:
     std::vector<int> generator_final_particle_pdg_code_;
     std::vector<double> generator_final_particle_mass_;
     std::vector<double> generator_final_particle_charge_;
+
+    double primary_energy_;
+    int total_optical_photons_;
+    int total_thermal_electrons_;
+    std::vector<std::vector<double>> total_photon_arrival_times_;
+    double total_charge_yield_;
+    double total_light_yield_;
+
+    std::vector<double> cascade_levels_;
 };
 
 #endif // HIT_DATA_HANDLER_HH

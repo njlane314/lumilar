@@ -13,8 +13,11 @@ void EventAction::EndOfEventAction(const G4Event* event) {
         this->RecordHit(event);
     }
 
-    Signal* signal = Signal::GetInstance(); Optics::CalculateOpticalSignal(signal, InstrumentConstruction::GetInstance()->GetOpticalSensors());
-    this->RunAnalysis(event, signal);
+    Signal* signal = Signal::GetInstance(); 
+    Optics::CalculateOpticalSignal(signal, &InstrumentConstruction::GetInstance()->GetOpticalSensors());
+
+    HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
+    hit_data_handler->AddDetectorResponse(signal);
     
     this->UpdateProgressBar(event);
 
@@ -28,6 +31,7 @@ void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
         calorimetry_->EventAnalysis(signal);
     } 
     
+    std::cout << "Event ID: " << event->GetEventID() << std::endl;
     if(analysis_manager->IsPulseShapeEnabled()){
         pulse_shape_->EventAnalysis(signal);
     } 

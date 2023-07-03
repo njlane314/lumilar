@@ -13,13 +13,13 @@
     source: {
         type: "histogram",
         neutrino: "ve",
-        E_bin_lefts: [ 0., 10., ],   // Low edges of energy bins (MeV)
-        weights: [ 0.5, 0.5 ],       // Bin weights (dimensionless)
+        E_bin_lefts: [ 0.],   // Low edges of energy bins (MeV)
+        weights: [ 1. ],       // Bin weights (dimensionless)
         Emax: 20.,                        // Upper edge of the final bin (MeV)
     },
   
     // Incident neutrino direction 3-vector
-    direction: { x: 0.0, y: 0.0, z: 1.0 },
+    direction: "isotropic",
 
     log: [ { file: "stdout", level: "disabled" } ],
   }

@@ -2,24 +2,23 @@
 - [x] Change name to lumiLAr
 - [x] Add lArXe to detector config file to avoid recompiling each time
 - [x] Multithread AnalyticalOptics::CalculateOpticalSignal
-- [] Simplify recombination model
+- [x] Simplify recombination model
 - [] Add nuclear quenching of alpha particles
-- [] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
+- [x] Add asset directory, and build directory; i.e. modify CMakeLists.txt for easier install
 - [] Optimise lArXe scintillation profile sampling through parameterisation
 - [x] Add bxdecay0 background generator
 - [x] Implement random vertex module for marley events
-- [] Add supernova neutrino events
+- [x] Add supernova neutrino events
 - [x] Guard against deposits outside world volume
 - [] Implement raw variable branches output
 - [x] Reimplement medium properties instantiation
 - [x] Add Rayleigh scattering approximation
 - [] Add reflective foils at the cathode plane
-- [] Add FD opdet placement files to be read
+- [x] Add FD opdet placement files to be read
 - [x] Bulk vertex generator 
-- [] Unique vertex generator
+- [x] Unique vertex generator
 - [] Radiological background macro file
 - [] Create bash script to merge background files
-- [] Set electric field 
 - [] Genie generator interface
 - [] Nucleon decays
 - [] Add nitrogen quenching effects on pulse shape : https://arxiv.org/pdf/2009.06238.pdf

@@ -9,7 +9,7 @@ double Optics::detector_width = 0.0;
 double Optics::detector_height = 0.0;
 double Optics::detector_depth = 0.0;
 //_________________________________________________________________________________________
-void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector& optical_sensors) {
+void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVector* optical_sensors) {
     auto start_time = std::chrono::high_resolution_clock::now();
     bool debug_true = true;
 
@@ -22,8 +22,8 @@ void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVec
     detector_construction->GetDetectorDimensions(detector_width, detector_height, detector_depth);
 
     std::vector<std::future<void>> results;
-    std::vector<std::pair<PhotonRadiant, int>> radiant_count_pairs = CreateRadiantCountPairs(signal);
-    for (const auto& radiant_count_pair : radiant_count_pairs) {
+    std::vector<std::pair<PhotonRadiant, int>>* radiant_count_pair_vector = new std::vector<std::pair<PhotonRadiant, int>>(CreateRadiantCountPairVector(signal));
+    for (const auto& radiant_count_pair : *radiant_count_pair_vector) {
         results.emplace_back(
             optics_thread_pool_.enqueue([&](){
                 ProcessRadiant(radiant_count_pair, optical_sensors, total_photons, photons_geometrically_expected, photons_collected, expected_geometric_acceptance);
@@ -40,8 +40,8 @@ void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVec
     }
 }
 //_________________________________________________________________________________________
-std::vector<std::pair<PhotonRadiant, int>> Optics::CreateRadiantCountPairs(const Signal* signal) {
-    std::vector<int> radiant_count_vector = signal->GetScintillation()->GetRadiantSizes();
+std::vector<std::pair<PhotonRadiant, int>> Optics::CreateRadiantCountPairVector(const Signal* signal) {
+    std::vector<int> radiant_count_vector = signal->GetScintillation()->GetRadiantCounts();
     std::vector<PhotonRadiant> photon_radiants = signal->GetScintillation()->GetPhotonRadiants();
     assert(radiant_count_vector.size() == photon_radiants.size());
 
@@ -53,38 +53,38 @@ std::vector<std::pair<PhotonRadiant, int>> Optics::CreateRadiantCountPairs(const
     return radiant_count_pairs;
 }
 //_________________________________________________________________________________________
-void Optics::ProcessRadiant(const std::pair<PhotonRadiant, int>& radiant_count_pair, const OpticalSensorVector& optical_sensors, int& total_photons, int& photons_geometrically_expected, int& photons_collected, double& expected_geometric_acceptance) {
-    PhotonRadiant radiant_copy = radiant_count_pair.first;
-    int a_radiant_count = radiant_count_pair.second;
+void Optics::ProcessRadiant(const std::pair<PhotonRadiant, int> radiant_count_pair, const OpticalSensorVector* optical_sensor_vector, int& total_photons, int& photons_geometrically_expected, int& photons_collected, double& expected_geometric_acceptance) {
+    auto radiant_copy = radiant_count_pair.first;
+    int radiant_count = radiant_count_pair.second;
 
     double total_geometric_quenching_factor = 0;
     std::vector<OpticalPhoton> photons_copy;
-    for (const auto& a_optical_sensor : optical_sensors) {
-        Eigen::Vector3d separation = (a_optical_sensor->GetPosition() - (radiant_copy.position));
+    for (const auto& optical_sensor : *optical_sensor_vector) {
+        Eigen::Vector3d separation = (optical_sensor->GetPosition() - (radiant_copy.GetPosition()));
         double distance = separation.norm();
         
-        double geometric_quenching_factor = Optics::GeometricQuenching(&radiant_copy, a_optical_sensor.get(), &separation);                
-        int num_photons_geometrically_expected = CLHEP::RandBinomial::shoot(a_radiant_count, geometric_quenching_factor);
+        double geometric_quenching_factor = Optics::GeometricQuenching(&radiant_copy, optical_sensor.get(), &separation);                
+        int num_photons_geometrically_expected = CLHEP::RandBinomial::shoot(radiant_count, geometric_quenching_factor);
         photons_geometrically_expected += num_photons_geometrically_expected;
         if (num_photons_geometrically_expected >= 1) {
             photons_copy.clear();
-            photons_copy = radiant_copy.photons;
+            photons_copy = radiant_copy.GetOpticalPhotons();
             for (int photon_idx = 0; photon_idx < num_photons_geometrically_expected; photon_idx++) {
                 if (!photons_copy.empty()) {
                     OpticalPhoton selected_photon = photons_copy[0];
-                    ProcessAttenuation(radiant_copy, selected_photon, *a_optical_sensor, distance, photons_collected);
+                    ProcessAttenuation(radiant_copy, separation, selected_photon, *optical_sensor, distance, photons_collected);
                     photons_copy.erase(photons_copy.begin());
                 } else {
                     std::cout << "-- Optics::ProcessRadiant: photons_copy is empty" << std::endl;
                 }
             }
-            radiant_copy.photons = photons_copy;
+            radiant_copy.SetOpticalPhotons(photons_copy);
         } 
-        expected_geometric_acceptance += geometric_quenching_factor * ((double)a_radiant_count / (double)total_photons);
+        expected_geometric_acceptance += geometric_quenching_factor * ((double)radiant_count / (double)total_photons);
     }
 }
 //_________________________________________________________________________________________
-void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_collected) {
+void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, Eigen::Vector3d separation, const OpticalPhoton& optical_photon, const OpticalSensor& optical_sensor, const double distance, int& photons_collected) {
     double attenuation_factor = AttenuationFactor(distance, optical_photon.GetWavelength());
     
     if (std::isnan(attenuation_factor)) {
@@ -97,7 +97,7 @@ void Optics::ProcessAttenuation(const PhotonRadiant& photon_radiant, const Optic
 
     int is_accepted = CLHEP::RandBinomial::shoot(1, attenuation_factor);
     if (is_accepted == 1) {
-        OpticalPhoton arrival_photon = CreateArrivalPhoton(&photon_radiant, optical_photon, &optical_sensor);
+        OpticalPhoton arrival_photon = CreateArrivalPhoton(photon_radiant, separation, optical_photon, &optical_sensor);
         const_cast<OpticalSensor&>(optical_sensor).AddPhoton(arrival_photon);
         photons_collected++;
     }
@@ -110,8 +110,7 @@ double Optics::AttenuationFactor(const double distance, const double wavelength)
     return std::exp(- distance / attenuation_length);
 }
 //_________________________________________________________________________________________
-OpticalPhoton Optics::CreateArrivalPhoton(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
-    Eigen::Vector3d separation = (optical_sensor->GetPosition() - (photon_radiant->position));
+OpticalPhoton Optics::CreateArrivalPhoton(const PhotonRadiant& photon_radiant, Eigen::Vector3d separation, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor) {
     double distance = separation.norm();
     double convert_m_per_s_to_cm_per_ns = 1e2 * 1e-9;
 
@@ -238,12 +237,12 @@ void Optics::PrintDebug(double expected_geometric_acceptance, int photons_geomet
     std::cout << std::setw((line.length() - subheader.length()) / 2) << std::setfill(' ') << std::right << "" << subheader << std::setw((line.length() - subheader.length()) / 2) << std::setfill(' ') << std::left << std::endl;
     std::cout << line << std::endl;
     
-    std::cout << std::setw(60) << std::left << "Expected Geometric Acceptance: " << std::fixed << std::setprecision(5) << expected_geometric_acceptance * 100 << "%" << std::endl;
-    std::cout << std::setw(60) << std::left << "Photons Geometrically Expected: " << photons_geometrically_expected << std::endl;
-    std::cout << std::setw(60) << std::left << "Photons Collected: " << photons_collected << std::endl;
-    std::cout << std::setw(60) << std::left << "Photons Total: " << signal->GetScintillation()->GetTotalPhotonCount() << std::endl;
-    std::cout << std::setw(60) << std::left << "Detection Efficiency: " << std::fixed << std::setprecision(5) << (double)photons_collected / (double)signal->GetScintillation()->GetTotalPhotonCount() * 100 << "%" << std::endl;
-    std::cout << std::setw(60) << std::left << "Elapsed Time: " << elapsed_time.count() << " ms" << std::endl;
+    std::cout << std::setw(60) << std::left << "Expected Geometrical Acceptance: " << std::fixed << std::setprecision(5) << expected_geometric_acceptance * 100 << "%" << std::endl;
+    std::cout << std::setw(60) << std::left << "Photons Geometrically Predicted: " << photons_geometrically_expected << std::endl;
+    std::cout << std::setw(60) << std::left << "Photons Statistically Collected: " << photons_collected << std::endl;
+    std::cout << std::setw(60) << std::left << "Total Emission Photons: " << signal->GetScintillation()->GetTotalPhotonCount() << std::endl;
+    std::cout << std::setw(60) << std::left << "Optical Detection Efficiency: " << std::fixed << std::setprecision(5) << (double)photons_collected / (double)signal->GetScintillation()->GetTotalPhotonCount() * 100 << "%" << std::endl;
+    std::cout << std::setw(60) << std::left << "System Elapsed Time: " << elapsed_time.count() << " ms" << std::endl;
     
     std::cout << line << std::endl << std::endl;
 }

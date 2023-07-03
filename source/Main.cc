@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
     AnalysisManager* analysis_manager = new AnalysisManager(new AnalysisMessenger());
 
     analysis_manager->SetOutputFilename(output_filename);
-    analysis_manager->SetAnalysisResultsFilename(analysis_filename);
+    analysis_manager->SetAnalysisFilename(analysis_filename);
 
     std::cout << "-- Initialisation complete!" << std::endl;
 

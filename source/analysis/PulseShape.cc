@@ -7,9 +7,9 @@ AnalysisResults<TH2F> PulseShape::TH2F_run_plots_;
 void PulseShape::EventAnalysis(const Signal* signal){
     int evt_id = CLHEP::RandFlat::shootInt(1000);
     PlotEmissionTimes(signal, evt_id);
-    //PlotAmplitudeRatio(signal, evt_id);
+    PlotAmplitudeRatio(signal, evt_id);
     PlotArrivalTimes(evt_id);
-    //PlotWavelengths(signal, evt_id);
+    PlotWavelengths(signal, evt_id);
 } 
 //_________________________________________________________________________________________
 void PulseShape::RunAnalysis() {
@@ -69,6 +69,22 @@ void PulseShape::PlotArrivalTimes(int evt_id) {
         }
     }
 
+    std::stringstream auto_corr_hist_name;
+    auto_corr_hist_name << "evt" << std::setfill('0') << std::setw(3) << evt_id << "_arrival_auto_correlation";
+
+    TProfile_evt_plots_.CreateHistogram(auto_corr_hist_name.str(), "Lag Time [ns]", "Auto-correlation", 2 * n_bins, -x_max, x_max);
+    auto auto_corr_hist = TProfile_evt_plots_.GetHistogram(auto_corr_hist_name.str());
+    for (int t_lag = -x_max; t_lag < x_max; t_lag += time_res) {
+        double auto_corr = 0.;
+        for (int bin = 1; bin <= n_bins; bin++) {
+            if (bin * time_res + t_lag >= x_min && bin * time_res + t_lag < x_max) {
+                auto_corr += evt_hist->GetBinContent(bin) * evt_hist->GetBinContent(bin + t_lag / time_res);
+            }
+        }
+        auto_corr_hist->Fill(t_lag, auto_corr);
+    }
+
+    TProfile_evt_plots_.SaveHistograms();
     TH1F_evt_plots_.SaveHistograms();
 }
 //_________________________________________________________________________________________

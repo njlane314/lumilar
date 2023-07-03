@@ -17,7 +17,7 @@ public:
     Propagation();
     ~Propagation();
 
-    static double SampleArrivalTime(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor, const double detector_width, const double detetcor_height, const double detector_depth);
+    static double SampleArrivalTime(const PhotonRadiant photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor, const double detector_width, const double detetcor_height, const double detector_depth);
 
 private:
     static double FluxProbabilityDensity(double x, double x_0, double x_b, double y, double y_0, double y_b, double z, double z_0, double z_b, double t, PlaneOrientation plane_orient, double wl);

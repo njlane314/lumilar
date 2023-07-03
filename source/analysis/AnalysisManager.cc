@@ -26,11 +26,11 @@ std::string AnalysisManager::GetOutputFilename() const {
     return output_filename_;
 }
 //_________________________________________________________________________________________
-void AnalysisManager::SetAnalysisResultsFilename(std::string filename) {
+void AnalysisManager::SetAnalysisFilename(std::string filename) {
     this->analysis_filename_ = filename;
 }
 //_________________________________________________________________________________________
-std::string AnalysisManager::GetAnalysisResultsFilename() const {
+std::string AnalysisManager::GetAnalysisFilename() const {
    return analysis_filename_;
 }
 //_________________________________________________________________________________________

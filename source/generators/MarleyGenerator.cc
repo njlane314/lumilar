@@ -46,6 +46,8 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     double global_time = 0.;
 
     const auto& marley_cascades = marley_event.get_cascade_levels();
+    HitDataHandler::GetInstance()->AddCascadeLevels(marley_cascades);
+
     const int marley_residue_pdg = marley_event.residue().pdg_code();
 
     int particle_idx = 0;

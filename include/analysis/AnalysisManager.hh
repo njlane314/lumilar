@@ -28,8 +28,8 @@ public:
     static AnalysisManager* GetInstance();
     void SetOutputFilename(std::string filename);
     std::string GetOutputFilename() const;
-    void SetAnalysisResultsFilename(std::string filename);
-    std::string GetAnalysisResultsFilename() const;
+    void SetAnalysisFilename(std::string filename);
+    std::string GetAnalysisFilename() const;
 
     bool IsHitsEnabled() const;
     bool IsCalorimetryEnabled() const;

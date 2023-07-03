@@ -19,14 +19,31 @@ std::pair<double, double> Recombination::ProcessRecombination(const EnergyDeposi
 }
 //_________________________________________________________________________________________
 double Recombination::ChargeRecombination(double linear_transfer, double electric_field) {
-    return BirksRecombination(linear_transfer, electric_field) + EscapeRecombination(linear_transfer, electric_field);
+    return BirksRecombination(linear_transfer, electric_field); //+ EscapeRecombination(linear_transfer, electric_field);
 }
 //_________________________________________________________________________________________
 double Recombination::BirksRecombination(double linear_transfer, double electric_field) {
-    double ARecomb = 0.800;
-    double kRecomb = 0.0486;
+    bool UseBirks = true;
+    bool UseDokeBirks = false;
 
-    return ARecomb / (1. + linear_transfer * kRecomb / electric_field);
+    if (UseBirks) {
+        double ARecomb = 0.800;
+        double kRecomb = 0.0486;
+        return ARecomb / (1. + linear_transfer * kRecomb / electric_field);
+    }
+    
+    if(UseDokeBirks) {
+        double DokeBirksA = 0.07 * pow((electric_field / 1.0e3), -0.85);
+        double DokeBirksC = 0.00;
+
+        if (electric_field == 0.0) {
+            DokeBirksA = 0.0003;
+            DokeBirksC = 0.75;
+        }
+        double DokeBirksB = DokeBirksA / (1 - DokeBirksC);
+        
+        return (DokeBirksA * linear_transfer) / (1 + DokeBirksB * linear_transfer) + DokeBirksC;
+    } 
 }
 //_________________________________________________________________________________________
 double Recombination::EscapeRecombination(double linear_transfer, double electric_field) {

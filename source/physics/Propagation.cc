@@ -4,7 +4,7 @@ Propagation::Propagation() {}
 //_________________________________________________________________________________________
 Propagation::~Propagation() {}
 //_________________________________________________________________________________________
-double Propagation::SampleArrivalTime(const PhotonRadiant* photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor, const double detector_width, const double detector_height, const double detector_depth) {
+double Propagation::SampleArrivalTime(const PhotonRadiant photon_radiant, const OpticalPhoton& optical_photon, const OpticalSensor* optical_sensor, const double detector_width, const double detector_height, const double detector_depth) {
     std::vector<double> t_values;
     double t_start = 1.0;
     double t_end = 1000.0;
@@ -20,7 +20,7 @@ double Propagation::SampleArrivalTime(const PhotonRadiant* photon_radiant, const
 
     double x_b = detector_width / 2; double y_b = detector_height / 2; double z_b = detector_depth / 2;
 
-    double x_0 = photon_radiant->position.x(); double y_0 = photon_radiant->position.y(); double z_0 = photon_radiant->position.z();
+    double x_0 = photon_radiant.GetPosition().x(); double y_0 = photon_radiant.GetPosition().y(); double z_0 = photon_radiant.GetPosition().z();
     double x_1 = optical_sensor->GetPosition().x(); double y_1 = optical_sensor->GetPosition().y(); double z_1 = optical_sensor->GetPosition().z();
     double wl = optical_photon.GetWavelength();
     PlaneOrientation plane_orient = optical_sensor->GetOrientation();
@@ -67,7 +67,7 @@ double Propagation::SampleArrivalTime(const PhotonRadiant* photon_radiant, const
 }
 //_________________________________________________________________________________________
 double Propagation::FluxProbabilityDensity(double x, double x_0, double x_b, double y, double y_0, double y_b, double z, double z_0, double z_b, double t, PlaneOrientation plane_orient, double wl) {
-    int accuracy_scale = 10;
+    int accuracy_scale = 1;
 
     double D = CalculateDiffusion(wl);
     double norm = 1.0 / pow(4 * M_PI * D * t, 3.0 / 2.0);

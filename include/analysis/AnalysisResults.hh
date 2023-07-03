@@ -136,7 +136,7 @@ public:
     }
 
     void SaveHistograms() {
-        std::string output_filename = AnalysisManager::GetInstance()->GetAnalysisResultsFilename();
+        std::string output_filename = AnalysisManager::GetInstance()->GetAnalysisFilename();
         std::cout << "-- Writing histograms to file \"" << output_filename << "\"" << std::endl;
 
         TFile file(output_filename.c_str(), "UPDATE");
