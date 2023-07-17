@@ -17,6 +17,7 @@
 #include "ActionInitialisation.hh"
 #include "AnalysisManager.hh"
 #include "AnalysisMessenger.hh"
+#include "PropagationTime.hh"
 //_________________________________________________________________________________________
 int main(int argc, char* argv[]) {
     std::cout << "\n       :::       :::    :::   :::   :::   ::::::::::: :::            :::     ::::::::: \n"
@@ -90,6 +91,9 @@ int main(int argc, char* argv[]) {
     run_manager->SetUserInitialization(new PhysicsList());
     run_manager->SetUserInitialization(new ActionInitialisation(output_filename));
     run_manager->Initialize();
+
+    PropagationTime* propagation_time = new PropagationTime();
+    propagation_time->GenerateTimeDistributions();
 
     std::cout << "-- Set output filename to " << output_filename << std::endl;
     std::cout << "-- Set analysis filename to " << analysis_filename << std::endl;

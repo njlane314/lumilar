@@ -68,5 +68,3 @@ Example usage:
 cd system
 ./lumilar -d detector/dune_tpc.mac -g generator/marley_solar.mac
 ```
-
-![End-on schematic view of active volume, showing the four drift regions](docs/end_on_schematic.png)

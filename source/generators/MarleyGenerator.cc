@@ -1,25 +1,17 @@
 #include "MarleyGenerator.hh"
 //_________________________________________________________________________________________
-AnalysisResults<TH1F> MarleyGenerator::TH1F_plots_;
-//_________________________________________________________________________________________
 MarleyGenerator::MarleyGenerator(std::string marley_json, std::string output_filename)
 : output_filename_(output_filename) {
     bulk_vertex_generator_ = new BulkVertexGenerator();
 
     // https://www.sciencedirect.com/science/article/pii/S0090375217300169 
     half_lifes_ = {
-        //{ 0.0298299*MeV, 4.25*ns },
-        //{ 0.800143*MeV, 0.26*ps },
+        { 0.0298299*MeV, 4.25*ns },
+        { 0.800143*MeV, 0.26*ps },
         { 1.64364*MeV, 0.336*us },
-        //{ 1.95907*MeV, 0.54*ps },
-        //{ 2.010368*MeV, 0.32*ps },
+        { 1.95907*MeV, 0.54*ps },
+        { 2.010368*MeV, 0.32*ps },
     };
-
-    //energy_dist_name_ = "neutrino_energy_dist";
-    //time_dist_name_ = "cascade_time_dist";
-
-    //TH1F_plots_.CreateHistogram(energy_dist_name_, "Neutrino Energy [MeV]", "Events/bin", 20, 0, 20);
-    //TH1F_plots_.CreateHistogram(time_dist_name_, "Cascade Time [ns]", "Entries/bin", 100, 1, 0);
 
     if (!marley_json.empty()) {
         std::cout << "Configuring MARLEY..." << std::endl;
@@ -34,14 +26,15 @@ MarleyGenerator::MarleyGenerator(std::string marley_json, std::string output_fil
 MarleyGenerator::~MarleyGenerator() {}
 //_________________________________________________________________________________________
 void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
+    bool marley_event_debug = false;
+
     TruthManager* truth_manager = TruthManager::GetInstance();
     marley::Event marley_event = marley_generator_.create_event();
+    if (marley_event_debug == true) {
+        PrintEvent(marley_event);
+    }
 
     auto primary_energy = marley_event.projectile().total_energy();
-    Signal::GetInstance()->RecordPrimaryEnergy(primary_energy);
-    
-    //TH1F* energy_hist = TH1F_plots_.GetHistogram(energy_dist_name_);
-    //energy_hist->Fill(primary_energy);
 
     double global_time = 0.;
 
@@ -66,26 +59,13 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
         if (particle_idx > 1 && marley_residue_pdg == 1000190400 && cascade_idx < marley_event.get_cascade_levels().size()) {
             const auto& excited_state = marley_cascades[cascade_idx]->energy();
-            
-            /*std::string cascade_level_hist_name = "cascade_level_" + std::to_string(excited_state) + "_hist";
-
-            TH1F* cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
-
-            if (cascade_level_hist == nullptr) {
-                TH1F_plots_.CreateHistogram(cascade_level_hist_name, "Neutrino energy [MeV]", "Cascade levels/MeV", 20, 0, 20);
-                cascade_level_hist = TH1F_plots_.GetHistogram(cascade_level_hist_name);
-            }
-
-            cascade_level_hist->Fill(primary_energy);*/
 
             auto iter = half_lifes_.find(excited_state);
             if (iter != half_lifes_.end()) {
                 double time_of_decay = SampleFiniteParticleTime(iter->second);
                 global_time += time_of_decay;
+
                 primary_vertex->SetT0(global_time);
-                //TH1F* time_hist = TH1F_plots_.GetHistogram(time_dist_name_);
-                //time_hist->Fill(time_of_decay);
-                Signal::GetInstance()->RecordDelayTime(time_of_decay);
             }
             cascade_idx++;
         }
@@ -101,24 +81,19 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     int event_idx = event->GetEventID();
     int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
 
-    /*(if (event_idx == events_to_generate - 1) {
-        TH1F_plots_.WriteToFile(output_filename_);
-        TH1F_plots_.StackHistograms("cascade_level", "Neutrino Energy [MeV]", "Cascade Levels/MeV");
-    }*/
-
     int initial_particle_idx = 0;
     for (const auto& ip : marley_event.get_initial_particles()) {
         G4PrimaryVertex* vertex_generator_initial_state = primary_vertices[initial_particle_idx];
         initial_particle_idx++;
 
-        GeneratorParticle * generator_particle = new GeneratorParticle();
+        GeneratorParticle* generator_particle = new GeneratorParticle();
         generator_particle->SetPDGCode (ip->pdg_code());
         generator_particle->SetMass    (ip->mass());
         generator_particle->SetCharge  (ip->charge());
-        generator_particle->SetX        (vertex_generator_initial_state->GetX0() / CLHEP::cm);
-        generator_particle->SetY        (vertex_generator_initial_state->GetY0() / CLHEP::cm);
-        generator_particle->SetZ        (vertex_generator_initial_state->GetZ0() / CLHEP::cm);
-        generator_particle->SetT         (vertex_generator_initial_state->GetT0());
+        generator_particle->SetX       (vertex_generator_initial_state->GetX0() / CLHEP::cm);
+        generator_particle->SetY       (vertex_generator_initial_state->GetY0() / CLHEP::cm);
+        generator_particle->SetZ       (vertex_generator_initial_state->GetZ0() / CLHEP::cm);
+        generator_particle->SetT       (vertex_generator_initial_state->GetT0());
         generator_particle->SetEnergy  (ip->total_energy());
 
         generator_particle->SetPx      (ip->px());
@@ -133,14 +108,14 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
         G4PrimaryVertex* vertex_final_state_particle = primary_vertices[final_particle_idx];
         final_particle_idx++;
 
-        GeneratorParticle * generator_particle = new GeneratorParticle();
+        GeneratorParticle* generator_particle = new GeneratorParticle();
         generator_particle->SetPDGCode (fp->pdg_code());
         generator_particle->SetMass    (fp->mass());
         generator_particle->SetCharge  (fp->charge());
-        generator_particle->SetX        (vertex_final_state_particle->GetX0() / CLHEP::cm);
-        generator_particle->SetY        (vertex_final_state_particle->GetY0() / CLHEP::cm);
-        generator_particle->SetZ        (vertex_final_state_particle->GetZ0() / CLHEP::cm);
-        generator_particle->SetT        (vertex_final_state_particle->GetT0());
+        generator_particle->SetX       (vertex_final_state_particle->GetX0() / CLHEP::cm);
+        generator_particle->SetY       (vertex_final_state_particle->GetY0() / CLHEP::cm);
+        generator_particle->SetZ       (vertex_final_state_particle->GetZ0() / CLHEP::cm);
+        generator_particle->SetT       (vertex_final_state_particle->GetT0());
         generator_particle->SetEnergy  (fp->total_energy());
 
         generator_particle->SetPx      (fp->px());

@@ -3,72 +3,45 @@
 Scintillation* Scintillation::instance_ = nullptr;
 //_________________________________________________________________________________________
 Scintillation::Scintillation()
-: photon_radiants_(), relaxation_generator_(Relaxation()) {}
+: photon_radiant_vector_() {}
 //_________________________________________________________________________________________
 Scintillation::~Scintillation() {}
 //_________________________________________________________________________________________
-void Scintillation::AddRadiant(const EnergyDeposit* energy_deposit, int num_optical_photons) {
-    std::vector<OpticalPhoton> optical_photons;
-    for (int i = 0; i < num_optical_photons; i++) {
-        OpticalPhoton photon = Relaxation::CreateOpticalPhoton(energy_deposit);
-        if (photon.GetEmissionTime() > 0 && photon.GetWavelength() > 0) {
-            optical_photons.push_back(photon);
-        }
-    }
+void Scintillation::CreateRadiant(const EnergyDeposit* energy_deposit, int optical_photon_count) {
+    Eigen::Vector3d radiant_position = energy_deposit->GetPosition();
+    double radiant_time = energy_deposit->GetTime();
+    int radiant_photon_count = optical_photon_count;
 
-    photon_radiants_.push_back(PhotonRadiant(energy_deposit->GetPosition(), optical_photons));
+    photon_radiant_vector_.push_back(PhotonRadiant(radiant_photon_count, radiant_time, radiant_position));
 }
 //_________________________________________________________________________________________
 std::vector<PhotonRadiant> Scintillation::GetPhotonRadiants() const {
-    return photon_radiants_;
+    return photon_radiant_vector_;
 }
 //_________________________________________________________________________________________
 std::vector<Eigen::Vector3d> Scintillation::GetRadiantPositions() const {
     std::vector<Eigen::Vector3d> radiant_positions;
-    for (const auto& photon_radiant : photon_radiants_) {
+    for (const auto& photon_radiant : photon_radiant_vector_) {
         radiant_positions.push_back(photon_radiant.GetPosition());
     }
+
     return radiant_positions;
 }
 //_________________________________________________________________________________________
 std::vector<int> Scintillation::GetRadiantCounts() const {
-    std::vector<int> radiant_counts;
-    for (const auto& photon_radiant : photon_radiants_) {
-        int photon_count = 0;
-        for (const auto& photon : photon_radiant.GetOpticalPhotons()) {
-            photon_count += 1;
-        }
-        radiant_counts.push_back(photon_count);
+    std::vector<int> radiant_count_vector;
+    for (const auto& photon_radiant : photon_radiant_vector_) {
+        radiant_count_vector.push_back(photon_radiant.GetPhotonCount());
     }
-    return radiant_counts;
+
+    return radiant_count_vector;
 }
 //_________________________________________________________________________________________
 int Scintillation::GetTotalPhotonCount() const {
     int photon_count = 0;
-    for (const auto& photon_radiant : photon_radiants_) {
-        for (const auto& photon : photon_radiant.GetOpticalPhotons()) {
-            photon_count += 1;
-        }
+    for (const auto& photon_radiant : photon_radiant_vector_) {
+        photon_count += photon_radiant.GetPhotonCount();
     }
+    
     return photon_count;
-}
-//_________________________________________________________________________________________
-std::vector<double> Scintillation::GetEmissionTimes() const {
-    std::vector<double> emission_times;
-    for (const auto& photon_radiant : photon_radiants_) {
-        for (const auto& optical_photon : photon_radiant.GetOpticalPhotons()) {
-            emission_times.push_back(optical_photon.GetEmissionTime());
-        }
-    }
-    return emission_times;
-}
-//_________________________________________________________________________________________
-std::vector<double> Scintillation::GetWavelengths() const {
-    std::vector<double> wavelengths;
-    for (const auto& photon_radiant: photon_radiants_) {
-        for (const auto& optical_photon : photon_radiant.GetOpticalPhotons()) {
-            wavelengths.push_back(optical_photon.GetWavelength());
-        }
-    }
-    return wavelengths;
 }

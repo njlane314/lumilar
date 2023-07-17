@@ -10,13 +10,15 @@
 #include "TruthManager.hh"
 #include "Particle.hh"
 
+#include "LArNEST.h"
+
 class SteppingAction : public G4UserSteppingAction {
 public:
     SteppingAction();
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
-    bool IsParticleWithinDetector(const G4Step* step);
+    bool isParticleWithinDetector(const G4Step* step);
 };
 
 #endif // STEPPING_ACTION_HH

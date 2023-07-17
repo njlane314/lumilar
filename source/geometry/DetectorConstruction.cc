@@ -7,9 +7,8 @@ DetectorConstruction::DetectorConstruction(DetectorMessenger* detector_messenger
 DetectorConstruction::~DetectorConstruction() {}
 //_________________________________________________________________________________________
 G4VPhysicalVolume* DetectorConstruction::Construct() { 
-    detector_messenger_->SetDetectorParameters(detector_name_, detector_shape_, detector_width_, detector_height_, detector_depth_, detector_step_, detector_xenon_, detector_nitrogen_, detector_optical_placements_);
+    detector_messenger_->SetDetectorParameters(detector_name_, detector_shape_, detector_width_, detector_height_, detector_depth_, detector_step_, detector_nitrogen_, detector_optical_placements_);
     std::string detector_material = "G4_lAr";
-    MediumProperties* medium_properties = new MediumProperties(detector_xenon_, detector_nitrogen_);
 
     G4Box* detector_box = new G4Box(detector_name_.c_str(), detector_width_/2., detector_height_/2., detector_depth_/2.);
     G4LogicalVolume* detector_logical = new G4LogicalVolume(detector_box, G4NistManager::Instance()->FindOrBuildMaterial(detector_material), "detector.logical");

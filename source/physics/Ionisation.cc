@@ -3,46 +3,45 @@
 Ionisation* Ionisation::instance_ = nullptr;
 //_________________________________________________________________________________________
 Ionisation::Ionisation() 
-: ionisation_(), ejection_generator_(Ejection()) {}
+: electron_cloud_vector_() {}
 //_________________________________________________________________________________________
 Ionisation::~Ionisation() {}
 //_________________________________________________________________________________________
-void Ionisation::AddCloud(const EnergyDeposit* energy_deposit, int cloud_size) {
-    ElectronCloud current_cloud = {};
+void Ionisation::CreateCloud(const EnergyDeposit* energy_deposit, int thermal_electron_count) {
+    Eigen::Vector3d cloud_position = energy_deposit->GetPosition();
+    double cloud_time = energy_deposit->GetTime();
+    int cloud_electron_count = thermal_electron_count;
 
-    current_cloud.position = energy_deposit->GetPosition();
-    for (int i = 0; i < cloud_size; i++) {
-        current_cloud.electrons.push_back(ejection_generator_.CreateThermalElectron());
-    }
-    ionisation_.push_back(current_cloud);
+    electron_cloud_vector_.push_back(ElectronCloud(cloud_electron_count, cloud_time, cloud_position));
 }
 //_________________________________________________________________________________________
-std::vector<int> Ionisation::GetCloudSizes() const {
-    std::vector<int> cloud_sizes;
-    for (const auto& a_cloud : ionisation_) {
-        int electron_count = 0;
-        for (const auto& electron : a_cloud.electrons) {
-            electron_count += 1;
-        }
-        cloud_sizes.push_back(electron_count);
-    }
-    return cloud_sizes;
-}
-//_________________________________________________________________________________________
-int Ionisation::GetTotalElectronCount() const {
-    int electron_count = 0;
-    for (const auto& a_cloud : ionisation_) {
-        for (const auto& electron : a_cloud.electrons) {
-            electron_count += 1;
-        }
-    }
-    return electron_count;
+std::vector<ElectronCloud> Ionisation::GetElectronClouds() const {
+    return electron_cloud_vector_;
 }
 //_________________________________________________________________________________________
 std::vector<Eigen::Vector3d> Ionisation::GetCloudPositions() const {
     std::vector<Eigen::Vector3d> cloud_positions;
-    for (const auto& a_cloud : ionisation_) {
-        cloud_positions.push_back(a_cloud.position);
+    for (const auto& electron_cloud : electron_cloud_vector_) {
+        cloud_positions.push_back(electron_cloud.GetPosition());
     }
+    
     return cloud_positions;
+}
+//_________________________________________________________________________________________
+std::vector<int> Ionisation::GetCloudCounts() const {
+    std::vector<int> cloud_count_vector;
+    for (const auto& electron_cloud : electron_cloud_vector_) {
+        cloud_count_vector.push_back(electron_cloud.GetElectronCount());
+    }
+
+    return cloud_count_vector;
+}
+//_________________________________________________________________________________________
+int Ionisation::GetTotalElectronCount() const {
+    int electron_count = 0;
+    for (const auto& electron_cloud : electron_cloud_vector_) {
+        electron_count += electron_cloud.GetElectronCount();
+    }
+
+    return electron_count;
 }

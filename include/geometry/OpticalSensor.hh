@@ -1,18 +1,3 @@
-//____________________________________________________________________________
-/*!
-
-\class   geometry::OpticalSensor
-
-\brief   This class represnts an optical sensor.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 11, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef OPTICAL_SENSOR_HH
 #define OPTICAL_SENSOR_HH
 
@@ -21,8 +6,6 @@
 #include <memory>
 #include <vector>
 #include <mutex>
-
-#include "OpticalPhoton.hh"
 
 enum class PlaneOrientation {
     X_POS,
@@ -95,46 +78,38 @@ public:
         }
     }
 
-    bool IsRectangular() const {
+    bool isRectangular() const {
         const OpticalSensor::Shape* shape = GetShape();
         const OpticalSensor::Rectangle* rectangleShape = dynamic_cast<const OpticalSensor::Rectangle*>(shape);
         return (rectangleShape != nullptr);
     }
 
-    void AddPhoton(const OpticalPhoton& photon) {
+    void AddArrivalTime(const double arrival_time) {
         std::lock_guard<std::mutex> lock(mutex_);
-        detected_photons_.push_back(photon);
+        arrival_times_.push_back(arrival_time);
     }
 
-    const std::vector<OpticalPhoton>& GetPhotons() const {
-        return detected_photons_;
+    const std::vector<double>& GetArrivalTimes() const {
+        return arrival_times_;
     }
 
     const int GetPhotonCount() const {
         int count = 0;
-        for (const auto& photon : detected_photons_) {
+        for (const auto& photon : arrival_times_) {
             count += 1;
         }
         return count;
     }
 
-    const std::vector<double> GetPhotonTimes() const {
-        std::vector<double> photon_times;
-        for (const auto& photon : detected_photons_) {
-            photon_times.push_back(photon.GetArrivalTime());
-        }
-        return photon_times;
-    }
-
-    void ClearPhotons() {
-        detected_photons_.clear();
+    void ResetSensor() {
+        arrival_times_.clear();
     }
 
 private:
     std::unique_ptr<Shape> shape_;
     Eigen::Vector3d position_;
     PlaneOrientation orientation_;
-    std::vector<OpticalPhoton> detected_photons_;
+    std::vector<double> arrival_times_;
     std::mutex mutex_;
 };
 

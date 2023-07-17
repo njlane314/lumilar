@@ -12,12 +12,6 @@
 #include "Optics.hh"
 #include "Signal.hh"
 
-#include "Calorimetry.hh"
-#include "PulseShape.hh"
-#include "Coverage.hh"
-#include "ScintillationCollection.hh"
-#include "IonisationCollection.hh"
-#include "GeometricAcceptance.hh"
 #include "HitDataHandler.hh"
 #include "TruthManager.hh"
 
@@ -31,16 +25,9 @@ public:
 
 private:
 	void UpdateProgressBar(const G4Event* event);
-	void RunAnalysis(const G4Event* event, const Signal* signal);
 	void RecordHit(const G4Event* event);
 
 	Signal* signal_;
-	Calorimetry* calorimetry_;
-	PulseShape* pulse_shape_;
-	Coverage* coverage_;
-	ScintillationCollection* scintillation_collection_;
-	IonisationCollection* ionisation_collection_;
-	GeometricAcceptance* geometric_acceptance_;
 };
 
 #endif // EVENT_ACTION_HH

@@ -31,9 +31,7 @@ public:
     void SetAnalysisFilename(std::string filename);
     std::string GetAnalysisFilename() const;
 
-    bool IsHitsEnabled() const;
-    bool IsCalorimetryEnabled() const;
-    bool IsPulseShapeEnabled() const;
+    bool AreHitsOutput() const;
 
 private:
     static AnalysisManager* instance_;

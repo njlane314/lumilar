@@ -2,14 +2,9 @@
 //_________________________________________________________________________________________
 Signal* Signal::instance_ = nullptr;
 //_________________________________________________________________________________________
-Signal::Signal()
-: medium_properties_(MediumProperties::GetInstance()->GetMediumProperties()) {
+Signal::Signal() {
     if (!instance_) {
         instance_ = this;
-    }
-
-    if (!medium_properties_) {
-        throw std::runtime_error("-- MediumProperties instance is null");
     }
 
     scintillation_ = std::make_unique<Scintillation>();
@@ -50,44 +45,28 @@ std::vector<EnergyDeposit>* Signal::GetHits() const {
     return track_structure_.get();
 }
 //_________________________________________________________________________________________
-std::vector<double> Signal::GetVisibleDeposits() const {
-    std::vector<double> visible_deposits;
-    for (const auto& a_deposit : *track_structure_) {
-        visible_deposits.push_back(a_deposit.GetVisibleEnergy());
+std::vector<double> Signal::GetEnergyDeposits() const {
+    std::vector<double> energy_deposits;
+    for (const auto& energy_deposit : *track_structure_) {
+        energy_deposits.push_back(energy_deposit.GetEnergy());
     }
-    return visible_deposits;
+    return energy_deposits;
 }
 //_________________________________________________________________________________________
-std::vector<double> Signal::GetLinearTransfers() const {
-    std::vector<double> linear_transfers;
-    for (const auto& a_deposit : *track_structure_) {
-        linear_transfers.push_back(a_deposit.GetLinearTransfer());
+std::vector<double> Signal::GetLinearEnergyTransfers() const {
+    std::vector<double> linear_energy_transfers;
+    for (const auto& energy_deposit : *track_structure_) {
+        linear_energy_transfers.push_back(energy_deposit.GetEnergy() / energy_deposit.GetStepLength());
     }
-    return linear_transfers;
+    return linear_energy_transfers;
 }
 //_________________________________________________________________________________________
 std::vector<double> Signal::GetLengths() const {
     std::vector<double> lengths;
-    for (const auto& a_deposit : *track_structure_) {
-        lengths.push_back(a_deposit.GetLength());
+    for (const auto& energy_deposit : *track_structure_) {
+        lengths.push_back(energy_deposit.GetStepLength());
     }
     return lengths;
-}
-//_________________________________________________________________________________________
-void Signal::RecordDelayTime(const double delay_time) {
-    delay_times_.push_back(delay_time);
-}
-//_________________________________________________________________________________________
-std::vector<double> Signal::GetDelayTimes() const {
-    return delay_times_;
-}
-//_________________________________________________________________________________________
-void Signal::RecordPrimaryEnergy(const double primary_energy) {
-    primary_energy_ = primary_energy;
-}
-//_________________________________________________________________________________________
-double Signal::GetPrimaryEnergy() const {
-    return primary_energy_;
 }
 //_________________________________________________________________________________________
 void Signal::DeleteSignal() {

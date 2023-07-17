@@ -127,7 +127,53 @@ endif()
 include_directories(${EIGEN_DIR})
 
 #----------------------------------------------------------------------------
+# check if LArNEST is already installed
+
+set(LArNEST_DIR "${MAIN_EXTERNAL_DIR}/larnest")
+set(LArNEST_BUILD_DIR "${LArNEST_DIR}/build")
+set(LArNEST_INSTALLED FALSE)
+
+Set(LArNEST_INCLUDE_DIR ${LArNEST_DIR}/include)
+set(LArNEST_LIBRARIES ${LArNEST_BUILD_DIR}/libLArNESTCore.a)
+
+include_directories(${LArNEST_INCLUDE_DIR})
+file(GLOB LArNEST_FILES "${LArNEST_DIR}/src/*")
+
+if (LArNEST_FILES)
+  message(STATUS "LArNEST is already installed at ${LArNEST_DIR}")
+  set(LArNEST_INSTALLED TRUE)
+endif()
+
 #----------------------------------------------------------------------------
+# Clone and build LArNEST if not already installed
+
+if (NOT LArNEST_INSTALLED)
+  message(STATUS "Cloning and building LArNEST...")
+
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E env git clone https://github.com/NESTCollaboration/larnest ${LArNEST_DIR}
+    WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
+  )
+
+  execute_process(
+    COMMAND mkdir build
+    WORKING_DIRECTORY ${LArNEST_DIR}
+  )
+
+  execute_process(
+    COMMAND cmake -S . -B build
+    WORKING_DIRECTORY ${LArNEST_DIR}
+  )
+
+  execute_process(
+    COMMAND cmake --build build
+    WORKING_DIRECTORY ${LArNEST_DIR}
+  )
+
+endif()
+
+include_directories(${LArNEST_INCLUDE_DIR})
+
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
@@ -172,7 +218,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
                             ${MAIN_INCLUDE_DIR}/generators
                             ${MAIN_INCLUDE_DIR}/geometry
                             ${MAIN_INCLUDE_DIR}/utilities
-		            ${BXDECAY0_DIR}/_install.d/include
+		                        ${BXDECAY0_DIR}/_install.d/include
 )
 
 target_link_libraries(${PROJECT_NAME} ${Geant4_LIBRARIES})
@@ -181,3 +227,4 @@ target_link_libraries(${PROJECT_NAME} ${CLHEP_LIBRARIES})
 
 target_link_libraries(${PROJECT_NAME} ${MARLEY} ${MARLEY_ROOT})
 target_link_libraries(${PROJECT_NAME} BxDecay0::BxDecay0 BxDecay0::BxDecay0_Geant4)
+target_link_libraries(${PROJECT_NAME} ${LArNEST_LIBRARIES})

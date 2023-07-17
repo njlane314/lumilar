@@ -1,58 +1,74 @@
-//____________________________________________________________________________
-/*!
-
-\class   physics::EnergyDeposit
-
-\brief   This class stores the energy deposited information of a particle, from 
-        a discrete step.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 11, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef ENERGY_DEPOSIT_HH
 #define ENERGY_DEPOSIT_HH
 
 #include <string>
 #include <Eigen/Dense>
 
+#include "LArParameters.h"
+
 class EnergyDeposit {
 public:
-    EnergyDeposit();
-    EnergyDeposit(double visible, double linear_transfer, const std::string particle_species, const Eigen::Vector3d position, double length, double time);
-    ~EnergyDeposit();
+    EnergyDeposit() {
+        energy_ = -1;
+        dx_ = -1;
+        species_ = larnest::LArInteraction::ER;
+        position_ = Eigen::Vector3d::Zero();
+        time_ = -1;
+    };
+    EnergyDeposit(double energy, double dx, larnest::LArInteraction species, Eigen::Vector3d position, double time) {
+        energy_ = energy;
+        dx_ = dx;
+        species_ = species;
+        position_ = position; 
+        time_ = time;
+    }
+    ~EnergyDeposit() {};
 
-    double GetVisibleEnergy() const;
-    void SetVisibleEnergy(double value);
+    double GetEnergy() const {
+        return energy_;
+    };
+    void SetEnergy(double value) {
+        energy_ = value;
+    };
 
-    double GetLinearTransfer() const;
-    void SetLinearTransfer(double value);
+    larnest::LArInteraction GetInteractionSpecies() const {
+        return species_;
+    }; 
+    void SetInteractionSpecies(const larnest::LArInteraction value) {
+        species_ = value;
+    };
 
-    std::string GetParticleSpecies() const;
-    void SetParticleSpecies(const std::string value);
+    Eigen::Vector3d GetPosition() const {
+        return position_;
+    };
+    void SetPosition(const Eigen::Vector3d value) {
+        position_ = value;
+    };
 
-    Eigen::Vector3d GetPosition() const;
-    void SetPosition(const Eigen::Vector3d value);
+    double GetStepLength() const {
+        return dx_;
+    };
+    void SetStepLength(double value) {
+        dx_ = value;
+    };
 
-    double GetLength() const;
-    void SetLength(double value);
+    double GetTime() const {
+        return time_;
+    };
+    void SetTime(double value) {
+        time_ = value;
+    };
 
-    double GetTime() const;
-    void SetTime(double value);
-
-    bool IsEmpty() const;
+    bool isEmpty() const {
+        return energy_ <= 0 || dx_ <= 0 || time_ <= 0;
+    };
 
 private:
-    double visible;
-    double linear_transfer;
-    std::string particle_species;
-    Eigen::Vector3d position;
-    double length;
-    double time;
+    double energy_;
+    double dx_;
+    larnest::LArInteraction species_;
+    Eigen::Vector3d position_;
+    double time_;
 };
 
 #endif // ENERGY_DEPOSIT_HH

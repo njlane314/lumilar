@@ -45,6 +45,8 @@ public:
     inline void AddProcess(const std::string& process) { process_names_.insert(process); }
     inline std::set<std::string> GetProcessNames() const { return process_names_; }
 
+    void AddDiscreteResponse(const larnest::LArNESTResult result);
+
     void AddDetectorResponse(const Signal* signal);
 
     void AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels);
@@ -59,8 +61,8 @@ private:
     TFile* tfile_;
     TTree* metadata_;
     TTree* event_tree_;
+    TTree* medium_response_tree_;
     TTree* detector_tree_;
-    TTree* cascade_level_tree_;
 
     double detector_length_x_;
     double detector_length_y_;
@@ -135,14 +137,29 @@ private:
     std::vector<double> generator_final_particle_mass_;
     std::vector<double> generator_final_particle_charge_;
 
-    double primary_energy_;
+    std::vector<double> generator_cascade_levels_;
+
     int total_optical_photons_;
     int total_thermal_electrons_;
-    std::vector<std::vector<double>> total_photon_arrival_times_;
-    double total_charge_yield_;
-    double total_light_yield_;
+    
+    std::vector<std::vector<double>> sensor_arrival_times_;
+ 
+    std::vector<double> total_yield_;
+    std::vector<double> quanta_yield_;
+    std::vector<double> light_yield_;
+    std::vector<double> photon_yield_;
+    std::vector<double> electron_yield_;
+    std::vector<double> exciton_yield_;
+    std::vector<double> ionisation_yield_;
+    std::vector<double> lindhard_factor_;
 
-    std::vector<double> cascade_levels_;
+    std::vector<double> photon_fluctuations_;
+    std::vector<double> electron_fluctuations_;
+    std::vector<double> exciton_fluctuations_;
+    std::vector<double> ionisation_fluctuations_;
+
+    double event_charge_yield_;
+    double event_light_yield_;
 };
 
 #endif // HIT_DATA_HANDLER_HH

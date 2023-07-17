@@ -9,45 +9,19 @@ void EventAction::BeginOfEventAction(const G4Event* event) {}
 void EventAction::EndOfEventAction(const G4Event* event) {
     AnalysisManager* analysis_manager = AnalysisManager::GetInstance();
 
-    if(analysis_manager->IsHitsEnabled()){
-        this->RecordHit(event);
-    }
+    this->RecordHit(event);
 
     Signal* signal = Signal::GetInstance(); 
     Optics::CalculateOpticalSignal(signal, &InstrumentConstruction::GetInstance()->GetOpticalSensors());
 
     HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
+
     hit_data_handler->AddDetectorResponse(signal);
     
     this->UpdateProgressBar(event);
 
     InstrumentConstruction::GetInstance()->ClearOpticalSensors();
-    signal->DeleteSignal(); 
-}
-//_________________________________________________________________________________________
-void EventAction::RunAnalysis(const G4Event* event, const Signal* signal) {
-    AnalysisManager* analysis_manager = AnalysisManager::GetInstance();
-    if(analysis_manager->IsCalorimetryEnabled()){
-        calorimetry_->EventAnalysis(signal);
-    } 
-    
-    std::cout << "Event ID: " << event->GetEventID() << std::endl;
-    if(analysis_manager->IsPulseShapeEnabled()){
-        pulse_shape_->EventAnalysis(signal);
-    } 
-
-    int events_to_generate = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-    if (event->GetEventID() == events_to_generate - 1) {
-        if(analysis_manager->IsCalorimetryEnabled()){
-            std::cout << "Running calorimetry analysis..." << std::endl;
-            calorimetry_->RunAnalysis();
-        } 
-        
-        if(analysis_manager->IsPulseShapeEnabled()){
-            std::cout << "Running pulse shape analysis..." << std::endl;
-            pulse_shape_->RunAnalysis();
-        } 
-    }
+    signal->DeleteSignal();
 }
 //_________________________________________________________________________________________
 void EventAction::UpdateProgressBar(const G4Event* event) {

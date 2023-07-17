@@ -55,6 +55,8 @@ void HitDataHandler::Book() {
     event_tree_->Branch("generator_final_particle_mass",       &generator_final_particle_mass_);
     event_tree_->Branch("generator_final_particle_charge",     &generator_final_particle_charge_);
 
+    event_tree_->Branch("generator_cascade_levels",     &generator_cascade_levels_);
+
     event_tree_->Branch("number_particles", &number_particles_, "number_particles/I");
     event_tree_->Branch("number_hits",      &number_hits_,      "number_hits/I");
 
@@ -93,23 +95,39 @@ void HitDataHandler::Book() {
     event_tree_->Branch("hit_process_key",    &hit_process_key_);
 
     detector_tree_ = new TTree("detector_tree_", "detector tree");
-    detector_tree_->Branch("primary_energy", &primary_energy_);
-    detector_tree_->Branch("total_optical_photons", &total_optical_photons_);
-    detector_tree_->Branch("total_thermal_electrons", &total_thermal_electrons_);
-    detector_tree_->Branch("arrival_time_light", &total_photon_arrival_times_);
-    detector_tree_->Branch("total_charge_yield", &total_charge_yield_);
-    detector_tree_->Branch("total_light_yield", &total_light_yield_);
 
-    cascade_level_tree_ = new TTree("cascade_level_tree_", "cascade level tree");
-    cascade_level_tree_->Branch("cascade_levels", &cascade_levels_);
+    detector_tree_->Branch("total_optical_photons",   &total_optical_photons_);
+    detector_tree_->Branch("total_thermal_electrons", &total_thermal_electrons_);
+
+    detector_tree_->Branch("event_charge_yield", &event_charge_yield_);
+    detector_tree_->Branch("event_light_yield", &event_light_yield_);
+
+    detector_tree_->Branch("sensor_arrival_times", &sensor_arrival_times_);
+
+    medium_response_tree_ = new TTree("medium_response_tree_", "medium response tree");
+
+    medium_response_tree_->Branch("total_yield",        &total_yield_);
+    medium_response_tree_->Branch("quanta_yield",       &quanta_yield_);
+    medium_response_tree_->Branch("light_yield",        &light_yield_);
+    medium_response_tree_->Branch("photon_yield",       &photon_yield_);
+    medium_response_tree_->Branch("electron_yield",     &electron_yield_);
+    medium_response_tree_->Branch("exciton_yield",      &exciton_yield_);
+    medium_response_tree_->Branch("ionisation_yield",   &ionisation_yield_);
+    medium_response_tree_->Branch("lindhard_factor",    &lindhard_factor_);
+
+    medium_response_tree_->Branch("photon_fluctuations",        &photon_fluctuations_);
+    medium_response_tree_->Branch("electron_fluctuations",      &electron_fluctuations_);
+    medium_response_tree_->Branch("exciton_fluctuations",       &exciton_fluctuations_);
+    medium_response_tree_->Branch("ionisation_fluctuations",    &ionisation_fluctuations_);
 }
 //______________________________________________________________________________
 void HitDataHandler::Save() {
     tfile_->cd();
+
     metadata_->Write();
     event_tree_->Write();
     detector_tree_->Write();
-    cascade_level_tree_->Write();
+    medium_response_tree_->Write();
     
     tfile_->Close();
 }
@@ -143,6 +161,8 @@ void HitDataHandler::EventReset() {
     generator_final_particle_pdg_code_.clear();
     generator_final_particle_mass_.clear();
     generator_final_particle_charge_.clear();
+
+    generator_cascade_levels_.clear();
 
     number_hits_ = 0;
     energy_deposit_ = 0;
@@ -183,19 +203,31 @@ void HitDataHandler::EventReset() {
 
     total_optical_photons_ = 0;
     total_thermal_electrons_ = 0;
-    total_photon_arrival_times_.clear();
-    total_charge_yield_ = 0;
-    total_light_yield_ = 0;
 
-    cascade_levels_.clear();
+    event_charge_yield_ = 0;
+    event_light_yield_ = 0;
+    
+    sensor_arrival_times_.clear();
 
-    primary_energy_ = 0;
+    total_yield_.clear();
+    quanta_yield_.clear();
+    light_yield_.clear();
+    photon_yield_.clear();
+    electron_yield_.clear();
+    exciton_yield_.clear();
+    ionisation_yield_.clear();
+    lindhard_factor_.clear();
+
+    photon_fluctuations_.clear();
+    electron_fluctuations_.clear();
+    exciton_fluctuations_.clear();
+    ionisation_fluctuations_.clear();
 }
 //______________________________________________________________________________
 void HitDataHandler::EventFill() {
     event_tree_->Fill();
     detector_tree_->Fill();
-    cascade_level_tree_->Fill();
+    medium_response_tree_->Fill();
 }
 //______________________________________________________________________________
 void HitDataHandler::SetRun(const int value) {
@@ -212,6 +244,7 @@ void HitDataHandler::FillMetadata(const double& detector_length_x,
     detector_length_x_ = detector_length_x;
     detector_length_y_ = detector_length_y;
     detector_length_z_ = detector_length_z;
+    
     metadata_->Fill();
 }
 //______________________________________________________________________________
@@ -243,6 +276,12 @@ void HitDataHandler::AddFinalGeneratorParticle(const GeneratorParticle* particle
     generator_final_particle_py_.push_back(particle->Py());
     generator_final_particle_pz_.push_back(particle->Pz());
     generator_final_particle_energy_.push_back(particle->Energy());
+}
+//______________________________________________________________________________
+void HitDataHandler::AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels) {
+    for (const auto& level : cascade_levels) {
+        generator_cascade_levels_.push_back(level->energy());
+    }
 }
 //______________________________________________________________________________
 void HitDataHandler::AddParticle(const Particle* particle) {
@@ -328,29 +367,37 @@ int HitDataHandler::ProcessToKey(const std::string& process) {
     return key;
 }
 //______________________________________________________________________________
-void HitDataHandler::AddDetectorResponse(const Signal* signal) {
-    primary_energy_ = signal->GetPrimaryEnergy();
+void HitDataHandler::AddDiscreteResponse(const larnest::LArNESTResult result) {
+    total_yield_.push_back(result.yields.TotalYield);
+    quanta_yield_.push_back(result.yields.QuantaYield);
+    light_yield_.push_back(result.yields.LightYield);
+    photon_yield_.push_back(result.yields.Nph);
+    electron_yield_.push_back(result.yields.Ne);
+    exciton_yield_.push_back(result.yields.Nex);
+    ionisation_yield_.push_back(result.yields.Nion);
+    lindhard_factor_.push_back(result.yields.Lindhard);
 
+    photon_fluctuations_.push_back(result.fluctuations.NphFluctuation);
+    electron_fluctuations_.push_back(result.fluctuations.NeFluctuation);
+    exciton_fluctuations_.push_back(result.fluctuations.NexFluctuation);
+    ionisation_fluctuations_.push_back(result.fluctuations.NionFluctuation);
+}
+//______________________________________________________________________________
+void HitDataHandler::AddDetectorResponse(const Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
 
-    auto visible_deposits_vec = signal->GetVisibleDeposits();
-    double total_energy_dep = 0.;
-    for (auto visible_deposit : visible_deposits_vec) {
-        total_energy_dep += visible_deposit;
+    std::vector<double>  energy_deposit_vector = signal->GetEnergyDeposits();
+    double total_energy_deposit_ = 0.;
+    for (auto energy_deposit : energy_deposit_vector) {
+        total_energy_deposit_ += energy_deposit;
     }
 
-    total_charge_yield_ = (double)total_thermal_electrons_ / primary_energy_;
-    total_light_yield_ = (double)total_optical_photons_ / primary_energy_;
+    event_charge_yield_ = (double)total_thermal_electrons_ / total_energy_deposit_;
+    event_light_yield_ = (double)total_optical_photons_ / total_energy_deposit_;
 
-    /*const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
+    const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
     for (const auto& sensor : optical_sensors) {
-        total_photon_arrival_times_.push_back(sensor->GetPhotonTimes());
-    }*/
-}
-//______________________________________________________________________________
-void HitDataHandler::AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels) {
-    for (const auto& level : cascade_levels) {
-        cascade_levels_.push_back(level->energy());
+        sensor_arrival_times_.push_back(sensor->GetArrivalTimes());
     }
 }

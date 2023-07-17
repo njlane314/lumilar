@@ -34,14 +34,6 @@ std::string AnalysisManager::GetAnalysisFilename() const {
    return analysis_filename_;
 }
 //_________________________________________________________________________________________
-bool AnalysisManager::IsHitsEnabled() const {
-    return analysis_messenger_->GetHitsEnabled();
-}
-//_________________________________________________________________________________________
-bool AnalysisManager::IsCalorimetryEnabled() const {
-    return analysis_messenger_->GetCalorimetryEnabled();
-}
-//_________________________________________________________________________________________
-bool AnalysisManager::IsPulseShapeEnabled() const {
-    return analysis_messenger_->GetPulseShapeEnabled();
+bool AnalysisManager::AreHitsOutput() const {
+    return analysis_messenger_->GetHitsOutputEnabled();
 }

@@ -162,7 +162,7 @@ const OpticalSensorVector& InstrumentConstruction::GetOpticalSensors() {
 //_________________________________________________________________________________________
 void InstrumentConstruction::ClearOpticalSensors() {
     for (const auto& sensor : optical_sensors_) {
-        sensor->ClearPhotons();
+        sensor->ResetSensor();
     }
 }
 //_________________________________________________________________________________________

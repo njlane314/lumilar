@@ -8,7 +8,6 @@
 #include "G4LogicalVolumeStore.hh"
 
 #include "InstrumentConstruction.hh"
-#include "MediumProperties.hh"
 #include "HitDataHandler.hh"
 #include "TruthManager.hh"
 

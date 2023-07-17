@@ -6,12 +6,9 @@
 /detector/depth 57500 # mm
 
 /detector/nitrogen 2 # ppm
-/detector/xenon 0 # ppm
 
 /detector/step 1 # mm
 
 /detector/instruments detector/placements/dune_hd_placements.txt
 
-/analysis/hits false
-/analysis/calorimetry false
-/analysis/pulseshape true
+/output/hits false

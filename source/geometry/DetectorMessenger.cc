@@ -32,10 +32,6 @@ DetectorMessenger::DetectorMessenger() : G4UImessenger() {
     detector_step_cmd_->SetGuidance("Set detector step.");
     detector_step_cmd_->SetGuidance("[usage] /detector/step <detector_step [mm]>");
 
-    detector_xenon_cmd_ = new G4UIcommand("/detector/xenon", this);
-    detector_xenon_cmd_->SetGuidance("Set detector xenon concentration.");
-    detector_xenon_cmd_->SetGuidance("[usage] /detector/xenon <detector_xenon [ppm]>");
-
     detector_nitrogen_cmd_ = new G4UIcommand("/detector/nitrogen", this);
     detector_nitrogen_cmd_->SetGuidance("Set detector nitrogen concentration.");
     detector_nitrogen_cmd_->SetGuidance("[usage] /detector/nitrogen <detector_nitrogen [ppm]>");
@@ -72,11 +68,6 @@ DetectorMessenger::DetectorMessenger() : G4UImessenger() {
     detector_step_parameters->SetDefaultValue(1.0);
     detector_step_cmd_->SetParameter(detector_step_parameters);
 
-    G4UIparameter* detector_xenon_parameter = new G4UIparameter("detector_xenon", 'd', true);
-    detector_xenon_parameter->SetGuidance("Set detector xenon concentration.");
-    detector_xenon_parameter->SetDefaultValue(0.0);
-    detector_xenon_cmd_->SetParameter(detector_xenon_parameter);
-
     G4UIparameter* detector_nitrogen_parameter = new G4UIparameter("detector_nitrogen", 'd', true);
     detector_nitrogen_parameter->SetGuidance("Set detector nitrogen concentration.");
     detector_nitrogen_parameter->SetDefaultValue(0.0);
@@ -104,8 +95,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* cmd, G4String new_value) {
         detector_depth_ = std::stod(new_value);
     } else if (cmd == detector_step_cmd_) {
         detector_step_ = std::stod(new_value);
-    } else if (cmd == detector_xenon_cmd_) {
-        detector_xenon_ = std::stod(new_value);
     } else if (cmd == detector_nitrogen_cmd_) {
         detector_nitrogen_ = std::stod(new_value);
     } else if (cmd == detector_instruments_cmd_) {
@@ -115,14 +104,13 @@ void DetectorMessenger::SetNewValue(G4UIcommand* cmd, G4String new_value) {
     }
 }
 //_________________________________________________________________________________________
-void DetectorMessenger::SetDetectorParameters(std::string& detector_name, std::string& detector_shape, double& detector_width, double& detector_height, double& detector_depth, double& detector_step, double& detector_xenon, double& detector_nitrogen, std::string& detector_instruments) {
+void DetectorMessenger::SetDetectorParameters(std::string& detector_name, std::string& detector_shape, double& detector_width, double& detector_height, double& detector_depth, double& detector_step, double& detector_nitrogen, std::string& detector_instruments) {
     detector_name = detector_name_;
     detector_shape = detector_shape_;
     detector_width = detector_width_;
     detector_height = detector_height_;
     detector_depth = detector_depth_;
     detector_step = detector_step_;
-    detector_xenon = detector_xenon_;
     detector_nitrogen = detector_nitrogen_;
     detector_instruments = detector_instruments_;
 }

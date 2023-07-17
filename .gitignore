@@ -43,8 +43,6 @@
 
 # Build
 build/
-extern/bxdecay0/
-extern/marley/
-extern/Eigen/
+extern/
 system/data/
 lumilar

@@ -1,18 +1,3 @@
-//____________________________________________________________________________
-/*!
-
-\class   physics::Ionisation
-
-\brief   This class manages the ionisation signal.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 11, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef IONISATION_HH
 #define IONISATION_HH
 
@@ -20,29 +5,24 @@
 #include <vector>
 #include <iostream>
 
-#include "ThermalElectron.hh"
+#include "EnergyDeposit.hh"
+#include "ElectronCloud.hh"
 #include "Ejection.hh"
-#include "Excitation.hh"
-
-struct ElectronCloud {
-    Eigen::Vector3d position;
-    std::vector<ThermalElectron> electrons;
-};
 
 class Ionisation {
 public:
     Ionisation();
     ~Ionisation();
 
-    void AddCloud(const EnergyDeposit* energy_deposit, int cloud_size);
-    std::vector<int> GetCloudSizes() const;
-    int GetTotalElectronCount() const;
+    void CreateCloud(const EnergyDeposit* energy_deposit, int thermal_electron_count);
+    std::vector<ElectronCloud> GetElectronClouds() const;
     std::vector<Eigen::Vector3d> GetCloudPositions() const;
+    std::vector<int> GetCloudCounts() const;
+    int GetTotalElectronCount() const;
 
 private:
     static Ionisation* instance_;
-    std::vector<ElectronCloud> ionisation_;
-    Ejection ejection_generator_;
+    std::vector<ElectronCloud> electron_cloud_vector_;
 };
 
 #endif // IONISATION_HH

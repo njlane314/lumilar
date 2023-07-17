@@ -4,41 +4,136 @@ MediumResponse::MediumResponse() {}
 //_________________________________________________________________________________________
 MediumResponse::~MediumResponse() {}
 //_________________________________________________________________________________________
+larnest::LArNESTResult MediumResponse::ProcessResponse(const G4Step* step) {
+    larnest::LArNEST nest; 
+    larnest::LArNESTResult result;
+
+    const EnergyDeposit* energy_deposit = CreateEnergyDeposit(step);
+    if (!energy_deposit->isEmpty()) {
+        const std::string particle_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
+        int thermal_electron_count, optical_photon_count;
+
+        larnest::LArInteraction interaction = energy_deposit->GetInteractionSpecies();
+        double energy = energy_deposit->GetEnergy() / keV;
+        double dx = 0.;
+        double electric_field = 0.5 * 1000.;
+        double density = larnest::legacy_density_LAr;
+        bool do_times = false;
+
+        result = nest.FullCalculation(interaction, energy, dx, electric_field, density, do_times);
+
+        bool debug_nest_results = false;
+        if (debug_nest_results) {
+            PrintResponse(result);
+        }
+
+        thermal_electron_count = (int)round(result.fluctuations.NeFluctuation);
+        if (thermal_electron_count < 0) {
+            thermal_electron_count = 0;
+        }
+        optical_photon_count = (int)round(result.fluctuations.NphFluctuation);
+        if (optical_photon_count < 0) {
+            optical_photon_count = 0;
+        }
+
+        result.fluctuations.NphFluctuation = optical_photon_count;
+        result.fluctuations.NeFluctuation = thermal_electron_count;
+
+        Signal::GetInstance()->GetScintillation()->CreateRadiant(energy_deposit, optical_photon_count);
+        Signal::GetInstance()->GetIonisation()->CreateCloud(energy_deposit, thermal_electron_count);
+    }
+
+    return result;
+}
+//_________________________________________________________________________________________
 EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
-    const int particle_charge = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetPDGCharge();
-    const int entering_material = static_cast<int>(step->GetPreStepPoint()->GetMaterial()->GetZ());
-    const double intrinsic_threshold = MediumProperties::GetInstance()->GetMediumProperties()->loss_per_ionisation;
-    const double visible_deposit = step->GetTotalEnergyDeposit() - step->GetNonIonizingEnergyDeposit();
-    
-    if (particle_charge != 0 || entering_material == 18 || visible_deposit > intrinsic_threshold) {
-        const double stopping_power = step->GetTotalEnergyDeposit() / step->GetStepLength();
+    if (isStepInLiquidArgon(step) && isParticleCharged(step)) {
+        const double energy = step->GetTotalEnergyDeposit();
+        const double dx = step->GetStepLength();
+
+        const std::string particle_name = step->GetTrack()->GetDefinition()->GetParticleName();
         
-        const std::string particle_species = step->GetTrack()->GetDefinition()->GetParticleName();
-        const double discrete_length = step->GetStepLength();
+        larnest::LArInteraction interaction;
+        if (
+            particle_name == "alpha" ||
+            particle_name == "anti_alpha"
+        ) {
+            interaction = larnest::LArInteraction::Alpha;
+        } else if (
+            particle_name == "e-" ||
+            particle_name == "e+" ||
+            particle_name == "mu-" ||
+            particle_name == "mu+" 
+        ) {
+            interaction = larnest::LArInteraction::ER;
+        } else if (
+            particle_name == "neutron" || 
+            particle_name == "anti_neutron"
+        ) {
+            interaction = larnest::LArInteraction::NR;
+        }
+
         const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
+
         const double time = step->GetPreStepPoint()->GetGlobalTime();
 
-        auto energy_deposit = new EnergyDeposit(visible_deposit, stopping_power, particle_species, position, discrete_length, time);
+        EnergyDeposit* energy_deposit = new EnergyDeposit(energy, dx, interaction, position, time);
+
         Signal::GetInstance()->AddEnergyDeposit(energy_deposit);
+
         return energy_deposit;
     }
 
     return new EnergyDeposit();
 }
 //_________________________________________________________________________________________
-void MediumResponse::ProcessResponse(const G4Step* step) {
-    const auto energy_deposit = CreateEnergyDeposit(step);
-    if (!energy_deposit->IsEmpty()) {
-        const std::string particle_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
-        int num_thermal_electrons, num_optical_photons;
-        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+" || particle_name == "proton") {
-            const auto intrinsic_response = Excitation::CreateExctiation(energy_deposit, MediumProperties::GetInstance()->GetMediumProperties());
-            std::tie(num_thermal_electrons, num_optical_photons) = Recombination::ProcessRecombination(energy_deposit, MediumProperties::GetInstance()->GetMediumProperties(), intrinsic_response);
-        } else {
-            return;
-        }
+bool MediumResponse::isStepInLiquidArgon(const G4Step* step) {
+    const int entering_material_atomic_number = static_cast<int>(step->GetPreStepPoint()->GetMaterial()->GetZ());
 
-        Signal::GetInstance()->GetScintillation()->AddRadiant(energy_deposit, num_optical_photons);
-        Signal::GetInstance()->GetIonisation()->AddCloud(energy_deposit, num_thermal_electrons);
+    if (entering_material_atomic_number == 18) {
+        return true;
     }
+
+    return false;
+}
+//_________________________________________________________________________________________
+bool MediumResponse::isParticleCharged(const G4Step* step) {
+    G4Track* track = step->GetTrack();
+    const G4ParticleDefinition* particleDef = track->GetDefinition();
+
+    double charge = particleDef->GetPDGCharge();
+
+    if (charge != 0.0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+//_________________________________________________________________________________________
+void MediumResponse::PrintResponse(const larnest::LArNESTResult& result) {
+    std::string line = "=======================================================================";
+    std::string subheader = "Liquid Argon Response NEST Results";
+    std::cout << std::endl;
+    std::cout << line << std::endl;
+    std::cout << std::setw((line.length() - subheader.length()) / 2) << std::setfill(' ') << std::right << "" << subheader << std::setw((line.length() - subheader.length()) / 2) << std::setfill(' ') << std::left << std::endl;
+    std::cout << line << std::endl;
+
+    std::cout << std::setw(30) << std::left << "-------------Yields-------------" << std::endl;
+    std::cout << std::setw(30) << std::left << "Total Yield: " << result.yields.TotalYield << std::endl;
+    std::cout << std::setw(30) << std::left << "Quanta Yield: " << result.yields.QuantaYield << std::endl;
+    std::cout << std::setw(30) << std::left << "Light Yield: " << result.yields.LightYield << std::endl;
+    std::cout << std::setw(30) << std::left << "Nph: " << result.yields.Nph << std::endl;
+    std::cout << std::setw(30) << std::left << "Ne: " << result.yields.Ne << std::endl;
+    std::cout << std::setw(30) << std::left << "Nex: " << result.yields.Nex << std::endl;
+    std::cout << std::setw(30) << std::left << "Nion: " << result.yields.Nion << std::endl;
+    std::cout << std::setw(30) << std::left << "Lindhard: " << result.yields.Lindhard << std::endl;
+    std::cout << std::setw(30) << std::left << "Electric Field: " << result.yields.ElectricField << std::endl;
+
+    std::cout << std::setw(30) << std::left << "----------Fluctuations----------" << std::endl;
+    std::cout << std::setw(30) << std::left << "Nph Fluctuation: " << result.fluctuations.NphFluctuation << std::endl;
+    std::cout << std::setw(30) << std::left << "Ne Fluctuation: " << result.fluctuations.NeFluctuation << std::endl;
+    std::cout << std::setw(30) << std::left << "Nex Fluctuation: " << result.fluctuations.NexFluctuation << std::endl;
+    std::cout << std::setw(30) << std::left << "Nion Fluctuation: " << result.fluctuations.NionFluctuation << std::endl;
+
+    std::cout << line << std::endl << std::endl;
 }

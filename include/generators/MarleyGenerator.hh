@@ -42,7 +42,6 @@
 #include "TH2F.h"
 
 #include "Signal.hh"
-#include "AnalysisResults.hh"
 #include "BulkVertexGenerator.hh"
 #include "GeneratorParticle.hh"
 #include "TruthManager.hh"
@@ -62,7 +61,6 @@ public:
     void PrintEvent(const marley::Event& event);
 
 private:
-
     BulkVertexGenerator* bulk_vertex_generator_;
     marley::Generator marley_generator_;
 
@@ -71,7 +69,7 @@ private:
     TH1F* energy_hist_;
     TH1F* delayed_hist_;
     TH1F* delay_times_;
-    static AnalysisResults<TH1F> TH1F_plots_;
+
     std::string energy_dist_name_;
     std::string time_dist_name_;
 };

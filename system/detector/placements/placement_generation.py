@@ -1,8 +1,8 @@
 import itertools
 ################################################
 # CONFIGURATION
-case_name = "dune-hd"
-output_file = "dune_hd_placements.txt"
+case_name = "dune-solar"
+output_file = "dune_solar_placements.txt"
 ################################################
 detector_configs = {
     "dune-hd": {
@@ -17,7 +17,17 @@ detector_configs = {
         "plane_orientation": "+x"
     },
     "dune-vd": {},
-    "solar": {},
+    "dune-solar": {
+        "detector_width": 3500,
+        "detector_height": 12000,
+        "detector_depth": 57500,
+        "cell_width": 300,
+        "cell_height": 300,
+        "sensor_shape": "rectangle",
+        "sensor_width": 300,
+        "sensor_height": 300, 
+        "plane_orientation": "+x"
+    },
 }
 ################################################
 detector_config = detector_configs[case_name]

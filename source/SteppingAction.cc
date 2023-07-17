@@ -5,11 +5,12 @@ SteppingAction::SteppingAction() {}
 SteppingAction::~SteppingAction() {}
 //_________________________________________________________________________________________
 void SteppingAction::UserSteppingAction(const G4Step* step) {
-	if (IsParticleWithinDetector(step) == true) {
-		MediumResponse::ProcessResponse(step);
+	if (isParticleWithinDetector(step) == true) {
+		larnest::LArNESTResult medium_response = MediumResponse::ProcessResponse(step);
 
 		HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
 		hit_data_handler->AddProcess(step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName());
+		hit_data_handler->AddDiscreteResponse(medium_response);
 
 		TruthManager* truth_manager = TruthManager::GetInstance();
 		Particle* particle = truth_manager->GetParticle(step->GetTrack()->GetTrackID());
@@ -18,7 +19,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
 	}
 }
 //_________________________________________________________________________________________
-bool SteppingAction::IsParticleWithinDetector(const G4Step* step) {
+bool SteppingAction::isParticleWithinDetector(const G4Step* step) {
 	double detector_width, detector_height, detector_depth;
 	DetectorConstruction* detector_construction = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
 	detector_construction->GetDetectorDimensions(detector_width, detector_height, detector_depth);

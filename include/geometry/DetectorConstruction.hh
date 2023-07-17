@@ -1,18 +1,3 @@
-//____________________________________________________________________________
-/*!
-
-\class   geometry::DetectorConstruction
-
-\brief   This class constructs the detector geometry.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 11, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef DETECTOR_CONSTRUCTION_HH
 #define DETECTOR_CONSTRUCTION_HH
 
@@ -36,7 +21,6 @@
 #include "G4Tokenizer.hh"
 
 #include "DetectorMessenger.hh"
-#include "MediumProperties.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
 public:

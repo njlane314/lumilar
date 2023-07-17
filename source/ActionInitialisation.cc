@@ -6,8 +6,7 @@
 #include "SteppingAction.hh"
 #include "TrackingAction.hh"
 //_________________________________________________________________________________________
-ActionInitialisation::ActionInitialisation(std::string output_filename) 
-: output_filename_(output_filename), G4VUserActionInitialization() {}
+ActionInitialisation::ActionInitialisation(std::string output_filename) : output_filename_(output_filename), G4VUserActionInitialization() {}
 //_________________________________________________________________________________________
 ActionInitialisation::~ActionInitialisation() {}
 //_________________________________________________________________________________________
