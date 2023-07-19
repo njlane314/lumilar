@@ -15,7 +15,7 @@
         neutrino: "ve",
         E_bin_lefts: [ 0.],   // Low edges of energy bins (MeV)
         weights: [ 1. ],       // Bin weights (dimensionless)
-        Emax: 50.,                        // Upper edge of the final bin (MeV)
+        Emax: 30.,                        // Upper edge of the final bin (MeV)
     },
   
     // Incident neutrino direction 3-vector

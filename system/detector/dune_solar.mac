@@ -1,0 +1,14 @@
+/detector/name dune_tpc
+
+/detector/shape box
+/detector/width 3500 # mm
+/detector/height 12000 # mm
+/detector/depth 57500 # mm
+
+/detector/nitrogen 2 # ppm
+
+/detector/step 1 # mm
+
+/detector/instruments detector/placements/dune_solar_placements.txt
+
+/output/hits false

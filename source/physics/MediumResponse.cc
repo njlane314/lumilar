@@ -9,13 +9,13 @@ larnest::LArNESTResult MediumResponse::ProcessResponse(const G4Step* step) {
     larnest::LArNESTResult result;
 
     const EnergyDeposit* energy_deposit = CreateEnergyDeposit(step);
-    if (!energy_deposit->isEmpty()) {
+    if (!energy_deposit->isEmpty() || energy_deposit->GetEnergy() > 0) {
         const std::string particle_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
         int thermal_electron_count, optical_photon_count;
 
         larnest::LArInteraction interaction = energy_deposit->GetInteractionSpecies();
-        double energy = energy_deposit->GetEnergy() / keV;
-        double dx = 0.;
+        double energy = energy_deposit->GetEnergy();
+        double dx = energy_deposit->GetStepLength();
         double electric_field = 0.5 * 1000.;
         double density = larnest::legacy_density_LAr;
         bool do_times = false;
@@ -48,13 +48,13 @@ larnest::LArNESTResult MediumResponse::ProcessResponse(const G4Step* step) {
 //_________________________________________________________________________________________
 EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
     if (isStepInLiquidArgon(step) && isParticleCharged(step)) {
-        const double energy = step->GetTotalEnergyDeposit();
-        const double dx = step->GetStepLength();
+        const double energy = step->GetTotalEnergyDeposit() * 1000.;
+        const double dx = step->GetStepLength() / 1000.;
 
         const std::string particle_name = step->GetTrack()->GetDefinition()->GetParticleName();
         
         larnest::LArInteraction interaction;
-        if (
+        /*if (
             particle_name == "alpha" ||
             particle_name == "anti_alpha"
         ) {
@@ -71,7 +71,18 @@ EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
             particle_name == "anti_neutron"
         ) {
             interaction = larnest::LArInteraction::NR;
-        }
+        }*/
+
+	if (
+	  particle_name == "e-" ||
+	  particle_name == "e+" ||
+          particle_name == "mu-" ||
+	  particle_name == "mu+" ||
+   	  particle_name == "proton" ||
+	  particle_name == "anti_proton"
+	) {
+	  interaction = larnest::LArInteraction::ER;
+	}
 
         const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
 

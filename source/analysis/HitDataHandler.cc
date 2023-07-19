@@ -101,6 +101,8 @@ void HitDataHandler::Book() {
 
     detector_tree_->Branch("event_charge_yield", &event_charge_yield_);
     detector_tree_->Branch("event_light_yield", &event_light_yield_);
+    detector_tree_->Branch("total_energy_deposit", &total_energy_deposit_);
+    detector_tree_->Branch("primary_energy", &primary_energy_);
 
     detector_tree_->Branch("sensor_arrival_times", &sensor_arrival_times_);
 
@@ -206,6 +208,8 @@ void HitDataHandler::EventReset() {
 
     event_charge_yield_ = 0;
     event_light_yield_ = 0;
+    total_energy_deposit_ = 0.;
+    primary_energy_.clear();
     
     sensor_arrival_times_.clear();
 
@@ -386,9 +390,10 @@ void HitDataHandler::AddDiscreteResponse(const larnest::LArNESTResult result) {
 void HitDataHandler::AddDetectorResponse(const Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
+    primary_energy_ = *(signal->GetPrimaryEnergy());
 
     std::vector<double>  energy_deposit_vector = signal->GetEnergyDeposits();
-    double total_energy_deposit_ = 0.;
+    total_energy_deposit_ = 0.;
     for (auto energy_deposit : energy_deposit_vector) {
         total_energy_deposit_ += energy_deposit;
     }

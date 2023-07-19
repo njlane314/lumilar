@@ -68,6 +68,14 @@ std::vector<double> Signal::GetLengths() const {
     }
     return lengths;
 }
+///////
+void Signal::AddPrimaryEnergy(double primary_energy) {
+    primary_energy_->push_back(primary_energy);
+}
+///////
+std::vector<double>* Signal::GetPrimaryEnergy() const {
+    return primary_energy_.get();
+}
 //_________________________________________________________________________________________
 void Signal::DeleteSignal() {
     instance_ = nullptr;

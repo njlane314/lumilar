@@ -18,6 +18,7 @@ public:
   static Signal* GetInstance();
 
   void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
+  void AddPrimaryEnergy(double primary_energy);
   
   Scintillation* GetScintillation() const;
   Ionisation* GetIonisation() const;
@@ -26,6 +27,7 @@ public:
   std::vector<double> GetEnergyDeposits() const;
   std::vector<double> GetLinearEnergyTransfers() const;
   std::vector<double> GetLengths() const;
+  std::vector<double>* GetPrimaryEnergy() const;
 
   void DeleteSignal();
 
@@ -39,9 +41,8 @@ private:
   
   std::unique_ptr<EnergyDeposit> energy_deposit_;
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
-  
-  std::vector<double> delay_times_;
-  double primary_energy_;
+
+  std::unique_ptr<std::vector<double>> primary_energy_;
 };
 
 #endif // SIGNAL_HH
