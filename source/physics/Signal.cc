@@ -68,13 +68,13 @@ std::vector<double> Signal::GetLengths() const {
     }
     return lengths;
 }
-///////
+//_________________________________________________________________________________________
 void Signal::AddPrimaryEnergy(double primary_energy) {
-    primary_energy_->push_back(primary_energy);
+    primary_energy_ = primary_energy;
 }
-///////
-std::vector<double>* Signal::GetPrimaryEnergy() const {
-    return primary_energy_.get();
+//_________________________________________________________________________________________
+double Signal::GetPrimaryEnergy() const {
+    return primary_energy_;
 }
 //_________________________________________________________________________________________
 void Signal::DeleteSignal() {

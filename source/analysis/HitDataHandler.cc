@@ -209,7 +209,7 @@ void HitDataHandler::EventReset() {
     event_charge_yield_ = 0;
     event_light_yield_ = 0;
     total_energy_deposit_ = 0.;
-    primary_energy_.clear();
+    primary_energy_ = 0.;
     
     sensor_arrival_times_.clear();
 
@@ -390,7 +390,7 @@ void HitDataHandler::AddDiscreteResponse(const larnest::LArNESTResult result) {
 void HitDataHandler::AddDetectorResponse(const Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
-    primary_energy_ = *(signal->GetPrimaryEnergy());
+    primary_energy_ = signal->GetPrimaryEnergy();
 
     std::vector<double>  energy_deposit_vector = signal->GetEnergyDeposits();
     total_energy_deposit_ = 0.;

@@ -27,7 +27,7 @@ public:
   std::vector<double> GetEnergyDeposits() const;
   std::vector<double> GetLinearEnergyTransfers() const;
   std::vector<double> GetLengths() const;
-  std::vector<double>* GetPrimaryEnergy() const;
+  double GetPrimaryEnergy() const;
 
   void DeleteSignal();
 
@@ -42,7 +42,7 @@ private:
   std::unique_ptr<EnergyDeposit> energy_deposit_;
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
 
-  std::unique_ptr<std::vector<double>> primary_energy_;
+  double primary_energy_;
 };
 
 #endif // SIGNAL_HH

@@ -142,7 +142,7 @@ private:
     int total_optical_photons_;
     int total_thermal_electrons_;
     double total_energy_deposit_;
-    std::vector<double> primary_energy_;
+    double primary_energy_;
     
     std::vector<std::vector<double>> sensor_arrival_times_;
  

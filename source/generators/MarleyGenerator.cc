@@ -35,9 +35,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     }
 
     auto primary_energy = marley_event.projectile().total_energy();
+
     Signal* signal = Signal::GetInstance();
     signal->AddPrimaryEnergy(primary_energy);
-    delete signal;
 
     double global_time = 0.;
 
