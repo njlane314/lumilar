@@ -12,6 +12,8 @@
 
 #include "globals.hh"
 
+#include "G4ThreeVector.hh"
+
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -143,6 +145,19 @@ private:
     int total_thermal_electrons_;
     double total_energy_deposit_;
     double primary_energy_;
+    int decay_type_;
+
+    double interaction_vertex_x_;
+    double interaction_vertex_y_;
+    double interaction_vertex_z_;
+
+    std::vector<double> discrete_energies_;
+    std::vector<double> discrete_dx_;
+    std::vector<larnest::LArInteraction> discrete_species_;
+    std::vector<double> discrete_pos_x_;
+    std::vector<double> discrete_pos_y_;
+    std::vector<double> discrete_pos_z_;
+    std::vector<double> discrete_times_;
     
     std::vector<std::vector<double>> sensor_arrival_times_;
  

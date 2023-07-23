@@ -82,6 +82,18 @@ EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
 	  particle_name == "anti_proton"
 	) {
 	  interaction = larnest::LArInteraction::ER;
+	} 
+
+	if (
+ 	  particle_name == "alpha" 
+	) {
+	  interaction = larnest::LArInteraction::Alpha;
+	}
+
+	if (
+	  particle_name == "neutron"
+	) {
+	  interaction == larnest::LArInteraction::NR;
 	}
 
         const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());

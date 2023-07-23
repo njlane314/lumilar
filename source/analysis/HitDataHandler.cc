@@ -103,6 +103,19 @@ void HitDataHandler::Book() {
     detector_tree_->Branch("event_light_yield", &event_light_yield_);
     detector_tree_->Branch("total_energy_deposit", &total_energy_deposit_);
     detector_tree_->Branch("primary_energy", &primary_energy_);
+    detector_tree_->Branch("decay_type", &decay_type_);
+
+    detector_tree_->Branch("interaction_vertex_x", &interaction_vertex_x_);
+    detector_tree_->Branch("interaction_vertex_y", &interaction_vertex_y_);
+    detector_tree_->Branch("interaction_vertex_z", &interaction_vertex_z_);
+
+    detector_tree_->Branch("discrete_energies", &discrete_energies_);
+    detector_tree_->Branch("discrete_dx", &discrete_dx_);
+    detector_tree_->Branch("discrete_species", &discrete_species_);
+    detector_tree_->Branch("discrete_pos_x", &discrete_pos_x_);
+    detector_tree_->Branch("discrete_pos_y", &discrete_pos_y_);
+    detector_tree_->Branch("discrete_pos_z", &discrete_pos_z_);
+    detector_tree_->Branch("discrete_times", &discrete_times_);
 
     detector_tree_->Branch("sensor_arrival_times", &sensor_arrival_times_);
 
@@ -210,6 +223,19 @@ void HitDataHandler::EventReset() {
     event_light_yield_ = 0;
     total_energy_deposit_ = 0.;
     primary_energy_ = 0.;
+    decay_type_ = 0;
+    
+    interaction_vertex_x_ = 0.;
+    interaction_vertex_y_ = 0.;
+    interaction_vertex_z_ = 0.;
+
+    discrete_energies_.clear();
+    discrete_dx_.clear();
+    discrete_species_.clear();
+    discrete_pos_x_.clear();
+    discrete_pos_y_.clear();
+    discrete_pos_z_.clear();
+    discrete_times_.clear();
     
     sensor_arrival_times_.clear();
 
@@ -391,6 +417,27 @@ void HitDataHandler::AddDetectorResponse(const Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
     primary_energy_ = signal->GetPrimaryEnergy();
+    decay_type_ = signal->GetDecayType();
+    
+    std::vector<EnergyDeposit> track_structure = *signal->GetHits();
+
+    for (const auto& hit : track_structure) {
+	discrete_energies_.push_back(hit.GetEnergy());
+	discrete_dx_.push_back(hit.GetStepLength());
+	discrete_species_.push_back(hit.GetInteractionSpecies());
+	Eigen::Vector3d position = hit.GetPosition();
+	discrete_pos_x_.push_back(position(0));
+	discrete_pos_y_.push_back(position(1));
+	discrete_pos_z_.push_back(position(2));
+	discrete_times_.push_back(hit.GetTime());
+    }
+
+    G4ThreeVector interaction_vertex = signal->GetInteractionVertex();
+    interaction_vertex_x_ = interaction_vertex.getX();
+    interaction_vertex_y_ = interaction_vertex.getY();
+    interaction_vertex_z_ = interaction_vertex.getZ();
+
+    std::cout << interaction_vertex_x_ << std::endl;
 
     std::vector<double>  energy_deposit_vector = signal->GetEnergyDeposits();
     total_energy_deposit_ = 0.;

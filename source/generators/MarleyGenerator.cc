@@ -38,6 +38,21 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
     Signal* signal = Signal::GetInstance();
     signal->AddPrimaryEnergy(primary_energy);
+    int decay_type = 0;
+    for (const auto& marley_particle : marley_event.get_final_particles()) {
+    	int marley_particle_pdg_code = marley_particle->pdg_code();
+        if (marley_particle_pdg_code == 2112) {
+	    decay_type = 1;
+	}
+	else if (marley_particle_pdg_code == 2212) {
+	    decay_type = 2;
+	}
+        else if (marley_particle_pdg_code == 1000020040) {
+	    decay_type = 3;
+	}
+    }
+    std::cout << "Decay type of interaction " << decay_type << std::endl;
+    signal->AddDecayType(decay_type);
 
     double global_time = 0.;
 
@@ -52,6 +67,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     std::vector<G4PrimaryVertex*> primary_vertices;
     G4ThreeVector vertex(0.0, 0.0, 0.0);
     bulk_vertex_generator_->ShootVertex(vertex);  
+    signal->AddInteractionVertex(vertex);
 
     for (const auto& marley_particle : marley_event.get_final_particles()) {
         G4PrimaryVertex* primary_vertex = new G4PrimaryVertex(vertex, global_time);

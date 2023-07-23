@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 
 #include "G4Step.hh"
+#include "G4ThreeVector.hh"
 
 #include "Scintillation.hh"
 #include "Ionisation.hh"
@@ -19,6 +20,8 @@ public:
 
   void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
   void AddPrimaryEnergy(double primary_energy);
+  void AddDecayType(int decay_type);
+  void AddInteractionVertex(G4ThreeVector vertex);
   
   Scintillation* GetScintillation() const;
   Ionisation* GetIonisation() const;
@@ -28,6 +31,8 @@ public:
   std::vector<double> GetLinearEnergyTransfers() const;
   std::vector<double> GetLengths() const;
   double GetPrimaryEnergy() const;
+  int GetDecayType() const;
+  G4ThreeVector GetInteractionVertex() const;
 
   void DeleteSignal();
 
@@ -43,6 +48,8 @@ private:
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
 
   double primary_energy_;
+  int decay_type_;
+  G4ThreeVector interaction_vertex_;
 };
 
 #endif // SIGNAL_HH

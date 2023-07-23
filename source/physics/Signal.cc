@@ -77,6 +77,22 @@ double Signal::GetPrimaryEnergy() const {
     return primary_energy_;
 }
 //_________________________________________________________________________________________
+void Signal::AddInteractionVertex(G4ThreeVector vertex) {
+    interaction_vertex_ = vertex;
+}
+//_________________________________________________________________________________________
+G4ThreeVector Signal::GetInteractionVertex() const {
+    return interaction_vertex_;
+}
+//_________________________________________________________________________________________
+void Signal::AddDecayType(int decay_type) {
+    decay_type_ = decay_type;
+}
+//_________________________________________________________________________________________
+int Signal::GetDecayType() const {
+    return decay_type_;
+}
+//_________________________________________________________________________________________
 void Signal::DeleteSignal() {
     instance_ = nullptr;
     delete this;

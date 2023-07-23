@@ -16,10 +16,11 @@
         E_bin_lefts: [ 0.],   // Low edges of energy bins (MeV)
         weights: [ 1. ],       // Bin weights (dimensionless)
         Emax: 30.,                        // Upper edge of the final bin (MeV)
+        weight_flux: false,
     },
   
     // Incident neutrino direction 3-vector
     direction: "isotropic",
 
     log: [ { file: "stdout", level: "disabled" } ],
-  }
+}
