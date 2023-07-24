@@ -117,6 +117,8 @@ void HitDataHandler::Book() {
     detector_tree_->Branch("discrete_pos_z", &discrete_pos_z_);
     detector_tree_->Branch("discrete_times", &discrete_times_);
 
+    detector_tree_->Branch("cascade_levels", &cascade_levels_);
+
     detector_tree_->Branch("sensor_arrival_times", &sensor_arrival_times_);
 
     medium_response_tree_ = new TTree("medium_response_tree_", "medium response tree");
@@ -236,6 +238,8 @@ void HitDataHandler::EventReset() {
     discrete_pos_y_.clear();
     discrete_pos_z_.clear();
     discrete_times_.clear();
+
+    cascade_levels_.clear();
     
     sensor_arrival_times_.clear();
 
@@ -417,6 +421,7 @@ void HitDataHandler::AddDetectorResponse(const Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
     primary_energy_ = signal->GetPrimaryEnergy();
+    cascade_levels_ = signal->GetCascadeLevels();
     decay_type_ = signal->GetDecayType();
     
     std::vector<EnergyDeposit> track_structure = *signal->GetHits();

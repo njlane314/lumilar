@@ -11,6 +11,11 @@
 #include "Ionisation.hh"
 #include "MediumResponse.hh"
 
+#include "marley/Event.hh"
+#include "marley/Generator.hh"
+#include "marley/JSONConfig.hh"
+
+
 class Signal {
 public:
   Signal();
@@ -34,6 +39,9 @@ public:
   int GetDecayType() const;
   G4ThreeVector GetInteractionVertex() const;
 
+  void AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels); 
+  std::vector<double> GetCascadeLevels() const;
+
   void DeleteSignal();
 
 private:
@@ -46,6 +54,8 @@ private:
   
   std::unique_ptr<EnergyDeposit> energy_deposit_;
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
+ 
+  std::vector<double> cascade_levels_;
 
   double primary_energy_;
   int decay_type_;

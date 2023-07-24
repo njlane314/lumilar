@@ -158,6 +158,8 @@ private:
     std::vector<double> discrete_pos_y_;
     std::vector<double> discrete_pos_z_;
     std::vector<double> discrete_times_;
+
+    std::vector<double> cascade_levels_;
     
     std::vector<std::vector<double>> sensor_arrival_times_;
  

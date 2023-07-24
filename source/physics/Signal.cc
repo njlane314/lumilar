@@ -88,6 +88,15 @@ G4ThreeVector Signal::GetInteractionVertex() const {
 void Signal::AddDecayType(int decay_type) {
     decay_type_ = decay_type;
 }
+//_____________________
+void Signal::AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels) {
+    for (const auto& level : cascade_levels) {
+        cascade_levels_.push_back(level->energy());
+    }
+}
+std::vector<double> Signal::GetCascadeLevels() const {
+    return cascade_levels_;
+}
 //_________________________________________________________________________________________
 int Signal::GetDecayType() const {
     return decay_type_;

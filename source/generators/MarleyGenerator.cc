@@ -39,6 +39,9 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     Signal* signal = Signal::GetInstance();
     signal->AddPrimaryEnergy(primary_energy);
     int decay_type = 0;
+    bool neutron_decay = false;
+    bool proton_decay = false;
+    bool alpha_decay = false;
     for (const auto& marley_particle : marley_event.get_final_particles()) {
     	int marley_particle_pdg_code = marley_particle->pdg_code();
         if (marley_particle_pdg_code == 2112) {
