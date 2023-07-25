@@ -4,9 +4,6 @@ PhysicsList::PhysicsList() {
 	G4StepLimiterPhysics* step_limit_phys = new G4StepLimiterPhysics();
 	step_limit_phys->SetApplyToAll(true);
 	RegisterPhysics(step_limit_phys);
-	
-	RegisterPhysics( new G4HadronElasticPhysicsHP() );
-	RegisterPhysics( new G4HadronPhysicsQGSP_BERT_HP() );
 
 	RegisterPhysics( new G4DecayPhysics() );
 	RegisterPhysics( new G4EmStandardPhysics_option4() );
@@ -16,6 +13,8 @@ PhysicsList::PhysicsList() {
 	RegisterPhysics( new G4StoppingPhysics() );
 	RegisterPhysics( new G4IonElasticPhysics() );
 	RegisterPhysics( new G4IonPhysics() );
+
+    RegisterPhysics( new NeutronPhysics("neutronHP"));  
 }
 //_________________________________________________________________________________________
 PhysicsList::~PhysicsList() {}

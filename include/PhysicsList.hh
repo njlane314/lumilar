@@ -1,9 +1,9 @@
 #ifndef PHYSICS_LIST_HH
 #define PHYSICS_LIST_HH
 
-#include "G4PhysListFactory.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4StepLimiterPhysics.hh"
+
 #include "G4DecayPhysics.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
@@ -16,8 +16,7 @@
 #include "G4EmStandardPhysics_option4.hh"
 #include "G4HadronElasticPhysicsHP.hh"
 
-#include "QGSP_BERT_HP.hh"
-#include "G4HadronPhysicsQGSP_BERT_HP.hh"
+#include "NeutronPhysics.hh"
 
 class PhysicsList : public G4VModularPhysicsList{
 public:
