@@ -13,6 +13,7 @@
 #include "Signal.hh"
 
 #include "HitDataHandler.hh"
+#include "TruthManager.hh"
 
 class EventAction : public G4UserEventAction {
 public:

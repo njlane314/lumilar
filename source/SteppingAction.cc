@@ -6,7 +6,16 @@ SteppingAction::~SteppingAction() {}
 //_________________________________________________________________________________________
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 	if (isParticleWithinDetector(step) == true) {
-		MediumResponse::ProcessResponse(step);
+		larnest::LArNESTResult medium_response = MediumResponse::ProcessResponse(step);
+
+		HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
+		hit_data_handler->AddProcess(step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName());
+		hit_data_handler->AddDiscreteResponse(medium_response);
+
+		TruthManager* truth_manager = TruthManager::GetInstance();
+		Particle* particle = truth_manager->GetParticle(step->GetTrack()->GetTrackID());
+
+		particle->AddTrajectoryHit(step);
 	}
 }
 //_________________________________________________________________________________________

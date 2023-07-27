@@ -7,6 +7,7 @@
 #include "DetectorConstruction.hh"
 #include "MediumResponse.hh"
 #include "HitDataHandler.hh"
+#include "TruthManager.hh"
 #include "Particle.hh"
 
 #include "LArNEST.h"

@@ -21,7 +21,7 @@ public:
    MediumResponse();
    ~MediumResponse();
 
-   static  void ProcessResponse(const G4Step* step);
+   static larnest::LArNESTResult ProcessResponse(const G4Step* step);
     
 private:
    static EnergyDeposit* CreateEnergyDeposit(const G4Step* step);

@@ -4,7 +4,7 @@ MediumResponse::MediumResponse() {}
 //_________________________________________________________________________________________
 MediumResponse::~MediumResponse() {}
 //_________________________________________________________________________________________
-void MediumResponse::ProcessResponse(const G4Step* step) {
+larnest::LArNESTResult MediumResponse::ProcessResponse(const G4Step* step) {
     larnest::LArNEST nest; 
     larnest::LArNESTResult result;
 
@@ -16,7 +16,7 @@ void MediumResponse::ProcessResponse(const G4Step* step) {
         larnest::LArInteraction interaction = energy_deposit->GetInteractionSpecies();
         double energy = energy_deposit->GetEnergy();
         double dx = energy_deposit->GetStepLength();
-        double electric_field = 500.; // V / cm
+        double electric_field = 0.5 * 1000.;
         double density = larnest::legacy_density_LAr;
         bool do_times = false;
 
@@ -42,37 +42,66 @@ void MediumResponse::ProcessResponse(const G4Step* step) {
         Signal::GetInstance()->GetScintillation()->CreateRadiant(energy_deposit, optical_photon_count);
         Signal::GetInstance()->GetIonisation()->CreateCloud(energy_deposit, thermal_electron_count);
     }
+
+    return result;
 }
 //_________________________________________________________________________________________
 EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
     if (isStepInLiquidArgon(step) && isParticleCharged(step)) {
-        const double energy = step->GetTotalEnergyDeposit() * 1000; // keV
-        const double dx = 0.;
-        const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
-        const double time = step->GetPreStepPoint()->GetGlobalTime();
+        const double energy = step->GetTotalEnergyDeposit() * 1000.;
+        const double dx = step->GetStepLength() / 1000.;
 
         const std::string particle_name = step->GetTrack()->GetDefinition()->GetParticleName();
+        
         larnest::LArInteraction interaction;
-
-        if (
-            particle_name == "e-" ||
-            particle_name == "e+" ||
-            particle_name == "mu-" ||
-            particle_name == "mu+" ||
-            particle_name == "proton" ||
-            particle_name == "anti_proton"
-        ) {
-            interaction = larnest::LArInteraction::ER;
-        } 
-
-        if (
+        /*if (
             particle_name == "alpha" ||
             particle_name == "anti_alpha"
         ) {
             interaction = larnest::LArInteraction::Alpha;
-        }
+        } else if (
+            particle_name == "e-" ||
+            particle_name == "e+" ||
+            particle_name == "mu-" ||
+            particle_name == "mu+" 
+        ) {
+            interaction = larnest::LArInteraction::ER;
+        } else if (
+            particle_name == "neutron" || 
+            particle_name == "anti_neutron"
+        ) {
+            interaction = larnest::LArInteraction::NR;
+        }*/
+
+	if (
+	  particle_name == "e-" ||
+	  particle_name == "e+" ||
+          particle_name == "mu-" ||
+	  particle_name == "mu+" ||
+   	  particle_name == "proton" ||
+	  particle_name == "anti_proton"
+	) {
+	  interaction = larnest::LArInteraction::ER;
+	} 
+
+	if (
+ 	  particle_name == "alpha" 
+	) {
+	  interaction = larnest::LArInteraction::Alpha;
+	}
+
+	if (
+	  particle_name == "neutron"
+	) {
+	  interaction == larnest::LArInteraction::NR;
+	}
+
+        const Eigen::Vector3d position(step->GetPreStepPoint()->GetPosition().x(), step->GetPreStepPoint()->GetPosition().y(), step->GetPreStepPoint()->GetPosition().z());
+
+        const double time = step->GetPreStepPoint()->GetGlobalTime();
 
         EnergyDeposit* energy_deposit = new EnergyDeposit(energy, dx, interaction, position, time);
+
         Signal::GetInstance()->AddEnergyDeposit(energy_deposit);
 
         return energy_deposit;
