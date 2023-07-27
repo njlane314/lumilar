@@ -18,27 +18,19 @@
 #define ANALYSIS_MANAGER_HH
 
 #include <string>
-#include "AnalysisMessenger.hh"
 
 class AnalysisManager {
 public:
-    AnalysisManager(AnalysisMessenger* analysis_messenger);
+    AnalysisManager();
     ~AnalysisManager();
 
     static AnalysisManager* GetInstance();
     void SetOutputFilename(std::string filename);
     std::string GetOutputFilename() const;
-    void SetAnalysisFilename(std::string filename);
-    std::string GetAnalysisFilename() const;
-
-    bool AreHitsOutput() const;
 
 private:
     static AnalysisManager* instance_;
     std::string output_filename_;
-    std::string analysis_filename_;
-
-    AnalysisMessenger* analysis_messenger_;
 };
 
 #endif // ANALYSIS_MANAGER_HH

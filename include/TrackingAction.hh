@@ -7,8 +7,6 @@
 #include "G4VProcess.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "TruthManager.hh"
-
 class TrackingAction : public G4UserTrackingAction {
 public:
     TrackingAction();

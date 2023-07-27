@@ -16,7 +16,6 @@
 #include "PhysicsList.hh"
 #include "ActionInitialisation.hh"
 #include "AnalysisManager.hh"
-#include "AnalysisMessenger.hh"
 #include "PropagationTime.hh"
 //_________________________________________________________________________________________
 int main(int argc, char* argv[]) {
@@ -61,17 +60,14 @@ int main(int argc, char* argv[]) {
     now_stream << std::put_time(std::gmtime(&now_time_t), "%Y-%m-%dT%H:%M:%SZ");
 
     std::string output_filename;
-    std::string analysis_filename;
     if (!generator_config.empty()) {
         auto last_slash_pos = generator_config.find_last_of("/\\");
         std::string generator_filename = generator_config.substr(last_slash_pos + 1);
         std::string generator_config_filename_without_ext = std::filesystem::path(generator_filename).stem();
 
         output_filename = "data/" + now_stream.str() + "_" + generator_config_filename_without_ext + ".root";
-        analysis_filename = "data/" + now_stream.str() + "_analysis_results" + ".root";
     } else {
         output_filename = now_stream.str();
-        analysis_filename = now_stream.str();
     }
 
     G4RunManager* run_manager = new G4RunManager();
@@ -93,15 +89,12 @@ int main(int argc, char* argv[]) {
     run_manager->Initialize();
 
     PropagationTime* propagation_time = new PropagationTime();
-    propagation_time->GenerateTimeDistributions();
 
     std::cout << "-- Set output filename to " << output_filename << std::endl;
-    std::cout << "-- Set analysis filename to " << analysis_filename << std::endl;
 
-    AnalysisManager* analysis_manager = new AnalysisManager(new AnalysisMessenger());
+    AnalysisManager* analysis_manager = new AnalysisManager();
 
     analysis_manager->SetOutputFilename(output_filename);
-    analysis_manager->SetAnalysisFilename(analysis_filename);
 
     std::cout << "-- Initialisation complete!" << std::endl;
 

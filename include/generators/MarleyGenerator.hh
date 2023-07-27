@@ -44,7 +44,6 @@
 #include "Signal.hh"
 #include "BulkVertexGenerator.hh"
 #include "GeneratorParticle.hh"
-#include "TruthManager.hh"
 #include "HitDataHandler.hh"
 
 class MarleyGenerator {
