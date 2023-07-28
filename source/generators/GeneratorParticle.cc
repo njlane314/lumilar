@@ -1,5 +1,0 @@
-#include "GeneratorParticle.hh"
-//_________________________________________________________________________________________
-GeneratorParticle::GeneratorParticle() {}
-//_________________________________________________________________________________________
-GeneratorParticle::~GeneratorParticle() {}

@@ -16,7 +16,7 @@ void EventAction::EndOfEventAction(const G4Event* event) {
 
     HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
 
-    hit_data_handler->AddDetectorResponse(signal);
+    hit_data_handler->AddSignal(signal);
     
     this->UpdateProgressBar(event);
 
@@ -60,15 +60,6 @@ void EventAction::UpdateProgressBar(const G4Event* event) {
 }
 //_________________________________________________________________________________________
 void EventAction::RecordHit(const G4Event* event) {
-    TruthManager* truth_manager = TruthManager::GetInstance();
-    auto const particle_map = truth_manager->GetParticleMap();
-
-    double energy_deposited = 0.;
-    for (auto const& p : particle_map) {
-        auto const& particle = p.second;
-        energy_deposited += particle->EnergyDeposited();
-    }
-
     int mod = event->GetEventID() % 1000;
     if (mod == 0) {
         G4cout << "Event " << event->GetEventID() << "..." << G4endl;
@@ -77,22 +68,7 @@ void EventAction::RecordHit(const G4Event* event) {
     HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
     hit_data_handler->SetEvent(event->GetEventID());
 
-    for (auto const& particle : truth_manager->GetInitialGeneratorParticles()) {
-        hit_data_handler->AddInitialGeneratorParticle(particle);
-    }
-
-    for (auto const& particle : truth_manager->GetFinalGeneratorParticles()) {
-        hit_data_handler->AddFinalGeneratorParticle(particle);
-    }
-
-    for (auto const& p : particle_map) {
-        auto const& particle = p.second;
-
-        hit_data_handler->AddParticle(particle);
-    }
 
     hit_data_handler->EventFill();
     hit_data_handler->EventReset();
-
-    truth_manager->EventReset();
 }
