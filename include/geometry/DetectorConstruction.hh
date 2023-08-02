@@ -19,6 +19,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 #include "G4Tokenizer.hh"
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
 
 #include "DetectorMessenger.hh"
 

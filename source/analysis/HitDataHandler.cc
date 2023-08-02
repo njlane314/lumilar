@@ -147,7 +147,6 @@ void HitDataHandler::AddSignal(const Signal* signal) {
     std::vector<EnergyDeposit> trajectory_structure = *signal->GetHits();
 
     for (const auto& hit : trajectory_structure) {
-        std::cout << "-- Filling hits..." << std::endl;
         double energy_deposit = hit.GetEnergy();
         
         hit_energy_deposits_.push_back(energy_deposit);

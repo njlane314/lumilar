@@ -23,6 +23,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4Transform3D detector_transform(G4Translate3D(detector_position) * G4Rotate3D());
     G4VPhysicalVolume* detector_physical = new G4PVPlacement(detector_transform, detector_logical, "detector.physical", 0, false, 0);
     
+    G4VisAttributes* vis_attributes = new G4VisAttributes(G4Colour(0.8, 0.8, 0.8)); 
+    vis_attributes->SetVisibility(true);
+    detector_logical->SetVisAttributes(vis_attributes); 
+
     return detector_physical;
 }
 //_________________________________________________________________________________________

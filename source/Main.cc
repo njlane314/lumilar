@@ -5,11 +5,15 @@
 #include <iomanip>
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 //_________________________________________________________________________________________
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "G4UIterminal.hh"
 #include "G4UItcsh.hh"
+#include "G4VisManager.hh"
+#include "G4VisExecutive.hh"
+#include "G4UIExecutive.hh"
 //_________________________________________________________________________________________
 #include "DetectorConstruction.hh"
 #include "DetectorMessenger.hh"
@@ -70,9 +74,15 @@ int main(int argc, char* argv[]) {
         output_filename = now_stream.str();
     }
 
+    G4VisManager* vis_manager = new G4VisExecutive;
+    vis_manager->Initialize();
+
+    G4UIExecutive* ui = nullptr;
+    if (argc == 1) { ui = new G4UIExecutive(argc, argv); }
+
     G4RunManager* run_manager = new G4RunManager();
     run_manager->SetUserInitialization(new DetectorConstruction(new DetectorMessenger()));
-
+    
     std::ifstream detector_config_stream(detector_config);
     if (detector_config_stream.good()) {
         G4UImanager* ui_manager = G4UImanager::GetUIpointer();
@@ -80,10 +90,10 @@ int main(int argc, char* argv[]) {
         std::cout << "-- Detector macro complete!" << std::endl;
     }
     else {
-        std::cout << "-- Failed to open detetcor macro..." << std::endl;
+        std::cout << "-- Failed to open detector macro..." << std::endl;
         return 1;
     }
-
+    
     run_manager->SetUserInitialization(new PhysicsList());
     run_manager->SetUserInitialization(new ActionInitialisation(output_filename));
     run_manager->Initialize();
@@ -108,8 +118,18 @@ int main(int argc, char* argv[]) {
         std::cout << "-- Failed to open generator macro..." << std::endl;
         return 1;
     }
+
+    G4UImanager* ui_manager = G4UImanager::GetUIpointer();
+
+    std::cout << "-- Interactive mode" << std::endl;
+    ui_manager->ApplyCommand("/control/execute ../system/generator/vis.mac");
+    ui->SessionStart();
+    delete ui;
     
+    delete analysis_manager;
+    delete propagation_time;
     delete run_manager;
+    delete vis_manager;
 
     return 0;
 }

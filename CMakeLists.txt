@@ -10,9 +10,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/system)
 
-find_package(Geant4 REQUIRED)
+find_package(Geant4 REQUIRED ui_all vis_all)
 find_package(ROOT REQUIRED COMPONENTS RIO Core)
 find_package(CLHEP REQUIRED)
+
+set(GEANT4_USE_OPENGL_X11 ON)
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
