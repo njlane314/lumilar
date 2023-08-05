@@ -41,7 +41,7 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
     std::vector<G4PrimaryVertex*> primary_vertices;
     G4ThreeVector vertex(0.0, 0.0, 0.0);
-    bulk_vertex_generator_->ShootVertex(vertex);  
+    //bulk_vertex_generator_->ShootVertex(vertex);  
 
     const auto& marley_cascades = marley_event.get_cascade_levels();
     for (const auto& marley_particle : marley_event.get_final_particles()) {

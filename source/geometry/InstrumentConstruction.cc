@@ -84,6 +84,7 @@ void InstrumentConstruction::CreateUniformRectangularOpticalSensors(PlaneOrienta
     const int num_sensors_width = floor(plane_width / sensor_width_separation);
     const int num_sensors_height = floor(plane_height / sensor_height_separation);
 
+    int sensor_index = 0;
     for (int i = 0; i < num_sensors_width; ++i) {
         for (int j = 0; j < num_sensors_height; ++j) {
             Eigen::Vector3d sensor_position = plane_center;
@@ -110,6 +111,7 @@ void InstrumentConstruction::CreateUniformRectangularOpticalSensors(PlaneOrienta
             }
             std::unique_ptr<OpticalSensor> optical_sensor = OpticalSensor::CreateRectangle(sensor_width, sensor_height, sensor_position, plane_orientation);
             optical_sensors_.push_back(std::move(optical_sensor));
+            sensor_index += 1;
         }
     }
 }

@@ -54,8 +54,9 @@ void DetectorConstruction::ReadOpticalSensorPlacements() {
     std::string dimensions_line;
     std::getline(optical_sensor_placements_file, dimensions_line);
     std::istringstream dimensions_iss(dimensions_line);
+    std::string index;
     double width, height, depth;
-    if (dimensions_iss >> width >> height >> depth) {
+    if (dimensions_iss >> index >> width >> height >> depth) {
         if (width != detector_width_ || height != detector_height_ || depth != detector_depth_) {
             std::cout << "-- Error: Inconsistent detector dimensions in the file." << std::endl;
             exit(1);

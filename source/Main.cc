@@ -42,6 +42,9 @@ int main(int argc, char* argv[]) {
     std::string generator_config;
     std::string detector_config;
 
+    G4UIExecutive* ui = nullptr;
+    ui = new G4UIExecutive(argc, argv);
+
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
 
@@ -53,7 +56,7 @@ int main(int argc, char* argv[]) {
         }
         else {
             std::cout << "-- Failed to parse command line arguments" << std::endl;
-            return 1;
+            
         }
     }
     std::cout << "-- Parsing arguments done" << std::endl;
@@ -74,11 +77,8 @@ int main(int argc, char* argv[]) {
         output_filename = now_stream.str();
     }
 
-    G4VisManager* vis_manager = new G4VisExecutive;
-    vis_manager->Initialize();
-
-    G4UIExecutive* ui = nullptr;
-    if (argc == 1) { ui = new G4UIExecutive(argc, argv); }
+    //G4VisManager* vis_manager = new G4VisExecutive;
+    //vis_manager->Initialize();
 
     G4RunManager* run_manager = new G4RunManager();
     run_manager->SetUserInitialization(new DetectorConstruction(new DetectorMessenger()));
@@ -91,7 +91,6 @@ int main(int argc, char* argv[]) {
     }
     else {
         std::cout << "-- Failed to open detector macro..." << std::endl;
-        return 1;
     }
     
     run_manager->SetUserInitialization(new PhysicsList());
@@ -116,20 +115,17 @@ int main(int argc, char* argv[]) {
     }
     else {
         std::cout << "-- Failed to open generator macro..." << std::endl;
-        return 1;
     }
 
-    G4UImanager* ui_manager = G4UImanager::GetUIpointer();
-
-    std::cout << "-- Interactive mode" << std::endl;
+    /*G4UImanager* ui_manager = G4UImanager::GetUIpointer();  
     ui_manager->ApplyCommand("/control/execute ../system/generator/vis.mac");
     ui->SessionStart();
-    delete ui;
+    delete ui;*/
     
     delete analysis_manager;
     delete propagation_time;
     delete run_manager;
-    delete vis_manager;
+    //delete vis_manager;
 
     return 0;
 }
