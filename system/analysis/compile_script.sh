@@ -6,14 +6,14 @@ if [ "$#" -ne 1 ]; then
 fi
 
 input_script="$1"
-output_executable="../${input_script%.*}"
+output_executable="${input_script%.*}"
 
 if [ ! -f "$input_script" ]; then
     echo "-- Input script file not found: $input_script"
     exit 1
 fi
 
-g++ -o "$output_executable" "$input_script" $(root-config --cflags --libs)
+g++ -o "$output_executable" "$input_script" Dict.cxx $(root-config --cflags --libs)
 
 if [ $? -eq 0 ]; then
     echo "-- Compilation successful"
