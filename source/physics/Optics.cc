@@ -4,7 +4,7 @@ Optics::Optics() {}
 //_________________________________________________________________________________________
 Optics::~Optics() {}
 //_________________________________________________________________________________________
-int num_threads = std::thread::hardware_concurrency();
+int num_threads = 1; //std::thread::hardware_concurrency();
 ThreadPool Optics::optics_thread_pool_(num_threads);
 //_________________________________________________________________________________________
 bool Optics::debug_status_ = true;
@@ -71,12 +71,17 @@ void Optics::ProcessRadiant(const PhotonRadiant& photon_radiant, const OpticalSe
 
         if (photons_collected > 0) {
             for (int i = 0; i < photons_collected; i++) {
-                double angle = 90.;
-                double arrival_time = SampleArrivalTime(initial_time, distance, angle);
-                if (arrival_time > 0) {
-                    const_cast<OpticalSensor&>(*optical_sensor).AddArrivalTime(arrival_time);
-                    debug_photons_collected_ += 1;
-                }
+                double QUANTUM_EFFIC = 0.1;
+                double ACCEPTANCE_AREA = 0.1;
+
+                if (CLHEP::RandBinomial::shoot(1, QUANTUM_EFFIC) == 1 && CLHEP::RandBinomial::shoot(1, ACCEPTANCE_AREA) == 1) {
+                    double angle = 90.;
+                    double arrival_time = SampleArrivalTime(initial_time, distance, angle);
+                    if (arrival_time > 0) {
+                        const_cast<OpticalSensor&>(*optical_sensor).AddArrivalTime(arrival_time);
+                        debug_photons_collected_ += 1;
+                    }
+                } 
             }
         }
     }
@@ -216,6 +221,7 @@ void Optics::PrintDebug(std::chrono::time_point<std::chrono::high_resolution_clo
     std::cout << std::setw(60) << std::left << "Total Emission Photons: " << debug_emission_photons_ << std::endl;
     std::cout << std::setw(60) << std::left << "Geometric Acceptance: " << std::fixed << std::setprecision(5) << debug_geometric_acceptance_ * 100 << "%" << std::endl;
     std::cout << std::setw(60) << std::left << "Photons Collected: " << debug_photons_collected_ << std::endl;
+    std::cout << std::setw(60) << std::left << "Collection Efficiency: " << static_cast<double>(debug_photons_collected_) / static_cast<double>(debug_emission_photons_) * 100 << "%" << std::endl;
     std::cout << std::setw(60) << std::left << "System Elapsed Time: " << elapsed_time.count() << " ms" << std::endl;
     
     std::cout << line << std::endl << std::endl;

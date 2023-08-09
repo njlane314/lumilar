@@ -55,6 +55,7 @@ void HitDataHandler::Book() {
     arrival_photons_tree_ = new TTree("arrival_photons_tree", "arrival photons tree");
 
     arrival_photons_tree_->Branch("sensor_arrival_times",    &sensor_arrival_times_);
+    arrival_photons_tree_->Branch("sensor_count",            &sensor_count_);
 }
 //______________________________________________________________________________
 void HitDataHandler::Save() {
@@ -94,6 +95,7 @@ void HitDataHandler::EventReset() {
     hit_total_energy_deposit_ = 0.;
 
     sensor_arrival_times_.clear();
+    sensor_count_.clear();
 }
 //______________________________________________________________________________
 void HitDataHandler::EventFill() {
@@ -168,5 +170,6 @@ void HitDataHandler::AddSignal(const Signal* signal) {
     const OpticalSensorVector& optical_sensors = InstrumentConstruction::GetInstance()->GetOpticalSensors();
     for (const auto& sensor : optical_sensors) {
         sensor_arrival_times_.push_back(sensor->GetArrivalTimes());
+        sensor_count_.push_back(sensor->GetPhotonCount());
     }
 }

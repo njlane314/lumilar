@@ -6,7 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 input_script="$1"
-output_executable="${input_script%.*}"
+output_executable="bin/${input_script%.*}"
 
 if [ ! -f "$input_script" ]; then
     echo "-- Input script file not found: $input_script"

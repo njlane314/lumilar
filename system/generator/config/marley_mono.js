@@ -12,10 +12,11 @@
     source: {
         neutrino: "ve",        // The source produces electron neutrinos
         type: "monoenergetic",
-        energy: 15.0,          // MeV
+        energy: 8.0,          // MeV
+        weight_flux: false,
     },
+
+    direction: "isotropic",
   
-    // Incident neutrino direction 3-vector
-    direction: { x: 0.0, y: 0.0, z: 1.0 },
-  
+    log: [ { file: "stdout", level: "disabled" } ],
   }
