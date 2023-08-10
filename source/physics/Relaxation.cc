@@ -14,6 +14,7 @@ double Relaxation::SampleEmissionTime() {
         emission_time = CLHEP::RandExponential::shoot(singlet_lifetime);
     } else {
         double triplet_lifetime = 2100. * ns;
+        
         double excited_rate = 1.3e-4;
         double quenched_rate = 2.3e-4;
 

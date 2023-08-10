@@ -12,7 +12,7 @@
     source: {
         neutrino: "ve",        // The source produces electron neutrinos
         type: "monoenergetic",
-        energy: 8.0,          // MeV
+        energy: 28.0,          // MeV
         weight_flux: false,
     },
 

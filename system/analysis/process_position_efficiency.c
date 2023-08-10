@@ -80,15 +80,31 @@ int main(int argc, char* argv[]) {
     efficiencyTree->Branch("DriftDistance", &rDriftDistance, "DriftDistance/D");
 
     std::vector<int> M_values = {4}; // triggered sensor threshold
-    std::vector<int> N_values = {10, 20, 50, 100}; // sensor photon threshold
+    std::vector<int> N_values = {10, 15, 30, 50}; // sensor photon threshold
 
     std::string BIN_PATH = "/home/lane/Software/src/lumilar/system/data/";
     std::vector<std::string> rootFileNames = {
+        BIN_PATH + "marley_mono_8_drift_pos1700.root",
+        BIN_PATH + "marley_mono_8_drift_pos1600.root",
+        BIN_PATH + "marley_mono_8_drift_pos1500.root",
         BIN_PATH + "marley_mono_8_drift_pos1400.root",
-        BIN_PATH + "marley_mono_8_drift_pos1050.root",
+        BIN_PATH + "marley_mono_8_drift_pos1300.root",
+        BIN_PATH + "marley_mono_8_drift_pos1200.root",
+        BIN_PATH + "marley_mono_8_drift_pos1100.root",
+        BIN_PATH + "marley_mono_8_drift_pos1000.root",
+        BIN_PATH + "marley_mono_8_drift_pos900.root",
+        BIN_PATH + "marley_mono_8_drift_pos800.root",
         BIN_PATH + "marley_mono_8_drift_pos700.root",
-        BIN_PATH + "marley_mono_8_drift_pos350.root",
+        BIN_PATH + "marley_mono_8_drift_pos600.root",
+        BIN_PATH + "marley_mono_8_drift_pos500.root",
+        BIN_PATH + "marley_mono_8_drift_pos400.root",
+        BIN_PATH + "marley_mono_8_drift_pos300.root",
+        BIN_PATH + "marley_mono_8_drift_pos200.root",
+        BIN_PATH + "marley_mono_8_drift_pos100.root",
         BIN_PATH + "marley_mono_8_drift_pos0.root",
+        BIN_PATH + "marley_mono_8_drift_neg100.root",
+        BIN_PATH + "marley_mono_8_drift_neg200.root",
+        BIN_PATH + "marley_mono_8_drift_neg300.root",
     };
 
     for (const std::string& rootFileName : rootFileNames) {
