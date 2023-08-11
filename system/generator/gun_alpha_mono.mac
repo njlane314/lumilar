@@ -1,0 +1,29 @@
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/verbose 0
+
+/run/initialize
+
+# general, marley
+/generator/set general
+
+# Setting particle type to alpha
+/gps/particle alpha
+
+# Setting source to be uniformly distributed in a box volume
+/gps/pos/shape Rectangle
+/gps/pos/halfx 175 cm
+/gps/pos/halfy 600 cm
+/gps/pos/halfz 1500 cm
+/gps/pos/centre 0 0 0 cm
+
+# Angular distribution remains isotropic
+/gps/ang/type iso
+
+# Monochromatic energy distribution
+/gps/ene/type Mono
+/gps/ene/mono 10 MeV  # Adjusting energy to typical alpha particle energy
+
+# Run the simulation for 1000 events
+/run/beamOn 1000

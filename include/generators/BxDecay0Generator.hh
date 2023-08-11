@@ -1,18 +1,3 @@
-//____________________________________________________________________________
-/*!
-
-\class   generators::BxDecay0Generator
-
-\brief   This class sets the radiological generator for the simulation.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 13, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef BXDECAY0G4_PRIMARY_GENERATOR_HH
 #define BXDECAY0G4_PRIMARY_GENERATOR_HH
 
@@ -22,6 +7,9 @@
 
 #include <G4VUserPrimaryGeneratorAction.hh>
 #include <G4ParticleGun.hh>
+
+#include "BulkVertexGenerator.hh"
+#include "HitDataHandler.hh"
 
 class G4Event;
 class G4ParticleGun;
@@ -93,6 +81,7 @@ namespace BxDecay0Generator {
     const VertexGeneratorInterface & GetVertexGeneratorConst() const;
     
   private:
+    BulkVertexGenerator* bulk_vertex_generator_;
     G4ParticleGun * _particle_gun_ = nullptr; 
     VertexGeneratorInterface * _vertex_generator_ = nullptr;
     bool _owned_vertex_generator_ = false;

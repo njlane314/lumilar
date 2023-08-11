@@ -29,6 +29,9 @@ void HitDataHandler::Book() {
     marley_generator_tree_->Branch("marley_generator_interaction_vertex_y", &marley_generator_interaction_vertex_y_);
     marley_generator_tree_->Branch("marley_generator_interaction_vertex_z", &marley_generator_interaction_vertex_z_);
 
+    bxdecay_generator_tree_ = new TTree("bxdecay_generator_tree", "bxdecay generator tree");
+
+    bxdecay_generator_tree_->Branch("bxdecay_generator_momentum", &bxdecay_generator_momentum_);
 
     event_tree_ = new TTree("event_tree", "event tree");
 
@@ -62,6 +65,7 @@ void HitDataHandler::Save() {
     tfile_->cd();
 
     marley_generator_tree_->Write();
+    bxdecay_generator_tree_->Write();
     event_tree_->Write();
     hit_tree_->Write();
     arrival_photons_tree_->Write();
@@ -79,6 +83,8 @@ void HitDataHandler::EventReset() {
     marley_generator_interaction_vertex_x_ = 0.;
     marley_generator_interaction_vertex_y_ = 0.;
     marley_generator_interaction_vertex_z_ = 0.;
+
+    bxdecay_generator_momentum_.clear();
 
     total_optical_photons_ = 0;
     total_thermal_electrons_ = 0;
@@ -101,7 +107,9 @@ void HitDataHandler::EventReset() {
 void HitDataHandler::EventFill() {
     event_tree_->Fill();
     marley_generator_tree_->Fill();
+    bxdecay_generator_tree_->Fill();
     arrival_photons_tree_->Fill();
+    hit_tree_->Fill();
 }
 //______________________________________________________________________________
 void HitDataHandler::SetRun(const int value) {
@@ -140,6 +148,10 @@ void HitDataHandler::AddMarleyEvent(const marley::Event* marley_event, const G4T
     marley_generator_interaction_vertex_x_ = interaction_vertex->x();
     marley_generator_interaction_vertex_y_ = interaction_vertex->y();
     marley_generator_interaction_vertex_z_ = interaction_vertex->z();
+}
+//______________________________________________________________________________
+void HitDataHandler::AddBxDecayParticle(const bxdecay0::particle* bxdecay_particle) {
+    bxdecay_generator_momentum_.push_back(bxdecay_particle->get_p());
 }
 //______________________________________________________________________________
 void HitDataHandler::AddSignal(const Signal* signal) {

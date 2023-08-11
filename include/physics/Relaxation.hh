@@ -12,6 +12,8 @@
 #include <CLHEP/Random/JamesRandom.h>
 #include <CLHEP/Random/RandBinomial.h>
 
+#include "LArNEST.h"
+
 #include "EnergyDeposit.hh"
 
 class Relaxation {
@@ -19,7 +21,7 @@ public:
     Relaxation();
     ~Relaxation();
 
-    static double SampleEmissionTime();
+    static double SampleEmissionTime(larnest::LArInteraction interaction);
 };
 
 #endif // RELAXATION_HH

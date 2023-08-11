@@ -17,6 +17,9 @@
 #include "TTree.h"
 #include "TBranch.h"
 
+#include "BxDecay0Generator.hh"
+#include "bxdecay0/particle.h"  
+
 #include <map>
 #include <set>
 
@@ -34,6 +37,7 @@ public:
     void SetEvent(const int);
 
     void AddSignal(const Signal* signal);
+    void AddBxDecayParticle(const bxdecay0::particle* bxdecay_particle);
     void AddMarleyEvent(const marley::Event*, const G4ThreeVector*);
 
     static HitDataHandler* GetInstance();
@@ -46,6 +50,7 @@ private:
     TTree* event_tree_;
     TTree* hit_tree_;
     TTree* marley_generator_tree_;
+    TTree* bxdecay_generator_tree_;
     TTree* arrival_photons_tree_;
 
     int run_;
@@ -58,6 +63,8 @@ private:
     double marley_generator_interaction_vertex_x_;
     double marley_generator_interaction_vertex_y_;
     double marley_generator_interaction_vertex_z_;
+
+    std::vector<double> bxdecay_generator_momentum_;
 
     int total_optical_photons_;
     int total_thermal_electrons_;

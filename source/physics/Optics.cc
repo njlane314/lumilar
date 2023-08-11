@@ -40,6 +40,7 @@ void Optics::CalculateOpticalSignal(const Signal* signal, const OpticalSensorVec
 }
 //_________________________________________________________________________________________
 void Optics::ProcessRadiant(const PhotonRadiant& photon_radiant, const OpticalSensorVector* optical_sensor_vector) {
+    larnest::LArInteraction radiant_interaction = photon_radiant.GetInteraction();
     int radiant_photon_count = photon_radiant.GetPhotonCount();
 
     Eigen::Vector3d radiant_position = photon_radiant.GetPosition();
@@ -76,7 +77,7 @@ void Optics::ProcessRadiant(const PhotonRadiant& photon_radiant, const OpticalSe
 
                 if (CLHEP::RandBinomial::shoot(1, QUANTUM_EFFIC) == 1 && CLHEP::RandBinomial::shoot(1, ACCEPTANCE_AREA) == 1) {
                     double angle = 90.;
-                    double arrival_time = SampleArrivalTime(initial_time, distance, angle);
+                    double arrival_time = SampleArrivalTime(initial_time, distance, angle, radiant_interaction);
                     if (arrival_time > 0) {
                         const_cast<OpticalSensor&>(*optical_sensor).AddArrivalTime(arrival_time);
                         debug_photons_collected_ += 1;
@@ -87,9 +88,8 @@ void Optics::ProcessRadiant(const PhotonRadiant& photon_radiant, const OpticalSe
     }
 }
 //_________________________________________________________________________________________
-double Optics::SampleArrivalTime(const double initial_time, const double distance, const double angle) {
-    double emission_time = Relaxation::SampleEmissionTime();
-
+double Optics::SampleArrivalTime(const double initial_time, const double distance, const double angle, const larnest::LArInteraction interaction) {
+    double emission_time = Relaxation::SampleEmissionTime(interaction);
     double propagation_time = PropagationTime::GetInstance()->SamplePropagationTime(distance, angle);
 
     double arrival_time = initial_time + emission_time + propagation_time;

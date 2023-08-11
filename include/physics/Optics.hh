@@ -31,7 +31,7 @@ public:
 
     static double GeometricQuenching(const OpticalSensor* sensor, const Eigen::Vector3d* separation);
     static double AbsorptionQuenching(const double distance);
-    static double SampleArrivalTime(const double initial_time, const double distance, const double angle);
+    static double SampleArrivalTime(const double initial_time, const double distance, const double angle, const larnest::LArInteraction interaction);
     
     static double CalculateSolidAngle(const OpticalSensor* sensor, const Eigen::Vector3d* separation);
     static Eigen::Vector3d CreateProjectionGeometry(const OpticalSensor* sensor, const Eigen::Vector3d* separation);

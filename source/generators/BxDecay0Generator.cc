@@ -24,6 +24,7 @@
 //_________________________________________________________________________________________
 namespace {
   struct RadiologicalGun : public G4ParticleGun {
+    friend class HitDataHandler;
   public:
     RadiologicalGun() = default;
     RadiologicalGun(G4int number_of_particles) : G4ParticleGun(number_of_particles) {}
@@ -360,6 +361,7 @@ namespace BxDecay0Generator {
   }
   //_____________________________________________________________________________________ 
   PrimaryGeneratorAction::PrimaryGeneratorAction(int verbosity_) : G4VUserPrimaryGeneratorAction(), _particle_gun_(nullptr) {
+    bulk_vertex_generator_ = new BulkVertexGenerator();
     SetVerbosity(verbosity_);
     if (IsDebug()) std::cerr << "[debug] Instantiating BxDecay0 Geant4 Plugin PIMPL...\n";
     _pimpl_.reset(new pimpl_type(this));
@@ -371,6 +373,7 @@ namespace BxDecay0Generator {
   }
   //_____________________________________________________________________________________
   PrimaryGeneratorAction::PrimaryGeneratorAction(const ConfigurationInterface & config_inter_, int verbosity_) : PrimaryGeneratorAction(verbosity_) {
+    bulk_vertex_generator_ = new BulkVertexGenerator();
     SetConfiguration(config_inter_);
     return;
   }
@@ -636,6 +639,9 @@ namespace BxDecay0Generator {
     }
 
     for (const auto & particle : particles) {
+      HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
+      hit_data_handler->AddBxDecayParticle(&particle);
+
       dynamic_cast<RadiologicalGun*>(_particle_gun_)->ResetParticleData();
       if (particle.is_electron()) {
         _particle_gun_->SetParticleDefinition(G4Electron::ElectronDefinition());
@@ -661,6 +667,8 @@ namespace BxDecay0Generator {
                              particle.get_pz() * CLHEP::MeV);
       _particle_gun_->SetParticleMomentum(momentum);
       
+      G4ThreeVector vertex(0.0, 0.0, 0.0);
+      bulk_vertex_generator_->ShootVertex(vertex);
       _particle_gun_->SetParticlePosition(vertex);
       
       _particle_gun_->GeneratePrimaryVertex(event_);
