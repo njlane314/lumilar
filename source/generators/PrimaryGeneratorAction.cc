@@ -18,7 +18,14 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(std::string output_filename)
 	set_marley_source_cmd_->SetParameterName("Config", false, false);
 
 	bxdecay0_directory_ = new G4UIdirectory("/generator/bxdecay0/");
-	bxdecay0_directory_->SetGuidance("BXdecay0 generator control commands");
+	bxdecay0_directory_->SetGuidance("BxDecay0 generator control commands");
+
+	fixed_position_directory_ = new G4UIdirectory("/generator/position/fixed/");
+	fixed_position_directory_->SetGuidance("Fixed position generator control commands");
+
+	set_fixed_position_cmd_ = new G4UIcmdWith3Vector("/generator/position/fixed/set", this);
+	set_fixed_position_cmd_->SetGuidance("Sets the fixed position of the generator");
+	set_fixed_position_cmd_->SetParameterName("x", "y", "z", false, false);
 }
 //_________________________________________________________________________________________
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {}
@@ -49,6 +56,11 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 		G4Exception("PrimaryGeneratorAction::SetNewValue()", "", FatalErrorInArgument, "Error: Generator type not recognised");
 	}
 
+	if (cmd == set_fixed_position_cmd_) {
+		fixed_position_ = set_fixed_position_cmd_->GetNew3VectorValue(new_value);
+		use_fixed_position_ = true;
+	}
+
 	if (!detector_solid_) {
 		std::cout << "Detector dimensions not set, attempting to set them now" << std::endl;
 		G4LogicalVolume* detector_logical = G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
@@ -65,6 +77,18 @@ void PrimaryGeneratorAction::SetNewValue(G4UIcommand* cmd, G4String new_value) {
 }
 //_________________________________________________________________________________________
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event) {
+	if (use_fixed_position_) {
+        if (generator_type_ == "marley") {
+            marley_generator_->SetPosition(fixed_position_);
+        }
+        else if (generator_type_ == "bxdecay0") {
+            bxdecay0_generator_->SetPosition(fixed_position_);
+        }
+        else if (generator_type_ == "general") {
+            general_generator_->SetPosition(fixed_position_);
+        }
+    }
+
 	if (generator_type_ == "marley") {
 		marley_generator_->GeneratePrimaryVertex(event);
 	}

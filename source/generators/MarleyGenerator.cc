@@ -25,6 +25,11 @@ MarleyGenerator::MarleyGenerator(std::string marley_json, std::string output_fil
 //_________________________________________________________________________________________
 MarleyGenerator::~MarleyGenerator() {}
 //_________________________________________________________________________________________
+void MarleyGenerator::SetPosition(G4ThreeVector position) {
+    use_fixed_position_ = true;
+    fixed_position_ = position;
+}
+//_________________________________________________________________________________________
 void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     bool marley_event_debug = false;
 
@@ -41,9 +46,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
 
     std::vector<G4PrimaryVertex*> primary_vertices;
     G4ThreeVector vertex(0.0, 0.0, 0.0);
-    bulk_vertex_generator_->ShootVertex(vertex); 
-
-    //vertex.setX(200.0); // fix drift distance
+    if (use_fixed_position_) {
+        vertex = fixed_position_;
+    } else {
+        vertex = bulk_vertex_generator_->ShootVertex(vertex);
+    }
 
     const auto& marley_cascades = marley_event.get_cascade_levels();
     for (const auto& marley_particle : marley_event.get_final_particles()) {

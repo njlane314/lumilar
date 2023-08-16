@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
 
     std::string generator_config;
     std::string detector_config;
+    std::string output_filename;
 
     G4UIExecutive* ui = nullptr;
     ui = new G4UIExecutive(argc, argv);
@@ -54,6 +55,9 @@ int main(int argc, char* argv[]) {
         else if ((arg == "-d" || arg == "--detector") && i + 1 < argc) {
             detector_config = argv[++i];
         }
+        else if ((arg == "-o" || arg == "--output") && i + 1 < argc) {
+            output_filename = argv[++i];
+        }
         else {
             std::cout << "-- Failed to parse command line arguments" << std::endl;
             
@@ -66,17 +70,14 @@ int main(int argc, char* argv[]) {
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
     now_stream << std::put_time(std::gmtime(&now_time_t), "%Y-%m-%dT%H:%M:%SZ");
 
-    std::string output_filename;
-    if (!generator_config.empty()) {
+    if (!generator_config.empty() && output_filename.empty()) {
         auto last_slash_pos = generator_config.find_last_of("/\\");
         std::string generator_filename = generator_config.substr(last_slash_pos + 1);
         std::string generator_config_filename_without_ext = std::filesystem::path(generator_filename).stem();
 
         output_filename = "data/" + now_stream.str() + "_" + generator_config_filename_without_ext + ".root";
-    } else {
-        output_filename = now_stream.str();
-    }
-
+    } 
+    
     //G4VisManager* vis_manager = new G4VisExecutive;
     //vis_manager->Initialize();
 

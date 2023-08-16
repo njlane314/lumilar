@@ -55,6 +55,8 @@ public:
 
     void GeneratePrimaryVertex(G4Event* event);
     double SampleFiniteParticleTime(double half_life);
+
+    void SetPosition(G4ThreeVector position);
     
     void PrintEvent(const marley::Event& event);
 
@@ -70,6 +72,9 @@ private:
 
     std::string energy_dist_name_;
     std::string time_dist_name_;
+
+    bool use_fixed_position_ = false;
+    G4ThreeVector fixed_position_;
 };
 
 #endif // MARLEY_GENERATOR_HH

@@ -1,18 +1,3 @@
-//____________________________________________________________________________
-/*!
-
-\class   generators::PrimaryGeneratorAction
-
-\brief   This class sets the event generator for the simulation.
-
-\author  Nicholas Lane <nicholas.lane \at postgrad.manchester.ac.uk>, University of Manchester
-
-\created May 11, 2023
-
-\cpright GNU Public License
-*/
-//____________________________________________________________________________
-
 #ifndef PRIMARY_GENERATOR_ACTION_HH
 #define PRIMARY_GENERATOR_ACTION_HH
 
@@ -73,6 +58,9 @@ private:
     BxDecay0Generator::PrimaryGeneratorAction* bxdecay0_generator_;
 
     std::string output_filename_;
+
+    G4ThreeVector fixed_position_;
+    bool use_fixed_position_ = false;
 };
 
 #endif // PRIMARY_GENERATOR_ACTION_HH
