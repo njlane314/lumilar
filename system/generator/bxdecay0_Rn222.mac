@@ -1,0 +1,10 @@
+/control/verbose 0
+/run/verbose 0
+/tracking/verbose 0
+/run/initialize
+
+# general, marley
+/generator/set bxdecay0
+
+/bxdecay0/generator/background Rn222 123456
+/run/beamOn 10000
