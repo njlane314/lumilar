@@ -388,6 +388,7 @@
     Emax: 16.12,
   },
 
-  // Incident neutrino direction 3-vector
   direction: "isotropic",
+
+  log: [ { file: "stdout", level: "disabled" } ],
 }

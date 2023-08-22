@@ -68,6 +68,10 @@ namespace BxDecay0Generator {
     bool HasVertexGenerator() const;
     void SetVerbosity(int level);
     int GetVerbosity() const;
+    void SetPosition(G4ThreeVector position);
+
+    bool use_fixed_position_ = false;
+    G4ThreeVector fixed_position_;
 
     bool IsInfo() const;
     bool IsDebug() const;

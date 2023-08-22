@@ -84,9 +84,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event) {
         else if (generator_type_ == "bxdecay0") {
             bxdecay0_generator_->SetPosition(fixed_position_);
         }
-        else if (generator_type_ == "general") {
-            general_generator_->SetPosition(fixed_position_);
-        }
     }
 
 	if (generator_type_ == "marley") {

@@ -69,37 +69,20 @@ std::vector<double> Signal::GetLengths() const {
     return lengths;
 }
 //_________________________________________________________________________________________
-void Signal::AddPrimaryEnergy(double primary_energy) {
-    primary_energy_ = primary_energy;
+marley::Event& Signal::GetMarleyEvent() {
+    return marley_event_;
 }
 //_________________________________________________________________________________________
-double Signal::GetPrimaryEnergy() const {
-    return primary_energy_;
+G4ThreeVector& Signal::GetMarleyInteractionVertex() {
+    return marley_interaction_vertex_;
 }
 //_________________________________________________________________________________________
-void Signal::AddInteractionVertex(G4ThreeVector vertex) {
-    interaction_vertex_ = vertex;
+void Signal::SetMarleyEvent(const marley::Event& event) {
+    marley_event_ = event;
 }
 //_________________________________________________________________________________________
-G4ThreeVector Signal::GetInteractionVertex() const {
-    return interaction_vertex_;
-}
-//_________________________________________________________________________________________
-void Signal::AddDecayType(int decay_type) {
-    decay_type_ = decay_type;
-}
-//_____________________
-void Signal::AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels) {
-    for (const auto& level : cascade_levels) {
-        cascade_levels_.push_back(level->energy());
-    }
-}
-std::vector<double> Signal::GetCascadeLevels() const {
-    return cascade_levels_;
-}
-//_________________________________________________________________________________________
-int Signal::GetDecayType() const {
-    return decay_type_;
+void Signal::SetMarleyInteractionVertex(const G4ThreeVector& vertex) {
+    marley_interaction_vertex_ = vertex;
 }
 //_________________________________________________________________________________________
 void Signal::DeleteSignal() {

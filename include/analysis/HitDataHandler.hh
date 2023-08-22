@@ -36,9 +36,9 @@ public:
     void SetRun(const int);
     void SetEvent(const int);
 
-    void AddSignal(const Signal* signal);
+    void AddSignal(Signal* signal);
     void AddBxDecayParticle(const bxdecay0::particle* bxdecay_particle);
-    void AddMarleyEvent(const marley::Event*, const G4ThreeVector*);
+    void AddMarleyEvent(marley::Event*, G4ThreeVector*);
 
     static HitDataHandler* GetInstance();
 

@@ -216,4 +216,6 @@ Emax: 18.8,
 
 direction: "isotropic",
 
+  log: [ { file: "stdout", level: "disabled" } ],
+
 }

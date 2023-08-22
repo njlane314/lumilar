@@ -23,11 +23,6 @@ public:
   
   static Signal* GetInstance();
 
-  void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
-  void AddPrimaryEnergy(double primary_energy);
-  void AddDecayType(int decay_type);
-  void AddInteractionVertex(G4ThreeVector vertex);
-  
   Scintillation* GetScintillation() const;
   Ionisation* GetIonisation() const;
   
@@ -35,12 +30,14 @@ public:
   std::vector<double> GetEnergyDeposits() const;
   std::vector<double> GetLinearEnergyTransfers() const;
   std::vector<double> GetLengths() const;
-  double GetPrimaryEnergy() const;
-  int GetDecayType() const;
-  G4ThreeVector GetInteractionVertex() const;
 
-  void AddCascadeLevels(const std::vector<marley::Level*>& cascade_levels); 
-  std::vector<double> GetCascadeLevels() const;
+  marley::Event& GetMarleyEvent();
+  G4ThreeVector& GetMarleyInteractionVertex();
+
+  void SetMarleyInteractionVertex(const G4ThreeVector& vertex);
+  void SetMarleyEvent(const marley::Event& event);
+
+  void AddEnergyDeposit(const EnergyDeposit* energy_deposit);
 
   void DeleteSignal();
 
@@ -54,12 +51,9 @@ private:
   
   std::unique_ptr<EnergyDeposit> energy_deposit_;
   std::unique_ptr<std::vector<EnergyDeposit>> track_structure_;
- 
-  std::vector<double> cascade_levels_;
 
-  double primary_energy_;
-  int decay_type_;
-  G4ThreeVector interaction_vertex_;
+  marley::Event marley_event_;
+  G4ThreeVector marley_interaction_vertex_;
 };
 
 #endif // SIGNAL_HH

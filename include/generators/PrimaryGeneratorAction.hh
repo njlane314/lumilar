@@ -18,6 +18,7 @@
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4UIcmdWith3Vector.hh"
 
 #include "DetectorConstruction.hh"
 #include "MarleyGenerator.hh"
@@ -48,6 +49,9 @@ private:
 
     G4UIdirectory* bxdecay0_directory_;
     G4UIcmdWithAString* set_bxdecay0_source_cmd_;
+
+    G4UIdirectory* fixed_position_directory_;
+    G4UIcmdWith3Vector* set_fixed_position_cmd_;
 
     G4String generator_type_;
     G4GeneralParticleSource* general_generator_;

@@ -49,8 +49,11 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     if (use_fixed_position_) {
         vertex = fixed_position_;
     } else {
-        vertex = bulk_vertex_generator_->ShootVertex(vertex);
+        bulk_vertex_generator_->ShootVertex(vertex);
     }
+
+    Signal::GetInstance()->SetMarleyEvent(marley_event);
+    Signal::GetInstance()->SetMarleyInteractionVertex(vertex);
 
     const auto& marley_cascades = marley_event.get_cascade_levels();
     for (const auto& marley_particle : marley_event.get_final_particles()) {
@@ -80,9 +83,6 @@ void MarleyGenerator::GeneratePrimaryVertex(G4Event* event) {
     for (const auto& primary_vertex : primary_vertices) {
         event->AddPrimaryVertex(primary_vertex);
     }
-
-    HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
-    hit_data_handler->AddMarleyEvent(&marley_event, &vertex);
 }
 //_________________________________________________________________________________________
 double MarleyGenerator::SampleFiniteParticleTime(double half_life) {

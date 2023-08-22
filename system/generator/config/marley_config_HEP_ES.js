@@ -214,6 +214,8 @@ weights: [
 Emax: 18.8,
 },
 
-direction:{x:0.0, y:-1.0, z:0.0},
+direction: "isotropic",
+
+  log: [ { file: "stdout", level: "disabled" } ],
 
 }

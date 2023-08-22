@@ -10,7 +10,7 @@
 /generator/set marley
 
 # marley_mono.js, marley_solar.js, marley_unif.js
-/generator/marley/source generator/config/marley_unif.js
+/generator/marley/source generator/config/marley_config_B8_ES.js
 
 # run
 /run/beamOn 10000

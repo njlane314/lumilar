@@ -613,6 +613,11 @@ namespace BxDecay0Generator {
   const VertexGeneratorInterface & PrimaryGeneratorAction::GetVertexGeneratorConst() const {
     return *_vertex_generator_;
   }
+  //_____________________________________________________________________________________
+  void PrimaryGeneratorAction::SetPosition(G4ThreeVector position) {
+    use_fixed_position_ = true;
+    fixed_position_ = position;
+}
   //_____________________________________________________________________________________ 
   void PrimaryGeneratorAction::GeneratePrimaries(G4Event * event_) {
     if (IsTrace()) std::cerr << "[trace] BxDecay0Generator::PrimaryGeneratorAction::GeneratePrimaries: Entering..." << '\n';
@@ -627,15 +632,19 @@ namespace BxDecay0Generator {
     if (IsDebug()) std::cerr << "[debug] BxDecay0Generator::PrimaryGeneratorAction::GeneratePrimaries: Nb particles=" << particles.size() << '\n';
 
     G4ThreeVector vertex(0.0, 0.0, 0.0);
-    if (HasVertexGenerator()) {
-      if (not _vertex_generator_->HasNextVertex()) {
-        G4RunManager::GetRunManager()->AbortRun();
-        G4Exception("BxDecay0Generator::PrimaryGeneratorAction::GeneratePrimaries: ",
-                    "InvalidArgument",
-                    RunMustBeAborted,
-                    "Vertex generator has no more vertex available! Abort run!");
+    if (use_fixed_position_) {
+      vertex = fixed_position_;
+    } else {
+      if (HasVertexGenerator()) {
+        if (not _vertex_generator_->HasNextVertex()) {
+          G4RunManager::GetRunManager()->AbortRun();
+          G4Exception("BxDecay0Generator::PrimaryGeneratorAction::GeneratePrimaries: ",
+                      "InvalidArgument",
+                      RunMustBeAborted,
+                      "Vertex generator has no more vertex available! Abort run!");
+        }
+        _vertex_generator_->ShootVertex(vertex);  
       }
-      _vertex_generator_->ShootVertex(vertex);  
     }
 
     for (const auto & particle : particles) {

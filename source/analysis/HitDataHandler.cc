@@ -120,7 +120,7 @@ void HitDataHandler::SetEvent(const int value) {
     event_ = value;
 }
 //______________________________________________________________________________
-void HitDataHandler::AddMarleyEvent(const marley::Event* marley_event, const G4ThreeVector* interaction_vertex) {
+void HitDataHandler::AddMarleyEvent(marley::Event* marley_event, G4ThreeVector* interaction_vertex) {
     marley_generator_neutrino_energy_ = marley_event->projectile().total_energy();
 
     const auto& marley_cascades = marley_event->get_cascade_levels();
@@ -154,7 +154,7 @@ void HitDataHandler::AddBxDecayParticle(const bxdecay0::particle* bxdecay_partic
     bxdecay_generator_momentum_.push_back(bxdecay_particle->get_p());
 }
 //______________________________________________________________________________
-void HitDataHandler::AddSignal(const Signal* signal) {
+void HitDataHandler::AddSignal(Signal* signal) {
     total_optical_photons_ = signal->GetScintillation()->GetTotalPhotonCount();
     total_thermal_electrons_ = signal->GetIonisation()->GetTotalElectronCount();
 
@@ -184,4 +184,6 @@ void HitDataHandler::AddSignal(const Signal* signal) {
         sensor_arrival_times_.push_back(sensor->GetArrivalTimes());
         sensor_count_.push_back(sensor->GetPhotonCount());
     }
+
+    this->AddMarleyEvent(&signal->GetMarleyEvent(), &signal->GetMarleyInteractionVertex());
 }

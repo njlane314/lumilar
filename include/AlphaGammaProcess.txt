@@ -1,0 +1,16 @@
+#ifndef ALPHA_GAMMA_PROCESS_HH
+#define ALPHA_GAMMA_PROCESS_HH
+
+class AlphaGammaProcess : public G4VDiscreteProcess {
+public:
+    AlphaGammaProcess(const G4String& processName = "AlphaGammaCapture", G4ProcessType type = fElectromagnetic);
+    virtual ~AlphaGammaProcess();
+
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize, G4ForceCondition* condition) override;
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
+private:
+    G4ParticleChange aParticleChange;
+};
+
+#endif // ALPHA_GAMMA_PROCESS
