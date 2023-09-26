@@ -82,6 +82,7 @@ private:
     
     std::vector<std::vector<double>> sensor_arrival_times_;
     std::vector<int> sensor_count_;
+    double sensor_neutrino_energy_;
 };
 
 #endif // HIT_DATA_HANDLER_HH

@@ -1,0 +1,16 @@
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+/process/verbose 0
+
+/run/initialize
+
+# general, marley
+/generator/set marley
+
+# marley_mono.js, marley_solar.js, marley_unif.js
+/generator/marley/source generator/config/marley_unif_ES.js
+
+# run
+/run/beamOn 10000

@@ -18,7 +18,6 @@ void HitDataHandler::Book() {
     std::cout << "-- Opening file: " << tfile_name << std::endl;
     tfile_ = new TFile(tfile_name.c_str(), "UPDATE");
 
-
     marley_generator_tree_ = new TTree("marley_generator_tree", "marley generator tree");
 
     marley_generator_tree_->Branch("marley_generator_neutrino_energy", &marley_generator_neutrino_energy_);
@@ -54,11 +53,11 @@ void HitDataHandler::Book() {
     hit_tree_->Branch("hit_times",                          &hit_times_);
     hit_tree_->Branch("hit_total_energy_deposit",           &hit_total_energy_deposit_);
 
-
     arrival_photons_tree_ = new TTree("arrival_photons_tree", "arrival photons tree");
 
     arrival_photons_tree_->Branch("sensor_arrival_times",    &sensor_arrival_times_);
     arrival_photons_tree_->Branch("sensor_count",            &sensor_count_);
+    arrival_photons_tree_->Branch("sensor_neutrino_energy",  &sensor_neutrino_energy_);
 }
 //______________________________________________________________________________
 void HitDataHandler::Save() {
@@ -102,6 +101,7 @@ void HitDataHandler::EventReset() {
 
     sensor_arrival_times_.clear();
     sensor_count_.clear();
+    sensor_neutrino_energy_ = 0.;
 }
 //______________________________________________________________________________
 void HitDataHandler::EventFill() {
@@ -184,6 +184,7 @@ void HitDataHandler::AddSignal(Signal* signal) {
         sensor_arrival_times_.push_back(sensor->GetArrivalTimes());
         sensor_count_.push_back(sensor->GetPhotonCount());
     }
+    sensor_neutrino_energy_ = signal->GetMarleyEvent().projectile().total_energy();
 
     this->AddMarleyEvent(&signal->GetMarleyEvent(), &signal->GetMarleyInteractionVertex());
 }

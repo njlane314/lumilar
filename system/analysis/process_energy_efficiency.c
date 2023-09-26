@@ -7,6 +7,7 @@
 #include <set>
 #include "TFile.h"
 #include "TTree.h"
+#include <numeric>
 
 std::vector<std::tuple<double, double, double>> readPlacementFile(const std::string& placementFileName) {
     std::ifstream placementFile(placementFileName);
@@ -69,9 +70,18 @@ int main(int argc, char* argv[]) {
     outputRootFile->cd();
 
     TTree* efficiencyTree = new TTree("trigger_efficiencies_tree", "Trigger Efficiencies");
+    TTree* efficiencyEventTree = new TTree("event_tree", "Event Tree");
+
+    std::vector<int> rSumCounts;
+    std::vector<int> rThermalElectrons;
+
+    efficiencyTree->Branch("SumCounts", &rSumCounts);
+    efficiencyTree->Branch("ThermalElectrons", &rThermalElectrons);
+
 
     int rM, rN;
     double rEffic, rEfficError, rEnergy;
+    int rSensorSum, rNThermalElectrons;
 
     efficiencyTree->Branch("M", &rM, "M/I");
     efficiencyTree->Branch("N", &rN, "N/I");
@@ -79,8 +89,12 @@ int main(int argc, char* argv[]) {
     efficiencyTree->Branch("EfficiencyError", &rEfficError, "Efficiency Error/D");
     efficiencyTree->Branch("Energy", &rEnergy, "Energy/D");
 
-    std::vector<int> M_values = {4}; // triggered sensor threshold
-    std::vector<int> N_values = {10, 20, 50, 100}; // sensor photon threshold
+    efficiencyEventTree->Branch("SensorSum", &rSensorSum, "SensorSum/I");
+    efficiencyEventTree->Branch("NThermalElectrons", &rNThermalElectrons, "NThermalElectrons/I");
+    efficiencyEventTree->Branch("Energy", &rEnergy, "Energy/D");
+
+    std::vector<int> M_values = {1}; 
+    std::vector<int> N_values = {4, 10, 20, 50, 100};
 
     std::string BIN_PATH = "/home/lane/Software/src/lumilar/system/data/";
     std::vector<std::string> rootFileNames = {
@@ -105,29 +119,41 @@ int main(int argc, char* argv[]) {
         BIN_PATH + "marley_mono_23.root",
         BIN_PATH + "marley_mono_24.root",
         BIN_PATH + "marley_mono_25.root",
+        BIN_PATH + "marley_mono_26.root",
+        BIN_PATH + "marley_mono_27.root",
     };
+
+    std::vector<std::tuple<double, double, double>> sensorPositions = readPlacementFile(placementFileName);
 
     int nuEnergy = 4;
     for (const std::string& rootFileName : rootFileNames) {
         TFile* rootFile = TFile::Open(rootFileName.c_str(), "READ");
         if (!rootFile) {
             std::cerr << "-- Error: Cannot open root file " << rootFileName << std::endl;
-            return 1;
+            continue;
         }
-        std::vector<std::tuple<double, double, double>> sensorPositions = readPlacementFile(placementFileName);
 
         TTree* photonTree = (TTree*)rootFile->Get("arrival_photons_tree");
         if (!photonTree) {
             std::cerr << "-- Error: Cannot find the photonTree in root file" << std::endl;
             rootFile->Close();
-            return 1;
+            continue;
+        }
+
+        TTree* eventTree = (TTree*)rootFile->Get("event_tree");
+        if (!eventTree) {
+            std::cerr << "-- Error: Cannot find the eventTree in root file" << std::endl;
+            rootFile->Close();
+            continue;
         }
 
         Long64_t nEntries = photonTree->GetEntries();
         std::cout << "Number of entries in the root file: " << nEntries << std::endl;
 
         std::vector<int> *photonSensorCounts = nullptr;
+        int nThermalElectrons = 0;
 
+        eventTree->SetBranchAddress("total_thermal_electrons", &nThermalElectrons);
         photonTree->SetBranchAddress("sensor_count", &photonSensorCounts);
 
         for (int M : M_values) {
@@ -135,12 +161,19 @@ int main(int argc, char* argv[]) {
                 int totalEvents = 0;
                 int triggeredEvents = 0;
 
+                rSumCounts.clear();
+                rThermalElectrons.clear();
+
                 for (Long64_t entry = 1; entry < nEntries; ++entry) {
                     photonTree->GetEntry(entry);
+                    eventTree->GetEntry(entry);
 
+                    int currentSensorSum = std::accumulate(photonSensorCounts->begin(), photonSensorCounts->end(), 0);
                     bool triggerFired = isTriggered(sensorPositions, photonSensorCounts, M, N);
 
                     if (triggerFired) {
+                        rSumCounts.push_back(currentSensorSum);
+                        rThermalElectrons.push_back(nThermalElectrons);
                         triggeredEvents++;
                     }
 
@@ -163,7 +196,6 @@ int main(int argc, char* argv[]) {
         }
 
         rootFile->Close();
-
         nuEnergy++;
     }
 
