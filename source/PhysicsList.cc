@@ -14,7 +14,8 @@ PhysicsList::PhysicsList() {
 	RegisterPhysics( new G4IonElasticPhysics() );
 	RegisterPhysics( new G4IonPhysics() );
 
-	RegisterPhysics( new NeutronPhysics("neutronHP"));  
+	RegisterPhysics( new NeutronPhysics("neutronHP") );  
+	RegisterPhysics( new AlphaGammaPhysics() );
 }
 //_________________________________________________________________________________________
 PhysicsList::~PhysicsList() {}

@@ -61,6 +61,13 @@ source setup_config.sh
 ./simple_build.sh -b -t
 ```
 
+4. Or, to build:
+```shell
+cd build
+cmake -S .. -B .
+cmake -build .
+```
+
 ### Usage
 
 Example usage: 

@@ -1,6 +1,17 @@
 #ifndef ALPHA_GAMMA_PROCESS_HH
 #define ALPHA_GAMMA_PROCESS_HH
 
+#include "G4ProcessManager.hh"
+#include "AlphaGammaProcess.hh"
+#include "G4Gamma.hh"
+#include "G4ParticleChange.hh"
+#include "G4DynamicParticle.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Track.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VDiscreteProcess.hh"
+
 class AlphaGammaProcess : public G4VDiscreteProcess {
 public:
     AlphaGammaProcess(const G4String& processName = "AlphaGammaCapture", G4ProcessType type = fElectromagnetic);

@@ -17,6 +17,7 @@
 #include "G4HadronElasticPhysicsHP.hh"
 
 #include "NeutronPhysics.hh"
+#include "AlphaGammaPhysics.hh"
 
 class PhysicsList : public G4VModularPhysicsList{
 public:
