@@ -65,7 +65,7 @@ source setup_config.sh
 ```shell
 cd build
 cmake -S .. -B .
-cmake -build .
+cmake --build .
 ```
 
 ### Usage
