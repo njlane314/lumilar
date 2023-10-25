@@ -6,7 +6,7 @@ SteppingAction::~SteppingAction() {}
 //_________________________________________________________________________________________
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 	if (isParticleWithinDetector(step) == true) {
-		larnest::LArNESTResult medium_response = MediumResponse::ProcessResponse(step);
+		MediumResponse::ProcessResponse(step);
 	}
 }
 //_________________________________________________________________________________________

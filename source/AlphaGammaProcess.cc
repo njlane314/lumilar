@@ -1,11 +1,9 @@
 #include "AlphaGammaProcess.hh"
 
 AlphaGammaProcess::AlphaGammaProcess(const G4String& processName, G4ProcessType type)
-: G4VDiscreteProcess(processName, type)
-{}
+: G4VDiscreteProcess(processName, type) {}
 
-AlphaGammaProcess::~AlphaGammaProcess()
-{}
+AlphaGammaProcess::~AlphaGammaProcess() {}
 
 G4double AlphaGammaProcess::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition* condition) {
     return 0.01*CLHEP::cm;

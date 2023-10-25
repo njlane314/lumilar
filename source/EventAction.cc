@@ -68,7 +68,6 @@ void EventAction::RecordHit(const G4Event* event) {
     HitDataHandler* hit_data_handler = HitDataHandler::GetInstance();
     hit_data_handler->SetEvent(event->GetEventID());
 
-
     hit_data_handler->EventFill();
     hit_data_handler->EventReset();
 }

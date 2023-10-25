@@ -8,67 +8,28 @@
 
 class EnergyDeposit {
 public:
-    EnergyDeposit() {
-        energy_ = -1;
-        dx_ = -1;
-        species_ = larnest::LArInteraction::ER;
-        position_ = Eigen::Vector3d::Zero();
-        time_ = -1;
-    };
-    EnergyDeposit(double energy, double dx, larnest::LArInteraction species, Eigen::Vector3d position, double time) {
-        energy_ = energy;
-        dx_ = dx;
-        species_ = species;
-        position_ = position; 
-        time_ = time;
-    }
-    ~EnergyDeposit() {};
+    EnergyDeposit(double visible_deposit, double stopping_power, const std::string& particle_species, const Eigen::Vector3d& position, double discrete_length, double time)
+    : visible_deposit_(visible_deposit), stopping_power_(stopping_power), particle_species_(particle_species), position_(position), discrete_length_(discrete_length), time_(time) {}
 
-    double GetEnergy() const {
-        return energy_;
-    };
-    void SetEnergy(double value) {
-        energy_ = value;
-    };
+    EnergyDeposit() : visible_deposit_(0), stopping_power_(0), particle_species_(""), position_(Eigen::Vector3d(0, 0, 0)), discrete_length_(0), time_(0) {}
 
-    larnest::LArInteraction GetInteractionSpecies() const {
-        return species_;
-    }; 
-    void SetInteractionSpecies(const larnest::LArInteraction value) {
-        species_ = value;
-    };
-
-    Eigen::Vector3d GetPosition() const {
-        return position_;
-    };
-    void SetPosition(const Eigen::Vector3d value) {
-        position_ = value;
-    };
-
-    double GetStepLength() const {
-        return dx_;
-    };
-    void SetStepLength(double value) {
-        dx_ = value;
-    };
-
-    double GetTime() const {
-        return time_;
-    };
-    void SetTime(double value) {
-        time_ = value;
-    };
-
-    bool isEmpty() const {
-        return energy_ <= 0 || dx_ <= 0 || time_ <= 0;
-    };
+    double GetVisibleDeposit() const { return visible_deposit_; }
+    double GetStoppingPower() const { return stopping_power_; }
+    const std::string& GetParticleSpecies() const { return particle_species_; }
+    const Eigen::Vector3d& GetPosition() const { return position_; }
+    double GetDiscreteLength() const { return discrete_length_; }
+    double GetTime() const { return time_; }
+    bool isEmpty() const { return energy_ <= 0 || dx_ <= 0 || time_ <= 0; };
 
 private:
-    double energy_;
-    double dx_;
-    larnest::LArInteraction species_;
+    double visible_deposit_;
+    double stopping_power_;
+    std::string particle_species_;
     Eigen::Vector3d position_;
+    double discrete_length_;
     double time_;
 };
+
+    
 
 #endif // ENERGY_DEPOSIT_HH

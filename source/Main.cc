@@ -78,9 +78,6 @@ int main(int argc, char* argv[]) {
         output_filename = "data/" + now_stream.str() + "_" + generator_config_filename_without_ext + ".root";
     } 
     
-    //G4VisManager* vis_manager = new G4VisExecutive;
-    //vis_manager->Initialize();
-
     G4RunManager* run_manager = new G4RunManager();
     run_manager->SetUserInitialization(new DetectorConstruction(new DetectorMessenger()));
     
@@ -118,15 +115,9 @@ int main(int argc, char* argv[]) {
         std::cout << "-- Failed to open generator macro..." << std::endl;
     }
 
-    /*G4UImanager* ui_manager = G4UImanager::GetUIpointer();  
-    ui_manager->ApplyCommand("/control/execute ../system/generator/vis.mac");
-    ui->SessionStart();
-    delete ui;*/
-    
     delete analysis_manager;
     delete propagation_time;
     delete run_manager;
-    //delete vis_manager;
 
     return 0;
 }
