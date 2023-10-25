@@ -19,7 +19,7 @@ public:
     const Eigen::Vector3d& GetPosition() const { return position_; }
     double GetDiscreteLength() const { return discrete_length_; }
     double GetTime() const { return time_; }
-    bool isEmpty() const { return energy_ <= 0 || dx_ <= 0 || time_ <= 0; };
+    bool isEmpty() const { return visible_deposit_ <= 0 || discrete_length_ <= 0 || time_ <= 0; };
 
 private:
     double visible_deposit_;
@@ -29,7 +29,5 @@ private:
     double discrete_length_;
     double time_;
 };
-
-    
 
 #endif // ENERGY_DEPOSIT_HH

@@ -9,7 +9,7 @@
 
 class PhotonRadiant {
 public: 
-    PhotonRadiant(int radiant_photon_count, double radiant_time, Eigen::Vector3d radiant_position, larnest::LArInteraction interaction) : radiant_photon_count_(radiant_photon_count), radiant_time_(radiant_time), radiant_position_(radiant_position), radiation_interaction_(interaction) {};
+    PhotonRadiant(int radiant_photon_count, double radiant_time, Eigen::Vector3d radiant_position, std::string particle_name) : radiant_photon_count_(radiant_photon_count), radiant_time_(radiant_time), radiant_position_(radiant_position), particle_name_(particle_name) {};
     ~PhotonRadiant() {};
 
     int GetPhotonCount() const {
@@ -24,15 +24,15 @@ public:
         return radiant_time_;
     }
 
-    larnest::LArInteraction GetInteraction() const {
-        return radiation_interaction_;
+    std::string GetParticleName() const {
+        return particle_name_;
     }
 
 private:
     int radiant_photon_count_;
     double radiant_time_;
     Eigen::Vector3d radiant_position_;
-    larnest::LArInteraction radiation_interaction_;
+    std::string particle_name_;
 };
 
 #endif // PHOTONRADIANT_HH

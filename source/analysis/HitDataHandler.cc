@@ -161,10 +161,10 @@ void HitDataHandler::AddSignal(Signal* signal) {
     std::vector<EnergyDeposit> trajectory_structure = *signal->GetHits();
 
     for (const auto& hit : trajectory_structure) {
-        double energy_deposit = hit.GetEnergy();
+        double energy_deposit = hit.GetVisibleDeposit();
         
         hit_energy_deposits_.push_back(energy_deposit);
-        hit_step_length_.push_back(hit.GetStepLength());
+        hit_step_length_.push_back(hit.GetDiscreteLength());
         
         Eigen::Vector3d position = hit.GetPosition();
         hit_position_x_.push_back(position(0));

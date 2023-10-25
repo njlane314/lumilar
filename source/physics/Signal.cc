@@ -48,7 +48,7 @@ std::vector<EnergyDeposit>* Signal::GetHits() const {
 std::vector<double> Signal::GetEnergyDeposits() const {
     std::vector<double> energy_deposits;
     for (const auto& energy_deposit : *track_structure_) {
-        energy_deposits.push_back(energy_deposit.GetEnergy());
+        energy_deposits.push_back(energy_deposit.GetVisibleDeposit());
     }
     return energy_deposits;
 }
@@ -56,7 +56,7 @@ std::vector<double> Signal::GetEnergyDeposits() const {
 std::vector<double> Signal::GetLinearEnergyTransfers() const {
     std::vector<double> linear_energy_transfers;
     for (const auto& energy_deposit : *track_structure_) {
-        linear_energy_transfers.push_back(energy_deposit.GetEnergy() / energy_deposit.GetStepLength());
+        linear_energy_transfers.push_back(energy_deposit.GetVisibleDeposit() / energy_deposit.GetDiscreteLength());
     }
     return linear_energy_transfers;
 }
@@ -64,7 +64,7 @@ std::vector<double> Signal::GetLinearEnergyTransfers() const {
 std::vector<double> Signal::GetLengths() const {
     std::vector<double> lengths;
     for (const auto& energy_deposit : *track_structure_) {
-        lengths.push_back(energy_deposit.GetStepLength());
+        lengths.push_back(energy_deposit.GetDiscreteLength());
     }
     return lengths;
 }

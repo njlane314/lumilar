@@ -17,6 +17,8 @@ public:
 
     virtual void UserSteppingAction(const G4Step* step);
     bool isParticleWithinDetector(const G4Step* step);
+
+    MediumResponse medium_response;
 };
 
 #endif // STEPPING_ACTION_HH

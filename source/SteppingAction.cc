@@ -1,12 +1,14 @@
 #include "SteppingAction.hh"
 //_________________________________________________________________________________________
-SteppingAction::SteppingAction() {}
+SteppingAction::SteppingAction() {
+	medium_response = MediumResponse();
+}
 //_________________________________________________________________________________________
 SteppingAction::~SteppingAction() {}
 //_________________________________________________________________________________________
 void SteppingAction::UserSteppingAction(const G4Step* step) {
 	if (isParticleWithinDetector(step) == true) {
-		MediumResponse::ProcessResponse(step);
+		medium_response.ProcessResponse(step);
 	}
 }
 //_________________________________________________________________________________________

@@ -53,10 +53,6 @@ Properties MediumProperties::InitialiseProperties(std::string medium = "lAr") {
     medium_properties.proton_singlet_abundance = 0.22;
     medium_properties.alpha_singlet_abundance = 0.36;
 
-    //https://pubs.aip.org/aip/jcp/article/91/3/1469/220871/Argon-krypton-and-xenon-excimer-luminescence-From
-    medium_properties.argon_spectra_wavelength_mean = 127.;
-    medium_properties.argon_spectra_wavelength_sigma = 7.4 / (2 * sqrt(2 * log(2)));
-
     medium_properties.electric_field = 0.5; // kilovolt / cm
     
     return medium_properties;

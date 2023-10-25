@@ -21,18 +21,19 @@ struct Properties {
     double singlet_lifetime;
     double triplet_lifetime;
 
-    double singlet_abundance;
-    double triplet_abundance;
+    double muon_yield_quenching;
+    double pion_yield_quenching;
+    double electron_yield_quenching;
+    double kaon_yield_quenching;
+    double proton_yield_quenching;
+    double alpha_yield_quenching;
 
-    double absorption_length;
-
-    double excited_rate;
-    double quenched_rate;
-
-    double transfer_rate; 
-
-    double argon_spectra_wavelength_mean;
-    double argon_spectra_wavelength_sigma;
+    double muon_singlet_abundance;
+    double pion_singlet_abundance;
+    double electron_singlet_abundance;
+    double kaon_singlet_abundance;
+    double proton_singlet_abundance;
+    double alpha_singlet_abundance;
 
     double electric_field;
 };

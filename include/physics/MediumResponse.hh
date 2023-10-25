@@ -10,6 +10,9 @@
 
 #include "Signal.hh"
 #include "EnergyDeposit.hh"
+#include "MediumProperties.hh"
+#include "Excitation.hh"
+#include "Recombination.hh"
 
 #include "LArNEST.h"
 
@@ -21,15 +24,13 @@ public:
    MediumResponse();
    ~MediumResponse();
 
-   static larnest::LArNESTResult ProcessResponse(const G4Step* step);
+   void ProcessResponse(const G4Step* step);
     
 private:
    static EnergyDeposit* CreateEnergyDeposit(const G4Step* step);
 
    static bool isStepInLiquidArgon(const G4Step* step);
    static bool isParticleCharged(const G4Step* step);
-   
-   static void PrintResponse(const larnest::LArNESTResult& result);
 };
 
 #endif // MEDIUM_RESPONSE_HH

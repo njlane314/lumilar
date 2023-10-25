@@ -15,13 +15,14 @@
 #include "LArNEST.h"
 
 #include "EnergyDeposit.hh"
+#include "MediumProperties.hh"
 
 class Relaxation {
 public:
     Relaxation();
     ~Relaxation();
 
-    static double SampleEmissionTime(larnest::LArInteraction interaction);
+    static double SampleEmissionTime(std::string particle_name);
 };
 
 #endif // RELAXATION_HH

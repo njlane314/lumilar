@@ -8,12 +8,12 @@ Scintillation::Scintillation()
 Scintillation::~Scintillation() {}
 //_________________________________________________________________________________________
 void Scintillation::CreateRadiant(const EnergyDeposit* energy_deposit, int optical_photon_count) {
-    larnest::LArInteraction radiant_interaction = energy_deposit->GetInteractionSpecies();
+    std::string particle_name = energy_deposit->GetParticleSpecies();
     Eigen::Vector3d radiant_position = energy_deposit->GetPosition();
     double radiant_time = energy_deposit->GetTime();
     int radiant_photon_count = optical_photon_count;
 
-    photon_radiant_vector_.push_back(PhotonRadiant(radiant_photon_count, radiant_time, radiant_position, radiant_interaction));
+    photon_radiant_vector_.push_back(PhotonRadiant(radiant_photon_count, radiant_time, radiant_position, particle_name));
 }
 //_________________________________________________________________________________________
 std::vector<PhotonRadiant> Scintillation::GetPhotonRadiants() const {

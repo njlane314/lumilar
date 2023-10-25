@@ -15,7 +15,6 @@
 #include "marley/Generator.hh"
 #include "marley/JSONConfig.hh"
 
-
 class Signal {
 public:
   Signal();

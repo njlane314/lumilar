@@ -4,7 +4,8 @@ Relaxation::Relaxation() {}
 //_________________________________________________________________________________________
 Relaxation::~Relaxation() {}
 //_________________________________________________________________________________________
-double Relaxation::SampleEmissionTime(const std::string& particle_name, const MediumProperties* medium_properties) {
+double Relaxation::SampleEmissionTime(const std::string particle_name) {
+    Properties* medium_properties = MediumProperties::GetInstance()->GetMediumProperties();
     double singlet_lifetime = medium_properties->singlet_lifetime;
     double triplet_lifetime = medium_properties->triplet_lifetime;
     double singlet_abundance;

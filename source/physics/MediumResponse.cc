@@ -27,13 +27,13 @@ EnergyDeposit* MediumResponse::CreateEnergyDeposit(const G4Step* step) {
 //_________________________________________________________________________________________
 void MediumResponse::ProcessResponse(const G4Step* step) {
     const auto energy_deposit = CreateEnergyDeposit(step);
-    const auto properties =  MediumProperties::GetInstance()->GetMediumProperties()
-    if (energy_deposit->GetEnergy() > 0) {
+    const auto properties =  MediumProperties::GetInstance()->GetMediumProperties();
+    if (energy_deposit->GetVisibleDeposit() > 0) {
         const std::string particle_name = step->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName();
-        int num_thermal_electrons, num_optical_photons;
-        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+" || particle_name == "proton" || particle_name == "anti_proton" || particle_name == "kaon+" || particle_name == "kaon-" || ) {
+        int thermal_electron_count, optical_photon_count;
+        if (particle_name == "e-" || particle_name == "e+" || particle_name == "mu-" || particle_name == "mu+" || particle_name == "proton" || particle_name == "anti_proton" || particle_name == "kaon+" || particle_name == "kaon-" ) {
             const auto intrinsic_response = Excitation::CreateExcitation(energy_deposit, properties);
-            std::tie(num_thermal_electrons, num_optical_photons) = Recombination::ProcessRecombination(energy_deposit, properties, intrinsic_response);
+            std::tie(thermal_electron_count, optical_photon_count) = Recombination::ProcessRecombination(energy_deposit, properties, intrinsic_response);
         } else {
             return;
         }
