@@ -73,6 +73,9 @@ include_directories(${BXDECAY0_DIR}/_install.d/include)
 #----------------------------------------------------------------------------
 # Check if GENIE is already installed
 
+export GENIE=/home/lane/Software/src/Generator
+
+
 # Check if GENIE is already installed
 set(GENIE_INSTALLED FALSE)
 
