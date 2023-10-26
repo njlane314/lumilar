@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/system)
 find_package(Geant4 REQUIRED)
 find_package(ROOT REQUIRED COMPONENTS RIO Core)
 find_package(CLHEP REQUIRED)
+find_package(GENIE QUIET)
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
@@ -68,6 +69,50 @@ endif()
 
 find_package(BxDecay0 REQUIRED COMPONENTS Geant4 CONFIG PATHS "${BXDECAY0_DIR}/_build.d" NO_DEFAULT_PATH)
 include_directories(${BXDECAY0_DIR}/_install.d/include)
+
+#----------------------------------------------------------------------------
+# Check if GENIE is already installed
+
+# Check if GENIE is already installed
+set(GENIE_INSTALLED FALSE)
+
+# Define the GENIE installation directory
+set(GENIE_INSTALL_DIR "${MAIN_EXTERNAL_DIR}/genie")
+
+# Check for the existence of the GENIE executable
+if(EXISTS "${GENIE_INSTALL_DIR}/bin/genie")
+  message(STATUS "GENIE is already installed at ${GENIE_INSTALL_DIR}")
+  set(GENIE_INSTALLED TRUE)
+endif()
+
+# Clone and build GENIE if not already installed
+if (NOT GENIE_INSTALLED)
+  message(STATUS "Cloning and building GENIE...")
+
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E env git clone https://github.com/GENIE-MC/Generator.git ${GENIE_INSTALL_DIR}
+    WORKING_DIRECTORY ${MAIN_EXTERNAL_DIR}
+  )
+
+  execute_process(
+    COMMAND cmake -S ${GENIE_INSTALL_DIR} -B ${GENIE_INSTALL_DIR}/build
+    WORKING_DIRECTORY ${GENIE_INSTALL_DIR}
+  )
+
+  execute_process(
+    COMMAND cmake --build ${GENIE_INSTALL_DIR}/build
+    WORKING_DIRECTORY ${GENIE_INSTALL_DIR}
+  )
+endif()
+
+# Set the GENIE_DIR to the installation directory
+set(GENIE_DIR "${GENIE_INSTALL_DIR}")
+
+# Find GENIE again (after installation)
+find_package(GENIE REQUIRED)
+
+# Include GENIE configuration files
+include(${GENIE_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Check if Marley is already installed
